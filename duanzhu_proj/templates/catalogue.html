@@ -1,0 +1,66 @@
+{% block javascript %}
+<style>
+    .nested { display: none; }
+    .toggle { cursor: pointer; color: blue; }
+</style>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        document.getElementById("juanTree").addEventListener("click", function (event) {
+            let toggle = event.target;
+
+            // Expand/Collapse juans
+            if (toggle.classList.contains("toggle-juan")) {
+                let volumeList = toggle.nextElementSibling.nextElementSibling;
+                volumeList.style.display = (volumeList.style.display === "none" || !volumeList.style.display) ? "block" : "none";
+                toggle.textContent = (toggle.textContent === "[+]") ? "[-]" : "[+]";
+            }
+
+            // Expand/Collapse Volumes & Lazy-Load Chapters
+            if (toggle.classList.contains("toggle-vol")) {
+                let juan = toggle.dataset.juan;
+                let bushou = toggle.dataset.bushou;
+                let chapterList = document.getElementById(`chapters-${juan}-${bushou}`);
+
+                if (!chapterList.dataset.loaded) {
+                    fetch(`/manuscript/get_duanzhu_structure/?juan=${encodeURIComponent(juan)}&bushou=${encodeURIComponent(bushou)}`)
+                        .then(response => response.json())
+                        .then(data => {
+                            chapterList.innerHTML = ""; // Clear old content
+                            data.duanzhus.forEach(duanzhu => {
+                                let li = document.createElement("li");
+                                let a = document.createElement("a");
+                                a.href = `/manuscript/index/${duanzhu.id}`;
+                                a.textContent = duanzhu.zitou;
+                                li.appendChild(a);
+                                chapterList.appendChild(li);
+                            });
+                            chapterList.dataset.loaded = "true"; // Mark as loaded
+                        });
+                }
+
+                chapterList.style.display = (chapterList.style.display === "none" || !chapterList.style.display) ? "block" : "none";
+                toggle.textContent = (toggle.textContent === "[+]") ? "[-]" : "[+]";
+            }
+        });
+    });
+
+</script>
+{% endblock %}
+<h3 align="center">目录</h3>
+<ul id="juanTree">
+    {% for juan, bushous in duanzhu_dict.items %}
+    <li>
+        <span class="toggle toggle-juan">[+]</span>
+        <span class="juan-name">{{ juan }}</span>
+        <ul class="nested">
+            {% for bushou in bushous.keys %}
+            <li>
+                <span class="toggle toggle-vol" data-juan="{{ juan }}" data-bushou="{{ bushou }}">[+]</span>
+                <span class="vol-name">{{ bushou }}部</span>
+                <ul class="nested" id="chapters-{{ juan }}-{{ bushou }}"></ul>  <!-- Empty initially -->
+            </li>
+            {% endfor %}
+        </ul>
+    </li>
+    {% endfor %}
+</ul>
