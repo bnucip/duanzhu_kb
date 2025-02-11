@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block main %}
+    {% if zitou %}
+        <h2>{{ zitou.zitou }}</h2>
+        <p>{{ zitou.zhengwen_zhushi }}</p>
+    {% else %}
+        <p>Select a zitou to view details.</p>
+    {% endif %}
+{% endblock %}
