@@ -1,66 +1,67 @@
-{% block javascript %}
-<style>
-    .nested { display: none; }
-    .toggle { cursor: pointer; color: blue; }
-</style>
+<div id="tree-container"></div>
 <script>
-    document.addEventListener("DOMContentLoaded", function () {
-        document.getElementById("juanTree").addEventListener("click", function (event) {
-            let toggle = event.target;
-
-            // Expand/Collapse juans
-            if (toggle.classList.contains("toggle-juan")) {
-                let volumeList = toggle.nextElementSibling.nextElementSibling;
-                volumeList.style.display = (volumeList.style.display === "none" || !volumeList.style.display) ? "block" : "none";
-                toggle.textContent = (toggle.textContent === "[+]") ? "[-]" : "[+]";
-            }
-
-            // Expand/Collapse Volumes & Lazy-Load Chapters
-            if (toggle.classList.contains("toggle-vol")) {
-                let juan = toggle.dataset.juan;
-                let bushou = toggle.dataset.bushou;
-                let chapterList = document.getElementById(`chapters-${juan}-${bushou}`);
-
-                if (!chapterList.dataset.loaded) {
-                    fetch(`/manuscript/get_duanzhu_structure/?juan=${encodeURIComponent(juan)}&bushou=${encodeURIComponent(bushou)}`)
-                        .then(response => response.json())
-                        .then(data => {
-                            chapterList.innerHTML = ""; // Clear old content
-                            data.duanzhus.forEach(duanzhu => {
-                                let li = document.createElement("li");
-                                let a = document.createElement("a");
-                                a.href = `/manuscript/index/${duanzhu.id}`;
-                                a.textContent = duanzhu.zitou;
-                                li.appendChild(a);
-                                chapterList.appendChild(li);
-                            });
-                            chapterList.dataset.loaded = "true"; // Mark as loaded
-                        });
+$(document).ready(function() {
+    $('#tree-container').jstree({
+        'core': {
+            'data': {
+                "url": "/catalogue/",
+                "dataType": "json",
+                "error": function(jqXHR, textStatus, errorThrown) {
+                    console.error("AJAX Error:", textStatus, errorThrown);
+                    alert("Error loading data. Please try again.");
                 }
-
-                chapterList.style.display = (chapterList.style.display === "none" || !chapterList.style.display) ? "block" : "none";
-                toggle.textContent = (toggle.textContent === "[+]") ? "[-]" : "[+]";
-            }
-        });
+            },
+            'check_callback': true
+        },
+        'types': {
+            'juan': { 'icon': false },
+            'bushou': { 'icon': false },
+            'zitou': { 'icon': false }
+        },
+        'plugins': ["types"]
     });
 
+    $('#tree-container').on("select_node.jstree", function (e, data) {
+        let node = data.node;
+
+        // Ensure node.data exists
+        if (!node.data) {
+            node.data = {};  // Initialize node.data if undefined
+        }
+
+        // If a Bushou is clicked, load Zitous
+        if (node.type === "bushou" && !node.data.loaded) {
+            node.data.loaded = true;  // Prevent duplicate requests
+
+            $.ajax({
+                url: "/catalogue/?bushou=" + node.id,
+                type: "GET",
+                dataType: "json",
+                success: function(zitous) {
+                    zitous.forEach(z => {
+                        $('#tree-container').jstree().create_node(node, z);
+                    });
+                    $('#tree-container').jstree().open_node(node);
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                    console.error("Failed to load zitous:", textStatus, errorThrown);
+                    alert("Failed to load zitous. Try again.");
+                    node.data.loaded = false;  // Allow retry on failure
+                }
+            });
+        }
+
+        // When a Zitou node is clicked, only refresh the main block
+        else if (node.type === "zitou") {
+            // Load the zitou content into the main block only, prevent left block refresh
+            $('#main').load("/zitou/" + node.id + "/", function(response, status, xhr) {
+                if (status === "error") {
+                    console.error("Failed to load content:", xhr.statusText);
+                    alert("Error loading content.");
+                }
+            });
+        }
+    });
+});
+
 </script>
-{% endblock %}
-<h3 align="center">目录</h3>
-<ul id="juanTree">
-    {% for juan, bushous in duanzhu_dict.items %}
-    <li>
-        <span class="toggle toggle-juan">[+]</span>
-        <span class="juan-name">{{ juan }}</span>
-        <ul class="nested">
-            {% for bushou in bushous.keys %}
-            <li>
-                <span class="toggle toggle-vol" data-juan="{{ juan }}" data-bushou="{{ bushou }}">[+]</span>
-                <span class="vol-name">{{ bushou }}部</span>
-                <ul class="nested" id="chapters-{{ juan }}-{{ bushou }}"></ul>  <!-- Empty initially -->
-            </li>
-            {% endfor %}
-        </ul>
-    </li>
-    {% endfor %}
-</ul>

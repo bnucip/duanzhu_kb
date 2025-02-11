@@ -1,63 +1,29 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh">
 <head>
     <meta charset="UTF-8">
-    <title>{% block title %}{% endblock %}</title>
-    {% load static %}
-    <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}" />
-    <link rel="stylesheet" type="text/css" href="{% static 'css/swiper.min.css' %}" />
-    <script src="{% static 'js/vendor/jquery/jquery.min.js' %}"></script>
-    <script src="{% static 'js/vendor/echarts/echarts.min.js' %}"></script>
-    <script src="{% static 'js/swiper.min.js' %}"></script>
-    {% block javascript %}{% endblock %}
-    <style>
-        body {
-            display: grid;
-            grid-template-rows: 80px 1fr 50px;
-            grid-template-columns: 200px 1fr 200px;
-            grid-template-areas:
-                "top top top"
-                "left main right"
-                "bottom bottom bottom";
-            height: 100vh;
-            margin: 0;
-            font-family: Arial, sans-serif;
-        }
-        .head { grid-area: top; background: white; color: black; text-align: center; padding: 20px; }
-        .left { grid-area: left; background: #f4f4f4; padding: 20px; }
-        .main { grid-area: main; background: white; padding: 20px; }
-        .right { grid-area: right; background: #f4f4f4; padding: 20px; }
-        .footer { grid-area: bottom; background: #333; color: white; text-align: center; padding: 10px; }
-    </style>
+    <title>DuanZhu</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.3.12/themes/default/style.min.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.3.12/jstree.min.js"></script>
 </head>
 <body>
-    <div class="head">
-        <div class="head_title">说文解字注知识库</div>
-        <div class="head_link">
-            <a href="/">首页</a>&nbsp;
-            |&nbsp;&nbsp;<a href="/admin/">后台</a>
-<!--            {% if user.is_authenticated %}-->
-<!--                |&nbsp;&nbsp;<a href="/annotation/admin/logout">注销</a> {{ user.username }}-->
-<!--            {% else %}-->
-<!--                |&nbsp;&nbsp;<a href="/annotation/admin/login">登录</a>-->
-<!--            {% endif %}-->
+    <div id="wrapper">
+        <div id="left" class="left">
+            {% block left %}
+                <!-- Left block remains the same; it contains the tree -->
+                {% include "catalogue.html" %}
+            {% endblock %}
+        </div>
+
+        <div id="main" class="main">
+            {% block main %}
+                <!-- Main content is updated dynamically -->
+            {% endblock %}
         </div>
     </div>
-
-    <div class="left">
-        {% include 'catalogue.html' %}
-    </div>
-
-    <div class="main">
-        {% block main %}{% endblock %}
-    </div>
-
-    <div class="right">
-        {% block right %}Default Right Sidebar{% endblock %}
-    </div>
-
-    <div class="footer">
-         © 北京师范大学中国文字整理与规范研究中心
-    </div>
+    {% block footer %}
+    <!-- Footer content -->
+    {% endblock %}
 </body>
 </html>
