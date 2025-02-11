@@ -1,15 +1,21 @@
 <!DOCTYPE html>
 <html lang="zh">
 <head>
+    {% load static %}
     <meta charset="UTF-8">
     <title>DuanZhu</title>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.3.12/themes/default/style.min.css" />
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.3.12/jstree.min.js"></script>
+    <!-- Load CSS files -->
+    <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/vendor/jstree/themes/default/style.min.css' %}">
+
+    <!-- Load JavaScript files -->
+    <script src="{% static 'js/vendor/jquery/jquery.min.js' %}"></script>
+    <script src="{% static 'js/vendor/jstree/jstree.min.js' %}"></script>
 </head>
 <body>
-    <div id="wrapper">
+    <div id="wrapper" class="container">
         <div id="left" class="left">
+            <h2>目录</h2>
             {% block left %}
                 <!-- Left block remains the same; it contains the tree -->
                 {% include "catalogue.html" %}
