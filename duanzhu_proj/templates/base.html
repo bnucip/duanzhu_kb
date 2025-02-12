@@ -13,9 +13,19 @@
     <script src="{% static 'js/vendor/jstree/jstree.min.js' %}"></script>
 </head>
 <body>
+    {% block head %}
+    <div class="head">
+            <div class="head_title">说文解字注知识库</div>
+            <div class="head_link">
+                <a href="/">首页</a>&nbsp;
+                |&nbsp;&nbsp;<a href="/admin/">后台</a>
+<!--                |&nbsp;&nbsp;<a href="/annotation/admin/login">登录</a>-->
+            </div>
+    </div>
+    {% endblock %}
     <div id="wrapper" class="container">
         <div id="left" class="left">
-            <h2>目录</h2>
+            <h3>目录</h3>
             {% block left %}
                 <!-- Left block remains the same; it contains the tree -->
                 {% include "catalogue.html" %}
@@ -29,7 +39,9 @@
         </div>
     </div>
     {% block footer %}
-    <!-- Footer content -->
+    <div class="footer">
+         © 2025 北京师范大学中国文字整理与规范研究中心
+    </div>
     {% endblock %}
 </body>
 </html>

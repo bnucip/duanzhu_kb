@@ -1,3 +1,45 @@
 <!-- This will replace the #main block dynamically -->
-<h2>{{ zitou.zitou }}</h2>
-<p>{{ zitou.zhengwen_zhushi }}</p>
+<div style="display: flex; justify-content: space-between;">
+    <div style="text-align: left; margin-bottom: 15px;">
+        {% if prev_zitou %}
+            <button class="navigate-btn" onclick="loadZitou('{{ prev_zitou.id }}')">🡨 {{ prev_zitou.zitou }}</button>
+        {% endif %}
+    </div>
+    <div style="text-align: right; margin-bottom: 15px;">
+        {% if next_zitou %}
+            <button class="navigate-btn" onclick="loadZitou('{{ next_zitou.id }}')">{{ next_zitou.zitou }} 🡪</button>
+        {% endif %}
+    </div>
+</div>
+<div>{{ zitou.juan }}　|　{{ zitou.bushou }}部</div>
+<h1>{{ zitou.zitou }}</h1>
+
+<h2>段玉裁《說文解字注》</h2>
+<div class="zhengwen_zhushi">{{ zitou.zhengwen_zhushi|safe }}</div>
+
+{% if swdu %}
+<h2>段玉裁《說文解字读》</h2>
+<div class="zhengwen_zhushi">{{ swdu.zhushi|safe }}</div>
+{% endif %}
+
+<script>
+function loadZitou(zitouId) {
+    $('#main').load('/zitou/' + zitouId + '/', function(response, status, xhr) {
+        if (status === "error") {
+            console.error("Error loading content:", xhr.statusText);
+            alert("Error loading content.");
+        }
+    });
+}
+
+$(document).ready(function() {
+    $('div.zhengwen_zhushi').each(function(){
+        var originalHTML = $(this).html();
+        var newHTML = originalHTML.replace(/<p(\d+)>/g, '<p class="origin-script">');
+        newHTML = newHTML.replace(/<z(\d+)>/g, '<div class="border-gray-200">');
+        newHTML = newHTML.replace(/<\/p(\d+)>/g, '</p>');
+        newHTML = newHTML.replace(/<\/z(\d+)>/g, '</div>');
+        $(this).html(newHTML);
+    });
+});
+</script>
