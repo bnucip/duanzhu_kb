@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% load static %}
+
+    <!-- Load CSS files -->
+<!--    <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">-->
+
+    <!-- Load JavaScript files -->
+    <script src="{% static 'js/vendor/jquery/jquery.min.js' %}"></script>
+    <title>《说文解字注》检索系统</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .search-type {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+        .search-type button {
+            padding: 10px 20px;
+            margin: 0 5px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .search-type button.active {
+            background-color: #4CAF50;
+            color: white;
+        }
+        .search-container {
+            display: flex;
+            margin-bottom: 20px;
+        }
+        #search-input {
+            flex-grow: 1;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ddd;
+            border-radius: 5px 0 0 5px;
+        }
+        #search-button {
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 0 5px 5px 0;
+            cursor: pointer;
+        }
+        #total-results {
+            text-align: right;
+            margin-bottom: 10px;
+        }
+        .result-item {
+            background-color: white;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 15px;
+            margin-bottom: 15px;
+            display: flex;
+        }
+        .character {
+            font-size: 36px;
+            font-weight: bold;
+            margin-right: 20px;
+            min-width: 60px;
+            text-align: center;
+        }
+        .content {
+            flex-grow: 1;
+        }
+        .content p1,
+        .content p2,
+        .content p3,
+        .content p4,
+        .content p5,
+        .content p6,
+        .content p7,
+        .content p8,
+        .content p9,
+        .content p10,
+        .content p11,
+        .content p12,
+        .content p13,
+        .content p14,
+        .content p15,
+        .content p16 {
+            font-size: 20px;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+        .content z1,
+        .content z2,
+        .content z3,
+        .content z4,
+        .content z5,
+        .content z6,
+        .content z7,
+        .content z8,
+        .content z9,
+        .content z10,
+        .content z11,
+        .content z12,
+        .content z13,
+        .content z14,
+        .content z15,
+        .content z16 {
+            font-size: 14px;
+            color: #7f8c8d;
+            font-size: 0.9em;
+        }
+        .special {
+            font-size: 12px;
+            color: #777;
+            text-align: center;
+        }
+        .pagination {
+            display: flex;
+            justify-content: right;
+            margin-top: 10px;
+            margin-bottom: 2px;
+        }
+        .highlight {
+            background-color: yellow;
+        }
+    </style>
+</head>
+<body>
+    <h1>《说文解字注》检索系统</h1>
+    
+    <div class="search-type">
+        <button id="character-search" {% if categ != 'quanwen' %} class="active"{% endif %}>字头检索</button>
+        <button id="fulltext-search" {% if categ == 'quanwen' %} class="active"{% endif %}>全文检索</button>
+    </div>
+
+
+    <form id="searchForm" action="/search/" method="post">
+        {% csrf_token %}
+        <div class="search-container">
+            <input type="hidden" id="categ" name="categ" value="{{ categ|default:'zitou' }}"/>
+            <input type="text" id="search-input" name="keyword" placeholder="输入汉字..." value="{{ keyword }}"/>
+            <input type="submit" id="search-button" />
+        </div>
+        <div class="pagination">
+        {% include 'paginate.html' %}
+        </div>
+        <div id="results">
+        {% for duanzhu in models %}
+<div class="result-item">
+                    <div class="character">
+                        {{ duanzhu.zitou }}
+                        <div class="special">{{ duanzhu.chongwen|default:"" }}</div>
+                    </div>
+                    <div class="content">
+                        {{ duanzhu.zhengwen_zhushi|safe }}
+                    </div>
+                </div>
+        {% endfor %}
+        </div>
+    </form>
+
+    <script>
+        const searchInput = document.getElementById('search-input');
+        const characterSearchBtn = document.getElementById('character-search');
+        const fulltextSearchBtn = document.getElementById('fulltext-search');
+
+        characterSearchBtn.addEventListener('click', () => {
+            $("input[name='categ']").val('zitou');
+            characterSearchBtn.classList.add('active');
+            fulltextSearchBtn.classList.remove('active');
+            searchInput.placeholder = "输入汉字...";
+        });
+
+        fulltextSearchBtn.addEventListener('click', () => {
+            $("input[name='categ']").val('quanwen');
+            fulltextSearchBtn.classList.add('active');
+            characterSearchBtn.classList.remove('active');
+            searchInput.placeholder = "输入检索关键字...";
+        });
+
+
+        function highlightMatch(text, query) {
+            const regex = new RegExp(`(${query})`, 'gi');
+            return text.replace(regex, '<span class="highlight">$1</span>');
+        }
+
+        $(document).ready(function() {
+            if($("#categ").val() == 'quanwen' && $("#search-input").val()){
+                $('div.content').each(function(){
+                    var originalHTML = $(this).html();
+                    var newHTML = highlightMatch(originalHTML, $("#search-input").val())
+                    $(this).html(newHTML)
+                });
+            }
+        });
+    </script>
+</body>
+</html>
+

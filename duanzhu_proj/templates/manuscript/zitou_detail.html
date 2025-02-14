@@ -11,17 +11,18 @@
         {% endif %}
     </div>
 </div>
-<div>{{ zitou.juan }}　|　{{ zitou.bushou }}部</div>
-<h1>{{ zitou.zitou }}</h1>
+<div>
+    <div>{{ zitou.juan }}　|　{{ zitou.bushou }}部</div>
+    <h1>{{ zitou.zitou }}</h1>
 
-<h2>段玉裁《說文解字注》</h2>
-<div class="zhengwen_zhushi">{{ zitou.zhengwen_zhushi|safe }}</div>
+    <h2>段玉裁《說文解字注》</h2>
+    <div class="zhengwen_zhushi">{{ zitou.zhengwen_zhushi|safe }}</div>
 
-{% if swdu %}
-<h2>段玉裁《說文解字读》</h2>
-<div class="zhengwen_zhushi">{{ swdu.zhushi|safe }}</div>
-{% endif %}
-
+    {% if swdu %}
+    <h2>段玉裁《說文解字读》</h2>
+    <div class="zhengwen_zhushi">{{ swdu.zhushi|safe }}</div>
+    {% endif %}
+</div>
 <script>
 function loadZitou(zitouId) {
     $('#main').load('/zitou/' + zitouId + '/', function(response, status, xhr) {

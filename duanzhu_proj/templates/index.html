@@ -1,4 +1,42 @@
 {% extends "base.html" %}
+
+{% block head %}
+<div class="head">
+    <div>
+        <div class="head_title">《说文解字注》知识库</div>
+        <div class="head_link">
+            <a href="/">首页</a>&nbsp;
+            |&nbsp;&nbsp;<a href="/admin/">后台</a>
+<!--                |&nbsp;&nbsp;<a href="/annotation/admin/login">登录</a>-->
+        </div>
+    </div>
+    <div class="search-div">
+        <form class="search-form" action="/search/" method="post" target="_blank">
+            {% csrf_token %}
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                 stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                 class="search-svg">
+                <circle cx="11" cy="11" r="8"></circle>
+                <path d="m21 21-4.3-4.3"></path>
+            </svg>
+            <input placeholder="搜索..." class="search-form-input" name="keyword"
+                   type="text"/>
+            <div class="search-form-div-div">
+                <select class="search-form-select" name="categ">
+                    <option value="quanwen">全文检索</option>
+                    <option value="zitou">字头检索</option>
+<!--                        <option value="knowledge">知识点检索</option>-->
+                </select>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block left %}
+    {% include "catalogue.html" %}
+{% endblock %}
+
 {% block main %}
     {% include "manuscript/zitou_detail.html" %}
 {% endblock %}
