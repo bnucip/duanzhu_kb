@@ -1,0 +1,41 @@
+<script>
+    $(document).ready(function(){
+        $("a.page_link").click(function () {
+            $("#pageInput").val($(this).data("page"));
+            $("#searchForm").submit();
+        });
+        $("#toPageGo").click(function () {
+            $("#pageInput").val($("#toPageInput").val());
+            $("#searchForm").submit();
+        });
+        $("#toPageInput").keypress(function(e){
+            if(e.keyCode == 13){
+                $("#pageInput").val($(this).val());
+                $("#searchForm").submit();
+                return false;
+            }
+        });
+    });
+</script>
+
+<div class="pagination">
+    <input id="pageInput" type="hidden" name="page" value="{{ models.number }}"/>
+    <span class="step-links">
+        {% if models.has_previous %}
+            <a href="#" class="page_link" data-page="1">&laquo; 首页</a>
+            <a href="#" class="page_link" data-page="{{ models.previous_page_number }}">上一页</a>
+        {% endif %}
+
+        <span class="current">
+             {{ models.number }} / {{ models.paginator.num_pages }}
+        </span>
+
+        {% if models.has_next %}
+            <a href="#" class="page_link" data-page="{{ models.next_page_number }}">下一页</a>
+            <a href="#" class="page_link" data-page="{{ models.paginator.num_pages }}">末页 &raquo;</a>
+        {% endif %}
+        总计：{{ models.paginator.count }}条　　
+        <a href="#" id="toPageGo">跳至</a>
+        第<input id="toPageInput" type="number" style="width: 60px; font-size: large;" name="page_to" value="{{ models.number }}"/>页
+    </span>
+</div>
