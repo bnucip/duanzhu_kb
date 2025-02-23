@@ -19,7 +19,11 @@ $(document).ready(function() {
             'zitou': { 'icon': false }
         },
         'plugins': ["types"]
+    }).on('loaded.jstree',function(e,data){
+        //$('#tree-container').jstree('select_node', '一', true);
+        //$('#tree-container').jstree('deselect_node', '一', true);
     });
+
 
     $('#tree-container').on("select_node.jstree", function (e, data) {
         let node = data.node;
@@ -53,15 +57,20 @@ $(document).ready(function() {
 
         // When a Zitou node is clicked, only refresh the main block
         else if (node.type === "zitou") {
+            const zstag = $("#zstag").val();
             // Load the zitou content into the main block only, prevent left block refresh
             $('#main').load("/zitou/" + node.id + "/", function(response, status, xhr) {
                 if (status === "error") {
                     console.error("Failed to load content:", xhr.statusText);
                     alert("Error loading content.");
                 }
+                $(".zstag").show();
+                if(zstag){
+                    loadZsTag(node.id,zstag);
+                    $("#zstag").val(zstag);
+                }
             });
         }
     });
 });
-
 </script>

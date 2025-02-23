@@ -1,36 +1,84 @@
 <!-- This will replace the #main block dynamically -->
-<div style="display: flex; justify-content: space-between;">
-    <div style="text-align: left; margin-bottom: 15px;">
-        {% if prev_zitou %}
-            <button class="navigate-btn" onclick="loadZitou('{{ prev_zitou.id }}')">🡨 {{ prev_zitou.zitou }}</button>
+{% if not zitou %}
+<div class="nozitou">请选择左侧目录中的字头进行查看</div>
+{% endif %}
+{% if zitou %}
+<div class="zitou_left">
+    <div style="display: flex; justify-content: space-between; align-items: center;">
+        <div style="text-align: left;">
+            {% if prev_zitou %}
+                <button class="navigate-btn" onclick="loadZitou('{{ prev_zitou.id }}')">🡨 {{ prev_zitou.zitou }}</button>
+            {% endif %}
+        </div>
+        {% if zitou %}
+        <div>{{ zitou.juan }}　|　{{ zitou.bushou }}部</div>
         {% endif %}
+        <div style="text-align: right;">
+            {% if next_zitou %}
+                <button class="navigate-btn" onclick="loadZitou('{{ next_zitou.id }}')">{{ next_zitou.zitou }} 🡪</button>
+            {% endif %}
+        </div>
     </div>
-    <div style="text-align: right; margin-bottom: 15px;">
-        {% if next_zitou %}
-            <button class="navigate-btn" onclick="loadZitou('{{ next_zitou.id }}')">{{ next_zitou.zitou }} 🡪</button>
+    <div>
+
+        {% if zitou %}
+        <h1>{{ zitou.zitou }}</h1>
+        <h2>段玉裁《說文解字注》</h2>
+        <div class="zhengwen_zhushi">{{ zitou.zhengwen_zhushi|safe }}</div>
+        {% endif %}
+
+        {% if swdu %}
+        <h2>段玉裁《說文解字读》</h2>
+        <div class="zhengwen_zhushi">{{ swdu.zhushi|safe }}</div>
         {% endif %}
     </div>
 </div>
-<div>
-    <div>{{ zitou.juan }}　|　{{ zitou.bushou }}部</div>
-    <h1>{{ zitou.zitou }}</h1>
-
-    <h2>段玉裁《說文解字注》</h2>
-    <div class="zhengwen_zhushi">{{ zitou.zhengwen_zhushi|safe }}</div>
-
-    {% if swdu %}
-    <h2>段玉裁《說文解字读》</h2>
-    <div class="zhengwen_zhushi">{{ swdu.zhushi|safe }}</div>
-    {% endif %}
+<div class="zstag">
+    <div class="zstag-buttons">
+        <!--<button id="wztag" class="zstagBtn zstagBtn-blue" onclick="loadZsTag('{{ zitou.id }}','wz')">文字</button>
+        <button id="yytag" class="zstagBtn zstagBtn-green" onclick="loadZsTag('{{ zitou.id }}','yy')">音韵</button>
+        <button id="xgtag" class="zstagBtn zstagBtn-yellow" onclick="loadZsTag('{{ zitou.id }}','xg')">训诂</button>
+        <button id="xktag" class="zstagBtn zstagBtn-red" onclick="loadZsTag('{{ zitou.id }}','xk')">校勘</button>
+        <button id="ystag" class="zstagBtn zstagBtn-purple" onclick="loadZsTag('{{ zitou.id }}','ys')">引书</button>-->
+        <button id="wztag" class="zstagBtn" onclick="loadZsTag('{{ zitou.id }}','wz')">文字</button>
+        <button id="yytag" class="zstagBtn" onclick="loadZsTag('{{ zitou.id }}','yy')">音韵</button>
+        <button id="xgtag" class="zstagBtn" onclick="loadZsTag('{{ zitou.id }}','xg')">训诂</button>
+        <button id="xktag" class="zstagBtn" onclick="loadZsTag('{{ zitou.id }}','xk')">校勘</button>
+        <button id="ystag" class="zstagBtn" onclick="loadZsTag('{{ zitou.id }}','ys')">引书</button>
+    </div>
+    <div id="zscontent" class="zscontent">
+        <p>请选择上方的知识标签查看详细内容</p>
+    </div>
+    <input type="hidden" id="zstag" value="" />
 </div>
+{% endif %}
 <script>
 function loadZitou(zitouId) {
+    const zstag = $("#zstag").val();
     $('#main').load('/zitou/' + zitouId + '/', function(response, status, xhr) {
         if (status === "error") {
             console.error("Error loading content:", xhr.statusText);
             alert("Error loading content.");
         }
+        if(zstag){
+            loadZsTag(zitouId,zstag);
+            $("#zstag").val(zstag);
+        }
     });
+}
+
+function loadZsTag(zitouId,tag) {
+    $("#zstag").val(tag);
+    if(zitouId){
+        $('#zscontent').load('/zsTag/' + zitouId + '/tag/' + tag + '/', function(response, status, xhr) {
+            if (status === "error") {
+                console.error("Error loading content:", xhr.statusText);
+                alert("Error loading content.");
+            }
+        });
+    }
+    $(".zstagBtn").removeClass("active");
+    $("#"+tag+"tag").addClass("active");
 }
 
 $(document).ready(function() {

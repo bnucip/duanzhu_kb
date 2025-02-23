@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404
 from django.http import JsonResponse
-from .models import DuanZhu, SwDu
+from .models import DuanZhu, SwDu, Gujinzi, Guyunbu, Gouyi
 from django.core.paginator import Paginator
 from django.db.models import Q
 
@@ -58,6 +58,22 @@ def zitou_detail(request, zitou_id):
         "prev_zitou": prev_zitou,
         "next_zitou": next_zitou,
     })
+
+def zstag_detail(request, zitou_id, tag):
+    context = {"tag":tag}
+    if(tag=='wz'):
+        gujinzis = list(Gujinzi.objects.filter(duanzhu=zitou_id))
+        for gujinzi in gujinzis:
+            gujinzi.miaoshu = gujinzi.miaoshu.replace("古字:","").replace("今字:","").split("；")
+        context['gujinzis'] = gujinzis
+    elif(tag=='yy'):
+        guyunbus = list(Guyunbu.objects.filter(duanzhu=zitou_id))
+        context['guyunbus'] = guyunbus
+    elif(tag == 'xg'):
+        gouyis = list(Gouyi.objects.filter(duanzhu=zitou_id))
+        context['gouyis'] = gouyis
+    return render(request, "manuscript/zstag_detail.html", context)
+
 
 def search(request):
     keyword = request.POST.get('keyword', '').strip()
