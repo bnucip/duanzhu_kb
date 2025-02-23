@@ -60,6 +60,7 @@ function loadZitou(zitouId) {
             console.error("Error loading content:", xhr.statusText);
             alert("Error loading content.");
         }
+        $(".zstag").show();
         if(zstag){
             loadZsTag(zitouId,zstag);
             $("#zstag").val(zstag);
