@@ -59,7 +59,7 @@ class Gujinzi(models.Model):
     guzi_id = models.CharField('古字ID',max_length=20,null=True,blank=True)
     jinzi_id = models.CharField('今字ID',max_length=20,null=True,blank=True)
     class Meta:
-        verbose_name = '谐声声符'
+        verbose_name = '古今字'
         verbose_name_plural = verbose_name
 
 class Gouyi(models.Model):
