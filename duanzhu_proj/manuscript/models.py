@@ -10,6 +10,7 @@ class DuanZhu(models.Model):
     zhengwen_zhushi = models.TextField('正文注释',null=True,blank=True)
     bushou = models.CharField('部首',max_length=20,null=True,blank=True)
     juan = models.CharField('卷',max_length=20,null=True,blank=True)
+    swxz = models.CharField('说文小篆',max_length=20,null=True,blank=True)
     class Meta:
         verbose_name = '段注'
         verbose_name_plural = verbose_name

@@ -22,7 +22,12 @@
     <div>
 
         {% if zitou %}
-        <h1>{{ zitou.zitou }}</h1>
+        <div class="zitou_hz"style="display:flex">
+            <h1>{{ zitou.zitou }}</h1>
+            {% if zitou.swxz %}
+            <div class="zt_swxz">{{zitou.swxz}}</div>
+            {% endif %}
+        </div>
         <h2>段玉裁《說文解字注》</h2>
         <div class="zhengwen_zhushi">{{ zitou.zhengwen_zhushi|safe }}</div>
         {% endif %}
