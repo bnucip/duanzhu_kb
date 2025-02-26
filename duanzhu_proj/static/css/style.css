@@ -3,9 +3,10 @@
     font-family: '中推會説文小篆';
     src: url('../fonts/中推會説文小篆.eot');/* IE9 Compat Modes */
     src: url('../fonts/中推會説文小篆.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
-     /*url('../fonts/中推會説文小篆.woff2') format('woff2'), /* Modern Browsers */
+    url('../fonts/中推會説文小篆.woff2') format('woff2'), /* Modern Browsers */
     url('../fonts/fontzipMin.ttf') format('truetype'),/* Safari, Android, iOS */
     url('../fonts/中推會説文小篆.svg#中推會説文小篆') format('svg');/* Legacy iOS */
+    font-display: block
 }
 body {
     font-family: Arial, sans-serif;
