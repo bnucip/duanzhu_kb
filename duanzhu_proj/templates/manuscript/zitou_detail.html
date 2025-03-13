@@ -23,7 +23,7 @@
 
         {% if zitou %}
         <div class="zitou_hz"style="display:flex">
-            <h1>{{ zitou.zitou }}</h1>
+            <h1>{{ zitou.zitou }} {% if zitou.chongwen %}<span>[{{zitou.chongwen}}]{% endif %}</span></h1>
             {% if zitou.swxz %}
             <div class="zt_swxz">{{zitou.swxz}}</div>
             {% endif %}

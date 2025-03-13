@@ -1,6 +1,9 @@
 <div id="tree-container"></div>
 <script>
 $(document).ready(function() {
+    var bushou = "{{zitou.bushou}}";
+    var zitouid = "{{zitou.id}}"
+    console.log(zitouid);
     $('#tree-container').jstree({
         'core': {
             'data': {
@@ -20,7 +23,7 @@ $(document).ready(function() {
         },
         'plugins': ["types"]
     }).on('loaded.jstree',function(e,data){
-        //$('#tree-container').jstree('select_node', '一', true);
+        $('#tree-container').jstree('select_node', bushou, true);
         //$('#tree-container').jstree('deselect_node', '一', true);
     });
 
@@ -44,6 +47,11 @@ $(document).ready(function() {
                 success: function(zitous) {
                     zitous.forEach(z => {
                         $('#tree-container').jstree().create_node(node, z);
+                        //console.log(z);
+                        if(z.id==zitouid){
+                            $('#tree-container').jstree('select_node', z.id, true);
+                            $('#tree-container').jstree('deselect_node', bushou, true);
+                        }
                     });
                     $('#tree-container').jstree().open_node(node);
                 },

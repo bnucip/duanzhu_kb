@@ -389,6 +389,9 @@ body {
     justify-content: space-between;
     align-items: center;
 }
+.zitou_hz h1 span{
+    font-size:20px;
+}
 .zt_swxz{
     font-family:'中推會説文小篆';
     font-size:66px;

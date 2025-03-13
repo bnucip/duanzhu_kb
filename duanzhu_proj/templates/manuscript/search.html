@@ -80,6 +80,10 @@
             min-width: 60px;
             text-align: center;
         }
+        .character a{
+            color:#0066cc;
+            text-decoration:none;
+        }
         .content {
             flex-grow: 1;
         }
@@ -162,7 +166,7 @@
         {% for duanzhu in models %}
 <div class="result-item">
                     <div class="character">
-                        {{ duanzhu.zitou }}
+                        <a href="/?id={{duanzhu.id}}">{{ duanzhu.zitou }}</a>
                         <div class="special">{{ duanzhu.chongwen|default:"" }}</div>
                     </div>
                     <div class="content">

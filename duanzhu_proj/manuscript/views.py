@@ -1,11 +1,20 @@
+from django.core.exceptions import ValidationError
 from django.shortcuts import render, get_object_or_404
-from django.http import JsonResponse
+from django.http import JsonResponse, Http404
 from .models import DuanZhu, SwDu, Gujinzi, Guyunbu, Gouyi
 from django.core.paginator import Paginator
-from django.db.models import Q
 
 def index(request):
-    return render(request, 'index.html')
+    context = {}
+    if 'id' in request.GET:  # 先检查参数是否存在
+        zitou_id = request.GET['id']
+        try:
+            zitou = get_object_or_404(DuanZhu, id=zitou_id)
+            context['zitou'] = zitou
+        except ValidationError:
+            raise Http404
+
+    return render(request, 'index.html',context)
 
 
 def catalogue_data(request):
