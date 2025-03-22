@@ -10,6 +10,7 @@ class DuanZhu(models.Model):
     zhengwen_zhushi = models.TextField('正文注释',null=True,blank=True)
     bushou = models.CharField('部首',max_length=20,null=True,blank=True)
     juan = models.CharField('卷',max_length=20,null=True,blank=True)
+    img_path = models.CharField('图片路径',max_length=200,null=True,blank=True)
     swxz = models.CharField('说文小篆',max_length=20,null=True,blank=True)
     class Meta:
         verbose_name = '段注'
@@ -73,4 +74,39 @@ class Gouyi(models.Model):
     shengfugouyi = models.TextField('声符构意', null=True, blank=True)
     class Meta:
         verbose_name = '构意阐释'
+        verbose_name_plural = verbose_name
+
+class Yinyitong(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    duanzhu_bianhao = models.CharField('段注编号', max_length=20, null=True, blank=True)
+    duanzhu = models.ForeignKey(DuanZhu, on_delete=models.CASCADE, db_constraint=True, verbose_name='段注ID', null=True)
+    object1 = models.TextField('对象1', null=True, blank=True)
+    object1_duanzhu_bianhao = models.TextField('对象1段注编号', null=True, blank=True)
+    object2 = models.TextField('对象2', null=True, blank=True)
+    object2_duanzhu_bianhao = models.TextField('对象2段注编号', null=True, blank=True)
+    duanshianyu = models.TextField('段氏按语', null=True, blank=True)
+    class Meta:
+        verbose_name = '音义同'
+        verbose_name_plural = verbose_name
+
+class Zhishimulu(models.Model):
+    id = models.IntegerField(primary_key=True)
+    tag_name = models.TextField('目录名', null=True, blank=True)
+    parent_id = models.IntegerField('父级id', null=True, blank=True)
+    level = models.IntegerField('目录层级', null=True, blank=True)
+    url = models.TextField('请求url', null=True, blank=True)
+    class Meta:
+        verbose_name = '知识目录'
+        verbose_name_plural = verbose_name
+
+class Yinshu(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    idx = models.CharField('idx', max_length=20, null=True, blank=True)
+    book = models.TextField('书名', null=True, blank=True)
+    chapter = models.TextField('章节', null=True, blank=True)
+    content = models.TextField('原文', null=True, blank=True)
+    yiwen = models.TextField('yiwen', null=True, blank=True)
+    duanzhu_bianhaos = models.TextField('段注编号', null=True, blank=True)
+    class Meta:
+        verbose_name = '引书'
         verbose_name_plural = verbose_name

@@ -25,6 +25,11 @@ $(document).ready(function() {
     }).on('loaded.jstree',function(e,data){
         $('#tree-container').jstree('select_node', bushou, true);
         //$('#tree-container').jstree('deselect_node', '一', true);
+    }).on('activate_node.jstree', function (e, data) {
+        var node = data.node; // 获取被激活的节点数据
+        if (node) { // 确保节点存在
+            $('#tree-container').jstree(true).toggle_node(node); // 切换节点的展开状态
+        }
     });
 
 

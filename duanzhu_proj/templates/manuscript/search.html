@@ -164,15 +164,15 @@
         </div>
         <div id="results">
         {% for duanzhu in models %}
-<div class="result-item">
-                    <div class="character">
-                        <a href="/?id={{duanzhu.id}}">{{ duanzhu.zitou }}</a>
-                        <div class="special">{{ duanzhu.chongwen|default:"" }}</div>
-                    </div>
-                    <div class="content">
-                        {{ duanzhu.zhengwen_zhushi|safe }}
-                    </div>
+            <div class="result-item">
+                <div class="character">
+                    <a href="/?id={{duanzhu.id}}">{{ duanzhu.zitou }}</a>
+                    <div class="special">{{ duanzhu.chongwen|default:"" }}</div>
                 </div>
+                <div class="content">
+                    {{ duanzhu.zhengwen_zhushi|safe }}
+                </div>
+            </div>
         {% endfor %}
         </div>
     </form>

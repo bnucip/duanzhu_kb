@@ -1,0 +1,42 @@
+<div id="tree-container"></div>
+<script>
+$(document).ready(function() {
+    $('#tree-container').jstree({
+        'core': {
+            'data': {
+                "url": "/zhishimulu/",
+                "dataType": "json",
+                "error": function(jqXHR, textStatus, errorThrown) {
+                    console.error("AJAX Error:", textStatus, errorThrown);
+                    alert("Error loading data. Please try again.");
+                }
+            },
+            'check_callback': true
+        },
+        'types': {
+            'level1': { 'icon': false },
+            'level2': { 'icon': false },
+            'level3': { 'icon': false }
+        },
+        'plugins': ["types"]
+    }).on('loaded.jstree',function(e,data){
+        //$('#tree-container').jstree('select_node', '1', true);
+        //$('#tree-container').jstree('deselect_node', '一', true);
+    }).on('activate_node.jstree', function (e, data) {
+        var node = data.node; // 获取被激活的节点数据
+        if (node) { // 确保节点存在
+            $('#tree-container').jstree(true).toggle_node(node); // 切换节点的展开状态
+        }
+    });
+
+    $('#tree-container').on("select_node.jstree", function (e, data) {
+        let node = data.node;
+        if  (node.type === "level3") {
+            console.log(location.href);
+            if(node.original.url && location.href.indexOf(node.original.url)<0){
+                location.href = node.original.url
+            }
+        }
+    });
+});
+</script>

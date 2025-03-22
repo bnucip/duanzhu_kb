@@ -14,6 +14,9 @@ body {
     padding: 0;
     background-color: #f4f4f9;
 }
+a{
+    text-decoration:none;
+}
 .flex{
     display:flex;
 }
@@ -23,14 +26,17 @@ body {
 .gap1{
     gap:10px;
 }
+.btn{
+    display:inline-block;
+    cursor:pointer;
+}
 
 
 /* Container styles - using flex to lay out the left and main blocks side by side */
 .container {
     display: flex;
     justify-content: center;
-    margin: 20px;
-    padding: 20px;
+    padding: 20px 20px 60px 20px;
     min-height: 80vh;
     box-sizing: border-box;
     flex-wrap: wrap;  /* Allow wrapping on small screens */
@@ -40,7 +46,7 @@ body {
 .left {
     width: 180px;
     background-color: #ffffff;
-    padding: 15px;
+    padding: 0 15px;
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     margin-right: 20px;
@@ -293,8 +299,25 @@ body {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     display:none;
 }
+.zstag_title{
+    display:flex;
+    justify-content: space-between;
+    align-items: center;
+    padding:0 15px;
+}
+.zstag_title a{
+    font-size:13px;
+    border: solid 1px #ddd;
+    padding: 3px 5px;
+    border-radius: 3px;
+    color: #666;
+    text-decoration: none;
+}
+.zstag_title a:hover{
+    color:#000;
+}
 .zstag-buttons{
-    padding:15px 15px 0 15px;
+    padding:0 15px 0 15px;
     border-bottom: solid 1px #e5e7eb;
     display:flex;
     justify-content: center;
@@ -372,7 +395,7 @@ body {
 .zstag_p{
     padding-left:16px;
     line-height:25px;
-    margin-top:15px;
+    margin:15px 0;
 }
 .nozitou{
     flex:1;
@@ -393,8 +416,199 @@ body {
     font-size:20px;
 }
 .zt_swxz{
-    font-family:'中推會説文小篆';
-    font-size:66px;
+    /*font-family:'中推會説文小篆';
+    font-size:66px;*/
     border:solid 1px #ddd;
     border-radius:5px;
+}
+.swbt{
+    justify-content:space-between;
+    align-items:center;
+}
+.swbt a{
+    border: solid 1px #ddd;
+    padding: 8px 10px;
+    border-radius: 3px;
+    color: #666;
+    font-size:13px;
+}
+.swbt a:hover{
+    color:#000;
+}
+.zsd_left{
+    width:200px;
+    background-color: #ffffff;
+    padding: 0 15px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin-right: 20px;
+    box-sizing: border-box;
+    height: 75vh;
+    overflow-y: auto;
+    border-right: 1px solid #ddd;
+}
+.zsd_middle{
+    flex:1
+}
+.zsd_right{
+    width:335px;
+    background:#fff;
+    border: solid 1px #e5e7eb;
+    margin-left: 20px;
+    padding:0 15px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+.zsd_right p{
+    line-height:1.6;
+}
+.research-list{
+    list-style:none;
+    padding:0;
+}
+.research-item{
+    padding: 10px;
+    border-left: 2px solid #f6c23e;
+    margin-bottom: 15px;
+    background-color: #f8f9fc;
+    border-radius: 0 4px 4px 0;
+    color:#333;
+    line-height:1.6;
+}
+
+.yyt-item{
+    display: flex;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    margin-bottom: 20px;
+    border-left: 4px solid #f6c23e;
+    position: relative;
+}
+.character-section{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-right: 20px;
+}
+.character-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-right: 20px;
+}
+
+.character-info {
+    font-size: 0.8rem;
+    color: #666;
+    margin-bottom: 5px;
+    font-weight: normal;
+}
+.character {
+    font-size: 3rem;
+    font-weight: bold;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 80px;
+    height: 80px;
+    flex-shrink: 0;
+}
+
+.special {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 10px;
+    height: 10px;
+    background-color: #ff4d4f;
+    border-radius: 50%;
+}
+
+.yyt-content {
+    flex: 1;
+    line-height: 1.8;
+}
+
+.yyt-content p1, .content p2, .content p3, .content p4, .content p5, .content p6 {
+    font-size: 1.2rem;
+    color: #000;
+    font-weight: 600;
+    display: inline;
+}
+
+.yyt-content z1, .content z2, .content z3, .content z4, .content z5, .content z6 {
+    font-size: 0.95rem;
+    color: #666;
+    font-weight: normal;
+    display: inline;
+    font-style: normal;
+    line-height: 1.6;
+}
+.yyt-content span{
+    color:#e53935;
+    font-weight:bold;
+}
+.example-meta {
+    background-color: #f8f9fc;
+    padding: 12px;
+    border-radius: 6px;
+    border: 1px solid #e3e6f0;
+    margin-top: 15px;
+    width: 100%;
+    margin-left: 0;
+}
+
+.meta-item {
+    margin-bottom: 8px;
+    color: #c39820; /* Blue color for 对象 section */
+}
+
+.meta-item span {
+    font-weight: bold;
+    background-color: #e3f2fd; /* Light blue background */
+    padding: 2px 6px;
+    border-radius: 4px;
+    color: #1e88e5;
+}
+
+.meta-content {
+    margin-top: 10px;
+    display: flex;
+}
+
+.meta-character {
+    font-size: 3rem;
+    font-weight: bold;
+    margin-right: 20px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 80px;
+    height: 80px;
+    flex-shrink: 0;
+}
+
+.meta-text {
+    flex: 1;
+    line-height: 1.8;
+}
+
+.yyt_page {
+    text-align:center;
+}
+.yyt_page a{
+    margin:0 5px;
+    color:#06c;
+}
+.yyt_page a:hover{
+    color:#f90;
+}
+.yyt_page input{
+    width:30px;
+    margin:0 5px;
+    text-align:center;
 }

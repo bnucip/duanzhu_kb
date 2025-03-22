@@ -1,7 +1,7 @@
 from django.core.exceptions import ValidationError
 from django.shortcuts import render, get_object_or_404
 from django.http import JsonResponse, Http404
-from .models import DuanZhu, SwDu, Gujinzi, Guyunbu, Gouyi
+from .models import DuanZhu, SwDu, Gujinzi, Guyunbu, Gouyi, Yinyitong, Yinshu, Zhishimulu
 from django.core.paginator import Paginator
 
 def index(request):
@@ -81,6 +81,13 @@ def zstag_detail(request, zitou_id, tag):
     elif(tag == 'xg'):
         gouyis = list(Gouyi.objects.filter(duanzhu=zitou_id))
         context['gouyis'] = gouyis
+        zitou = get_object_or_404(DuanZhu, id=zitou_id)
+        yinyitongs = list(Yinyitong.objects.filter(object1_duanzhu_bianhao=zitou.duanzhu_bianhao))
+        context['yinyitongs'] = yinyitongs
+    elif (tag == 'ys'):
+        zitou = get_object_or_404(DuanZhu, id=zitou_id)
+        yinshus = list(Yinshu.objects.filter(duanzhu_bianhaos__contains=zitou.duanzhu_bianhao))
+        context['yinshus'] = yinshus
     return render(request, "manuscript/zstag_detail.html", context)
 
 
@@ -101,3 +108,40 @@ def search(request):
         context['models'] = []
 
     return render(request, "manuscript/search.html", context)
+
+def yinyitong(request):
+    context = {}
+    data = Yinyitong.objects.all()
+    paginator = Paginator(data, 10)
+    page = request.GET.get('page')
+    page_obj = paginator.get_page(page)
+    for p in page_obj:
+        duanzhu1 = DuanZhu.objects.filter(duanzhu_bianhao=p.object1_duanzhu_bianhao).first()
+        if duanzhu1:
+            duanzhu1.zhengwen_zhushi = duanzhu1.zhengwen_zhushi.replace(p.duanshianyu,'<span>' + p.duanshianyu + '</span>')
+            p.duanzhu1 = duanzhu1
+        duanzhu2 = DuanZhu.objects.filter(duanzhu_bianhao=p.object2_duanzhu_bianhao).first()
+        if duanzhu2:
+            duanzhu2.zhengwen_zhushi = duanzhu2.zhengwen_zhushi.replace(p.duanshianyu, '<span>' + p.duanshianyu + '</span>')
+            p.duanzhu2 = duanzhu2
+    context['models'] = page_obj
+
+    return render(request, "manuscript/yinyitong.html", context)
+
+def zhishimulu_data(request):
+    level1s = list(Zhishimulu.objects.filter(level=1))
+    tree_data = []
+    for level1 in level1s:
+        level2s = Zhishimulu.objects.filter(parent_id=level1.id).values_list('id','tag_name')
+        level2_nades = []
+        print(level2s)
+        for level2 in level2s:
+            level3s = Zhishimulu.objects.filter(parent_id=level2[0]).values_list('id','tag_name','url')
+            level3_nodes = [{"id": id, "text": tag_name, "url":url, "type": "level3", "children": False} for id,tag_name,url in level3s]
+            level2_node = {"id": level2[0], "text": level2[1], "type": "level2", "children": level3_nodes}
+            level2_nades.append(level2_node)
+        tree_data.append({
+            "id": level1.id, "text": level1.tag_name, "type": "level1", "children": level2_nades
+        })
+
+    return JsonResponse(tree_data, safe=False)

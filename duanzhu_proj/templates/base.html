@@ -6,32 +6,50 @@
     <title>DuanZhu</title>
     <link rel="preload" href="{% static 'fonts/中推會説文小篆.woff2' %}" as="font" type="font/woff2" crossorigin>
     <!-- Load CSS files -->
+    <link rel="stylesheet" type="text/css" href="{% static 'font-awesome-4.7.0/css/font-awesome.min.css' %}">
     <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
     <link rel="stylesheet" type="text/css" href="{% static 'css/vendor/jstree/themes/default/style.min.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'js/vendor/viewer/viewer.min.css' %}">
 
     <!-- Load JavaScript files -->
     <script src="{% static 'js/vendor/jquery/jquery.min.js' %}"></script>
     <script src="{% static 'js/vendor/jstree/jstree.min.js' %}"></script>
+    <script src="{% static 'js/vendor/viewer/viewer.min.js' %}"></script>
 </head>
 <body>
-    {% block head %}
-    {% endblock %}
-    <div id="wrapper" class="container">
-        <div id="left" class="left">
-            <h3>目录</h3>
-            {% block left %}
-            {% endblock %}
+    <div class="head">
+        <div class="head_title">《说文解字注》知识库</div>
+        <div class="search-div">
+            <form class="search-form" action="/search/" method="post" target="_blank">
+                {% csrf_token %}
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                     class="search-svg">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <path d="m21 21-4.3-4.3"></path>
+                </svg>
+                <input placeholder="搜索..." class="search-form-input" name="keyword"
+                       type="text"/>
+                <div class="search-form-div-div">
+                    <select class="search-form-select" name="categ">
+                        <option value="quanwen">全文检索</option>
+                        <option value="zitou">字头检索</option>
+    <!--                        <option value="knowledge">知识点检索</option>-->
+                    </select>
+                </div>
+            </form>
         </div>
-
-        <div id="main" class="main">
-            {% block main %}
-            {% endblock %}
+        <div class="head_link">
+            <a href="/">首页</a> | <a href="/admin/">后台</a>
+    <!--                |&nbsp;&nbsp;<a href="/annotation/admin/login">登录</a>-->
         </div>
     </div>
-    {% block footer %}
+    <div id="wrapper" class="container">
+        {% block container %}
+        {% endblock %}
+    </div>
     <div class="footer">
          © 2025 北京师范大学 中国文字整理与规范研究中心
     </div>
-    {% endblock %}
 </body>
 </html>

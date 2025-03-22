@@ -24,21 +24,37 @@
         {% if zitou %}
         <div class="zitou_hz"style="display:flex">
             <h1>{{ zitou.zitou }} {% if zitou.chongwen %}<span>[{{zitou.chongwen}}]{% endif %}</span></h1>
-            {% if zitou.swxz %}
-            <div class="zt_swxz">{{zitou.swxz}}</div>
+            {% if zitou.img_path %}
+            <div class="zt_swxz"><img src="static/字头/{{zitou.img_path}}" /></div>
             {% endif %}
         </div>
-        <h2>段玉裁《說文解字注》</h2>
+        <div class="flex swbt">
+            <h2>段玉裁《說文解字注》</h2>
+            <a id="btn1" class="btn"><i class="fa fa-image">&nbsp;查看图片</i></a>
+            <div id="dzimg" style="display:none">
+                <img data-original="static/段注/-李添富段注-_{{zitou.duanzhu_bianhao|slice:3}}.jpg" src="" />
+            </div>
+        </div>
         <div class="zhengwen_zhushi">{{ zitou.zhengwen_zhushi|safe }}</div>
         {% endif %}
 
         {% if swdu %}
-        <h2>段玉裁《說文解字读》</h2>
+        <div class="flex swbt">
+            <h2>段玉裁《說文解字读》</h2>
+            <a id="btn2" class="btn"><i class="fa fa-image">&nbsp;查看图片</i></a>
+            <div id="ddimg" style="display:none">
+                <img data-original="static/说文读/SWJZD-0{{swdu.du_bianhao|slice:3}}.jpg" src="" />
+            </div>
+        </div>
         <div class="zhengwen_zhushi">{{ swdu.zhushi|safe }}</div>
         {% endif %}
     </div>
 </div>
 <div class="zstag">
+    <div class="zstag_title">
+        <h3>知识标签</h3>
+        <a class="btn" href="/yinyitong">了解更多&nbsp;<i class="fa fa-external-link"></i></a>
+    </div>
     <div class="zstag-buttons">
         <!--<button id="wztag" class="zstagBtn zstagBtn-blue" onclick="loadZsTag('{{ zitou.id }}','wz')">文字</button>
         <button id="yytag" class="zstagBtn zstagBtn-green" onclick="loadZsTag('{{ zitou.id }}','yy')">音韵</button>
@@ -56,6 +72,29 @@
     </div>
     <input type="hidden" id="zstag" value="" />
 </div>
+<script>
+    var viewer = new Viewer(document.getElementById('dzimg'), {
+        url: 'data-original',
+        toolbar:true,
+        navbar:false,
+        fullscreen:true,
+        transition:false
+    });
+    document.getElementById('btn1').onclick = function() {
+        viewer.show();
+    }
+    {% if swdu %}
+    var viewer2 = new Viewer(document.getElementById('ddimg'), {
+        url: 'data-original',
+        toolbar:true,
+        navbar:false,
+        fullscreen:true
+    });
+    document.getElementById('btn2').onclick = function() {
+        viewer2.show();
+    }
+    {% endif %}
+</script>
 {% endif %}
 <script>
 function loadZitou(zitouId) {
@@ -96,5 +135,7 @@ $(document).ready(function() {
         newHTML = newHTML.replace(/<\/z(\d+)>/g, '</div>');
         $(this).html(newHTML);
     });
+
 });
+
 </script>
