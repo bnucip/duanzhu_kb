@@ -45,6 +45,8 @@
     {% endif%}
 {% elif tag == "ys" %}
     {% for yinshu in yinshus%}
+        {% if yinshu.content|length > 1 %}
         <div style="margin:15px 0; line-height:25px">书名：{{yinshu.book}}，章节名：{{yinshu.chapter}}<br/>原文：{{yinshu.content}}</div>
+        {% endif %}
     {% endfor%}
 {% endif %}
