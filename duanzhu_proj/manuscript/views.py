@@ -1,7 +1,8 @@
 from django.core.exceptions import ValidationError
 from django.shortcuts import render, get_object_or_404
 from django.http import JsonResponse, Http404
-from .models import DuanZhu, SwDu, Gujinzi, Guyunbu, Gouyi, Yinyitong, Yinshu, Zhishimulu
+from .models import DuanZhu, SwDu, Gujinzi, Guyunbu, Gouyi, Yinyitong, Yinshu, Zhishimulu, Liushu, Zhuanzhu, Jiajie, \
+    Tongzi, Xingfeizi
 from django.core.paginator import Paginator
 
 def index(request):
@@ -145,3 +146,111 @@ def zhishimulu_data(request):
         })
 
     return JsonResponse(tree_data, safe=False)
+
+def xiangxing(request):
+    context = {}
+    data = Liushu.objects.filter(liushu='象形')
+    paginator = Paginator(data, 10)
+    page = request.GET.get('page')
+    page_obj = paginator.get_page(page)
+    for p in page_obj:
+        duanzhu = DuanZhu.objects.filter(duanzhu_bianhao=p.duanzhu_bianhao).first()
+        p.duanzhu = duanzhu
+    context['models'] = page_obj
+
+    return render(request, "manuscript/xiangxing.html", context)
+
+def zhishi(request):
+    context = {}
+    data = Liushu.objects.filter(liushu='指事')
+    paginator = Paginator(data, 10)
+    page = request.GET.get('page')
+    page_obj = paginator.get_page(page)
+    for p in page_obj:
+        duanzhu = DuanZhu.objects.filter(duanzhu_bianhao=p.duanzhu_bianhao).first()
+        p.duanzhu = duanzhu
+    context['models'] = page_obj
+
+    return render(request, "manuscript/zhishi.html", context)
+
+def huiyi(request):
+    context = {}
+    data = Liushu.objects.filter(liushu='会意')
+    paginator = Paginator(data, 10)
+    page = request.GET.get('page')
+    page_obj = paginator.get_page(page)
+    for p in page_obj:
+        duanzhu = DuanZhu.objects.filter(duanzhu_bianhao=p.duanzhu_bianhao).first()
+        p.duanzhu = duanzhu
+    context['models'] = page_obj
+
+    return render(request, "manuscript/huiyi.html", context)
+
+def xingsheng(request):
+    context = {}
+    data = Liushu.objects.filter(liushu='形声')
+    paginator = Paginator(data, 10)
+    page = request.GET.get('page')
+    page_obj = paginator.get_page(page)
+    for p in page_obj:
+        duanzhu = DuanZhu.objects.filter(duanzhu_bianhao=p.duanzhu_bianhao).first()
+        p.duanzhu = duanzhu
+    context['models'] = page_obj
+
+    return render(request, "manuscript/xingsheng.html", context)
+
+def zhuanzhu(request):
+    context = {}
+    data = Zhuanzhu.objects.all()
+    paginator = Paginator(data, 10)
+    page = request.GET.get('page')
+    page_obj = paginator.get_page(page)
+    for p in page_obj:
+        duanzhu = DuanZhu.objects.filter(duanzhu_bianhao=p.duanzhu_bianhao).first()
+        duanzhu.zhengwen_zhushi = duanzhu.zhengwen_zhushi.replace(p.zhuanzhu, '<span>' + p.zhuanzhu + '</span>')
+        p.duanzhu = duanzhu
+    context['models'] = page_obj
+
+    return render(request, "manuscript/zhuanzhu.html", context)
+
+def jiajie(request):
+    context = {}
+    data = Jiajie.objects.all()
+    paginator = Paginator(data, 10)
+    page = request.GET.get('page')
+    page_obj = paginator.get_page(page)
+    for p in page_obj:
+        duanzhu = DuanZhu.objects.filter(duanzhu_bianhao=p.duanzhu_bianhao).first()
+        duanzhu.zhengwen_zhushi = duanzhu.zhengwen_zhushi.replace(p.jiajiezhuwen, '<span>' + p.jiajiezhuwen + '</span>')
+        p.duanzhu = duanzhu
+    context['models'] = page_obj
+
+    return render(request, "manuscript/jiajie.html", context)
+
+def tongzi(request):
+    context = {}
+    data = Tongzi.objects.all()
+    paginator = Paginator(data, 10)
+    page = request.GET.get('page')
+    page_obj = paginator.get_page(page)
+    for p in page_obj:
+        duanzhu = DuanZhu.objects.filter(duanzhu_bianhao=p.duanzhu_bianhao).first()
+        duanzhu.zhengwen_zhushi = duanzhu.zhengwen_zhushi.replace(p.tongzizhuwen, '<span>' + p.tongzizhuwen + '</span>')
+        p.duanzhu = duanzhu
+    context['models'] = page_obj
+
+    return render(request, "manuscript/tongzi.html", context)
+
+def xingfeizi(request):
+    context = {}
+    data = Xingfeizi.objects.all()
+    paginator = Paginator(data, 10)
+    page = request.GET.get('page')
+    page_obj = paginator.get_page(page)
+    for p in page_obj:
+        duanzhu = DuanZhu.objects.filter(duanzhu_bianhao=p.duanzhu_bianhao).first()
+        duanzhu.zhengwen_zhushi = duanzhu.zhengwen_zhushi.replace(p.pipeizifuchuan, '<span>' + p.pipeizifuchuan + '</span>')
+        p.duanzhu = duanzhu
+    context['models'] = page_obj
+
+    return render(request, "manuscript/xingfeizi.html", context)

@@ -5,24 +5,17 @@
           {% include "manuscript/zsd_catalogue.html" %}
      </div>
      <div class="zsd_middle">
-          <h3>知识点实例：音义同的实例</h3>
-          {% for yyt in models %}
+          <h3>知识点实例：转注的实例</h3>
+          {% for zhuanzhu in models %}
           <div class="yyt-item">
               <div class="character-section">
-                  <div class="character-info">{{yyt.duanzhu1.juan}}-{{yyt.duanzhu1.bushou}}</div>
-                  <div class="character">{{yyt.object1}}</div>
+                  <div class="character-info">{{zhuanzhu.duanzhu.juan}}-{{zhuanzhu.duanzhu.bushou}}</div>
+                  <div class="character">{{zhuanzhu.duanzhu.zitou}}</div>
               </div>
               <div class="yyt-content">
-                  {{yyt.duanzhu1.zhengwen_zhushi | safe}}
-                  <div class="example-meta">
-                      <div class="meta-item">对象：{{yyt.object1}}-{{yyt.object2}}</div>
-                      <div class="meta-content">
-                          <div class="meta-character">{{yyt.object2}}</div>
-                          <div class="meta-text">{{yyt.duanzhu2.zhengwen_zhushi | safe}}</div>
-                      </div>
-                  </div>
+                  {{zhuanzhu.duanzhu.zhengwen_zhushi | safe}}
               </div>
-              <input type="hidden" name="dsay" value="{{yyt.duanshianyu}}" />
+
           </div>
           {% endfor %}
 
@@ -52,30 +45,30 @@
      </div>
      <div class="zsd_right">
           <h3>知识点说明</h3>
-          <p>"音义同"、"音义近"是《段注》中出现频率很高的一类术语，探索了字词之间音、义相同或相近的关系。对象之间存在同源关系、同义、异体等词际和字际关系。</p>
+          <!--<p>"音义同"、"音义近"是《段注》中出现频率很高的一类术语，探索了字词之间音、义相同或相近的关系。对象之间存在同源关系、同义、异体等词际和字际关系。</p>-->
           <h4>相关研究：</h4>
           <ul class="research-list">
-               <li class="research-item">刘丽群. 《说文解字注》"音义同"、"音义近"考察[D]. 北京:北京师范大学,2006.</li>
+               <!--<li class="research-item">刘丽群. 《说文解字注》"音义同"、"音义近"考察[D]. 北京:北京师范大学,2006.</li>
                <li class="research-item">李涛. 论段玉裁《说文解字注》中的同义词[D]. 重庆:西南大学,2009.</li>
-               <li class="research-item">毛毓松. 《段注》"音义皆同"的同源字与"音义皆同"的异体字[J]. 广西师范学院学报（哲学社会科学版）,2008,29(4):104-107.</li>
+               <li class="research-item">毛毓松. 《段注》"音义皆同"的同源字与"音义皆同"的异体字[J]. 广西师范学院学报（哲学社会科学版）,2008,29(4):104-107.</li>-->
           </ul>
      </div>
     <script>
     $(document).ready(function(){
         $('#tree-container').on('loaded.jstree',function(e,data){
-            $('#tree-container').jstree(false).select_node('51');
-            //$('#tree-container').jstree(true).select_node('51', false);
+            $('#tree-container').jstree(false).select_node('19');
+            //$('#tree-container').jstree(true).select_node('19', false);
         });
 
         $("a.page_link").click(function () {
-            location.href = '/yinyitong/?page='+$(this).data("page")
+            location.href = '/zhuanzhu/?page='+$(this).data("page")
         });
         $("#toPageGo").click(function () {
-            location.href = '/yinyitong/?page='+$("#toPageInput").val()
+            location.href = '/zhuanzhu/?page='+$("#toPageInput").val()
         });
         $("#toPageInput").keypress(function(e){
             if(e.keyCode == 13){
-                location.href = '/yinyitong/?page='+$(this).val()
+                location.href = '/zhuanzhu/?page='+$(this).val()
                 return false;
             }
         });
