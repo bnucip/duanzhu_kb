@@ -1,0 +1,77 @@
+{% extends "../base.html" %}
+{% block container %}
+     <div class="zsd_left">
+          <h3>知识点目录</h3>
+          {% include "manuscript/zsd_catalogue.html" %}
+     </div>
+     <div class="zsd_middle">
+          <h3>知识点实例：构意的实例</h3>
+          {% for gouyi in models %}
+          <div class="yyt-item">
+              <div class="character-section">
+                  <div class="character-info">{{gouyi.duanzhu.juan}}-{{gouyi.duanzhu.bushou}}</div>
+                  <div class="character">{{gouyi.duanzhu.zitou}}</div>
+              </div>
+              <div class="yyt-content">
+                  {{gouyi.duanzhu.zhengwen_zhushi | safe}}
+              </div>
+
+          </div>
+          {% endfor %}
+
+          <div class="yyt_page">
+              <div class="pagination">
+                  <input id="pageInput" type="hidden" name="page" value="{{ models.number }}"/>
+                  <span class="step-links">
+                      {% if models.has_previous %}
+                          <a href="#" class="page_link" data-page="1">&laquo; 首页</a>
+                          <a href="#" class="page_link" data-page="{{ models.previous_page_number }}">上一页</a>
+                      {% endif %}
+
+                      <span class="current">
+                           {{ models.number }} / {{ models.paginator.num_pages }}
+                      </span>
+
+                      {% if models.has_next %}
+                          <a href="#" class="page_link" data-page="{{ models.next_page_number }}">下一页</a>
+                          <a href="#" class="page_link" data-page="{{ models.paginator.num_pages }}">末页 &raquo;</a>
+                      {% endif %}
+                      总计：{{ models.paginator.count }}条　　
+                      <a href="#" id="toPageGo">跳至</a>
+                      第<input id="toPageInput" type="number" style="width: 60px; font-size: large;" name="page_to" value="{{ models.number }}"/>页
+                  </span>
+              </div>
+          </div>
+     </div>
+     <div class="zsd_right">
+          <h3>知识点说明</h3>
+          <!--<p>"音义同"、"音义近"是《段注》中出现频率很高的一类术语，探索了字词之间音、义相同或相近的关系。对象之间存在同源关系、同义、异体等词际和字际关系。</p>-->
+          <h4>相关研究：</h4>
+          <ul class="research-list">
+               <!--<li class="research-item">刘丽群. 《说文解字注》"音义同"、"音义近"考察[D]. 北京:北京师范大学,2006.</li>
+               <li class="research-item">李涛. 论段玉裁《说文解字注》中的同义词[D]. 重庆:西南大学,2009.</li>
+               <li class="research-item">毛毓松. 《段注》"音义皆同"的同源字与"音义皆同"的异体字[J]. 广西师范学院学报（哲学社会科学版）,2008,29(4):104-107.</li>-->
+          </ul>
+     </div>
+    <script>
+    $(document).ready(function(){
+        $('#tree-container').on('loaded.jstree',function(e,data){
+            $('#tree-container').jstree(false).select_node('28');
+            //$('#tree-container').jstree(true).select_node('28', false);
+        });
+
+        $("a.page_link").click(function () {
+            location.href = '/gouyi/?page='+$(this).data("page")
+        });
+        $("#toPageGo").click(function () {
+            location.href = '/gouyi/?page='+$("#toPageInput").val()
+        });
+        $("#toPageInput").keypress(function(e){
+            if(e.keyCode == 13){
+                location.href = '/gouyi/?page='+$(this).val()
+                return false;
+            }
+        });
+    });
+</script>
+{% endblock %}

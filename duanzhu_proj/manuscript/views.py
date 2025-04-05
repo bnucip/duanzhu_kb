@@ -2,7 +2,7 @@ from django.core.exceptions import ValidationError
 from django.shortcuts import render, get_object_or_404
 from django.http import JsonResponse, Http404
 from .models import DuanZhu, SwDu, Gujinzi, Guyunbu, Gouyi, Yinyitong, Yinshu, Zhishimulu, Liushu, Zhuanzhu, Jiajie, \
-    Tongzi, Xingfeizi
+    Tongzi, Xingfeizi, Huxun, Zhiyan, Lianmianci, Yinshen, Benyi, Gujinyi
 from django.core.paginator import Paginator
 
 def index(request):
@@ -254,3 +254,109 @@ def xingfeizi(request):
     context['models'] = page_obj
 
     return render(request, "manuscript/xingfeizi.html", context)
+
+def huxun(request):
+    context = {}
+    data = Huxun.objects.all()
+    paginator = Paginator(data, 10)
+    page = request.GET.get('page')
+    page_obj = paginator.get_page(page)
+    for p in page_obj:
+        duanzhu = DuanZhu.objects.filter(duanzhu_bianhao=p.duanzhu_bianhao).first()
+        duanzhu.zhengwen_zhushi = duanzhu.zhengwen_zhushi.replace(p.shuojie, '<span>' + p.shuojie + '</span>')
+        p.duanzhu = duanzhu
+    context['models'] = page_obj
+
+    return render(request, "manuscript/huxun.html", context)
+
+def zhiyan(request):
+    context = {}
+    data = Zhiyan.objects.all()
+    paginator = Paginator(data, 10)
+    page = request.GET.get('page')
+    page_obj = paginator.get_page(page)
+    for p in page_obj:
+        duanzhu = DuanZhu.objects.filter(duanzhu_bianhao=p.duanzhu_bianhao).first()
+        duanzhu.zhengwen_zhushi = duanzhu.zhengwen_zhushi.replace(p.zhiyanshuojie, '<span>' + p.zhiyanshuojie + '</span>')
+        p.duanzhu = duanzhu
+    context['models'] = page_obj
+
+    return render(request, "manuscript/zhiyan.html", context)
+
+def lianmianci(request):
+    context = {}
+    data = Lianmianci.objects.all()
+    paginator = Paginator(data, 10)
+    page = request.GET.get('page')
+    page_obj = paginator.get_page(page)
+    for p in page_obj:
+        duanzhu = DuanZhu.objects.filter(duanzhu_bianhao=p.duanzhu_bianhao).first()
+        p.duanzhu = duanzhu
+    context['models'] = page_obj
+
+    return render(request, "manuscript/lianmianci.html", context)
+
+def yinshen(request):
+    context = {}
+    data = Yinshen.objects.all()
+    paginator = Paginator(data, 10)
+    page = request.GET.get('page')
+    page_obj = paginator.get_page(page)
+    for p in page_obj:
+        duanzhu = DuanZhu.objects.filter(duanzhu_bianhao=p.duanzhu_bianhao).first()
+        duanzhu.zhengwen_zhushi = duanzhu.zhengwen_zhushi.replace(p.yinshen, '<span>' + p.yinshen + '</span>')
+        p.duanzhu = duanzhu
+    context['models'] = page_obj
+
+    return render(request, "manuscript/yinshen.html", context)
+
+def benyi(request):
+    context = {}
+    data = Benyi.objects.all()
+    paginator = Paginator(data, 10)
+    page = request.GET.get('page')
+    page_obj = paginator.get_page(page)
+    for p in page_obj:
+        duanzhu = DuanZhu.objects.filter(duanzhu_bianhao=p.duanzhu_bianhao).first()
+        duanzhu.zhengwen_zhushi = duanzhu.zhengwen_zhushi.replace(p.benyi_1, '<span>' + p.benyi_1 + '</span>')
+        if p.benyi_2:
+            duanzhu.zhengwen_zhushi = duanzhu.zhengwen_zhushi.replace(p.benyi_2, '<span>' + p.benyi_2 + '</span>')
+        p.duanzhu = duanzhu
+    context['models'] = page_obj
+
+    return render(request, "manuscript/benyi.html", context)
+
+def gujinyi(request):
+    context = {}
+    data = Gujinyi.objects.all()
+    paginator = Paginator(data, 10)
+    page = request.GET.get('page')
+    page_obj = paginator.get_page(page)
+    for p in page_obj:
+        duanzhu = DuanZhu.objects.filter(duanzhu_bianhao=p.duanzhu_bianhao).first()
+        duanzhu.zhengwen_zhushi = duanzhu.zhengwen_zhushi.replace(p.shuojie, '<span>' + p.shuojie + '</span>')
+        p.duanzhu = duanzhu
+    context['models'] = page_obj
+
+    return render(request, "manuscript/gujinyi.html", context)
+
+def gouyi(request):
+    context = {}
+    data = Gouyi.objects.all()
+    paginator = Paginator(data, 10)
+    page = request.GET.get('page')
+    page_obj = paginator.get_page(page)
+    for p in page_obj:
+        duanzhu = DuanZhu.objects.filter(duanzhu_bianhao=p.duanzhu_bianhao).first()
+        if p.gouyi1:
+            duanzhu.zhengwen_zhushi = duanzhu.zhengwen_zhushi.replace(p.gouyi1, '<span>' + p.gouyi1 + '</span>')
+        if p.gouyi2:
+            duanzhu.zhengwen_zhushi = duanzhu.zhengwen_zhushi.replace(p.gouyi2, '<span>' + p.gouyi2 + '</span>')
+        if p.gouyi3:
+            duanzhu.zhengwen_zhushi = duanzhu.zhengwen_zhushi.replace(p.gouyi3, '<span>' + p.gouyi3 + '</span>')
+        if p.shengfugouyi:
+            duanzhu.zhengwen_zhushi = duanzhu.zhengwen_zhushi.replace(p.shengfugouyi, '<span>' + p.shengfugouyi + '</span>')
+        p.duanzhu = duanzhu
+    context['models'] = page_obj
+
+    return render(request, "manuscript/gouyi.html", context)

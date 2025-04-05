@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import catalogue_data, zitou_detail, zstag_detail, index, search, yinyitong, zhishimulu_data, xiangxing,zhishi,huiyi,xingsheng,zhuanzhu,jiajie,tongzi,xingfeizi
+from .views import catalogue_data, zitou_detail, zstag_detail, index, search, yinyitong, zhishimulu_data, xiangxing,zhishi,huiyi,xingsheng,zhuanzhu,jiajie,tongzi,xingfeizi,huxun,zhiyan,lianmianci,yinshen,benyi,gujinyi,gouyi
 
 urlpatterns = [
     path('', index, name='index'),
@@ -17,4 +17,12 @@ urlpatterns = [
     path('jiajie/', jiajie, name='jiajie'),
     path('tongzi/', tongzi, name='tongzi'),
     path('xingfeizi/', xingfeizi, name='xingfeizi'),
+
+    path('huxun/', huxun, name='huxun'),
+    path('zhiyan/', zhiyan, name='zhiyan'),
+    path('lianmianci/', lianmianci, name='lianmianci'),
+    path('yinshen/', yinshen, name='yinshen'),
+    path('benyi/', benyi, name='benyi'),
+    path('gujinyi/', gujinyi, name='gujinyi'),
+    path('gouyi/', gouyi, name='gouyi'),
 ]
