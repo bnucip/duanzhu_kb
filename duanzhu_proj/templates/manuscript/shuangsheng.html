@@ -5,15 +5,15 @@
           {% include "manuscript/zsd_catalogue.html" %}
      </div>
      <div class="zsd_middle">
-          <h3>知识点实例：同字的实例</h3>
-          {% for tongzi in models %}
-          <div id="{{tongzi.id}}" class="yyt-item">
+          <h3>知识点实例：双声的实例</h3>
+          {% for shuangsheng in models %}
+          <div id="{{shuangsheng.id}}" class="yyt-item">
               <div class="character-section">
-                  <div class="character-info">{{tongzi.duanzhu.juan}}-{{tongzi.duanzhu.bushou}}</div>
-                  <div class="character">{{tongzi.duanzhu.zitou}}</div>
+                  <div class="character-info">{{shuangsheng.duanzhu.juan}}-{{shuangsheng.duanzhu.bushou}}</div>
+                  <div class="character">{{shuangsheng.duanzhu.zitou}}</div>
               </div>
               <div class="yyt-content">
-                  {{tongzi.duanzhu.zhengwen_zhushi | safe}}
+                  {{shuangsheng.duanzhu.zhengwen_zhushi | safe}}
               </div>
 
           </div>
@@ -45,13 +45,13 @@
      </div>
      <div class="zsd_right">
           <h3>知识点说明</h3>
-          <p>指不同文字形体表示的为同一个词。</p>
-          <!--<h4>相关研究：</h4>
+          <p>声训的一种，训释词和被训释词在语音上有双声的关系。何九盈先生曾指出了段注双声的宽泛性和复杂性：“段玉裁也没有提出过上古声母系统,但又好谈双声。他说的双声,内容很宽泛,有同纽双声,同类双声,位同双声,谐声双声等,其中谬误不少......段氏的双声说是值得研究一番的”。</p>
+          <h4>相关研究：</h4>
           <ul class="research-list">
-               &lt;!&ndash;<li class="research-item">刘丽群. 《说文解字注》"音义同"、"音义近"考察[D]. 北京:北京师范大学,2006.</li>
-               <li class="research-item">李涛. 论段玉裁《说文解字注》中的同义词[D]. 重庆:西南大学,2009.</li>
-               <li class="research-item">毛毓松. 《段注》"音义皆同"的同源字与"音义皆同"的异体字[J]. 广西师范学院学报（哲学社会科学版）,2008,29(4):104-107.</li>&ndash;&gt;
-          </ul>-->
+               <li class="research-item">[1] 陈宁. 《说文段注》双声研究述论[J]. 古汉语研究, 2011(4): 20-26, 95.</li>
+               <li class="research-item">[2] 王军. 自《说文解字注》“双声”条例分析段氏上古音声类观[J]. 河北师范大学学报（哲社版）, 1999(1): 143-144.</li>
+              <li class="research-item">[3] 关长龙. 论《说文段注》之双声字[J]. 语言研究, 1989(2): 46-59.[4][1]冯宽平.《段注》双声撷辨[J].青海师范大学学报(哲学社会科学版),2016,38(06).</li>
+          </ul>
      </div>
     <script>
     $(document).ready(function(){
@@ -68,19 +68,19 @@
         }
 
         $('#tree-container').on('loaded.jstree',function(e,data){
-            $('#tree-container').jstree(false).select_node('25');
-            //$('#tree-container').jstree(true).select_node('25', false);
+            $('#tree-container').jstree(false).select_node('35');
+            //$('#tree-container').jstree(true).select_node('35', false);
         });
 
         $("a.page_link").click(function () {
-            location.href = '/tongzi/?page='+$(this).data("page")
+            location.href = '/shuangsheng/?page='+$(this).data("page")
         });
         $("#toPageGo").click(function () {
-            location.href = '/tongzi/?page='+$("#toPageInput").val()
+            location.href = '/shuangsheng/?page='+$("#toPageInput").val()
         });
         $("#toPageInput").keypress(function(e){
             if(e.keyCode == 13){
-                location.href = '/tongzi/?page='+$(this).val()
+                location.href = '/shuangsheng/?page='+$(this).val()
                 return false;
             }
         });

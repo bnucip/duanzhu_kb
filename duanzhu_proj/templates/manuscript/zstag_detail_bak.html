@@ -1,0 +1,60 @@
+{% if not tag %}
+    <p>请选择上方的知识标签查看详细内容</p>
+{% elif tag == 'wz' %}
+    <div class="zslb flex align-items gap1">
+        <span class="zstag_label">字用:</span>
+        <span class="zstag_bg_blue">古今字</span>
+    </div>
+    {% for wz in gujinzis%}
+    <div class="zstag_p">古字:{{wz.miaoshu.0 }}<br>今字:{{wz.miaoshu.1 }}</div>
+    {% endfor %}
+    <div class="zslb flex align-items gap1">
+        <span class="zstag_label">字用:</span>
+        <span class="zstag_bg_blue">行废字</span>
+    </div>
+    {% for wz in xingfeizis%}
+    <div class="zstag_p">{{wz.pipeizifuchuan }}</div>
+    <div class="more"><a class="btn" href="/xingfeizi/?id={{wz.id}}"><i class="fa fa-external-link"></i></a></div>
+    {% endfor %}
+{% elif tag == "yy" %}
+    {% for guyunbu in guyunbus%}
+    <div class="flex align-items gap1">
+        <span class="zstag_label">韵部:</span>
+        <span class="zstag_bg_blue">第{{guyunbu.yunbu}}部</span>
+    </div>
+    {% endfor %}
+{% elif tag == "xg" %}
+    <div class="flex align-items gap1">
+        <span class="zstag_label">训释:</span>
+        <span class="zstag_bg_blue">构意</span>
+    </div>
+    {% for gouyi in gouyis%}
+        {% if gouyi.gouyi1%}
+        <div class="zstag_p">{{ gouyi.gouyi1 }}</div>
+        {% endif %}
+        {% if gouyi.gouyi2%}
+        <div class="zstag_p">{{ gouyi.gouyi2 }}</div>
+        {% endif %}
+        {% if gouyi.gouyi3%}
+        <div class="zstag_p">{{ gouyi.gouyi3 }}</div>
+        {% endif %}
+        {% if gouyi.shengfugouyi%}
+        <div class="zstag_p">{{ gouyi.shengfugouyi }}</div>
+        {% endif %}
+    {% endfor %}
+    {% if yinyitongs %}
+        <div class="flex align-items gap1">
+            <span class="zstag_label">词:</span>
+            <span class="zstag_bg_blue">音义同</span>
+        </div>
+        {% for yinyitong in yinyitongs%}
+        <div class="zstag_p">对象：{{ yinyitong.object1 }}-{{yinyitong.object2}}</div>
+        {% endfor %}
+    {% endif%}
+{% elif tag == "ys" %}
+    {% for yinshu in yinshus%}
+        {% if yinshu.content|length > 1 %}
+        <div style="margin:15px 0; line-height:25px">书名：{{yinshu.book}}，章节名：{{yinshu.chapter}}<br/>原文：{{yinshu.content}}</div>
+        {% endif %}
+    {% endfor%}
+{% endif %}

@@ -5,15 +5,15 @@
           {% include "manuscript/zsd_catalogue.html" %}
      </div>
      <div class="zsd_middle">
-          <h3>知识点实例：同字的实例</h3>
-          {% for tongzi in models %}
-          <div id="{{tongzi.id}}" class="yyt-item">
+          <h3>知识点实例：夺的实例</h3>
+          {% for duotuo in models %}
+          <div id="{{duotuo.id}}" class="yyt-item">
               <div class="character-section">
-                  <div class="character-info">{{tongzi.duanzhu.juan}}-{{tongzi.duanzhu.bushou}}</div>
-                  <div class="character">{{tongzi.duanzhu.zitou}}</div>
+                  <div class="character-info">{{duotuo.duanzhu.juan}}-{{duotuo.duanzhu.bushou}}</div>
+                  <div class="character">{{duotuo.duanzhu.zitou}}</div>
               </div>
               <div class="yyt-content">
-                  {{tongzi.duanzhu.zhengwen_zhushi | safe}}
+                  {{duotuo.duanzhu.zhengwen_zhushi | safe}}
               </div>
 
           </div>
@@ -45,13 +45,18 @@
      </div>
      <div class="zsd_right">
           <h3>知识点说明</h3>
-          <p>指不同文字形体表示的为同一个词。</p>
-          <!--<h4>相关研究：</h4>
+          <p>古书在抄写刊行流传中遗漏的文字。</p>
+          <h4>相关研究：</h4>
           <ul class="research-list">
-               &lt;!&ndash;<li class="research-item">刘丽群. 《说文解字注》"音义同"、"音义近"考察[D]. 北京:北京师范大学,2006.</li>
-               <li class="research-item">李涛. 论段玉裁《说文解字注》中的同义词[D]. 重庆:西南大学,2009.</li>
-               <li class="research-item">毛毓松. 《段注》"音义皆同"的同源字与"音义皆同"的异体字[J]. 广西师范学院学报（哲学社会科学版）,2008,29(4):104-107.</li>&ndash;&gt;
-          </ul>-->
+               <li class="research-item">[1] 蒋冀骋. 《说文段注》改篆简论[J]. 古汉语研究, 1992(2): 74-84, 86.</li>
+               <li class="research-item">[2] 漆永祥. 段玉裁校勘学述论[J]. 古籍整理研究学刊, 1993(6): 28-32.</li>
+              <li class="research-item">[3] 鲁一帆. 段玉裁校勘实践中的辩证思维观[J]. 河北学刊, 2012, 32(4): 214-216.</li>
+              <li class="research-item">[4] 李憧, 胡俊俊. 《说文解字注·豕部》校勘述略[J]. 西南科技大学学报（哲学社会科学版）, 2009, 26(6): 105-108.</li>
+              <li class="research-item">[5] 李晓明. 《说文解字注》与段玉裁之校勘学[D/OL]. 内蒙古师范大学, 2012.</li>
+              <li class="research-item">[6] 刘秀华. 论段玉裁对《说文》的勘误成就[D/OL]. 曲阜师范大学, 2008.</li>
+              <li class="research-item">[7] 张莹莹. 段玉裁《说文解字注》校勘群书研究[D/OL]. 河北大学, 2022.</li>
+              <li class="research-item">[8]黃淑汝〈段玉裁《說文解字注》「淺人說」探析〉，國立成功大學碩士學位論文（指導教授：李添富），2001年</li>
+          </ul>
      </div>
     <script>
     $(document).ready(function(){
@@ -68,19 +73,19 @@
         }
 
         $('#tree-container').on('loaded.jstree',function(e,data){
-            $('#tree-container').jstree(false).select_node('25');
-            //$('#tree-container').jstree(true).select_node('25', false);
+            $('#tree-container').jstree(false).select_node('80');
+            //$('#tree-container').jstree(true).select_node('80', false);
         });
 
         $("a.page_link").click(function () {
-            location.href = '/tongzi/?page='+$(this).data("page")
+            location.href = '/duotuo/?page='+$(this).data("page")
         });
         $("#toPageGo").click(function () {
-            location.href = '/tongzi/?page='+$("#toPageInput").val()
+            location.href = '/duotuo/?page='+$("#toPageInput").val()
         });
         $("#toPageInput").keypress(function(e){
             if(e.keyCode == 13){
-                location.href = '/tongzi/?page='+$(this).val()
+                location.href = '/duotuo/?page='+$(this).val()
                 return false;
             }
         });

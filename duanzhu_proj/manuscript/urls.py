@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import catalogue_data, zitou_detail, zstag_detail, index, search, yinyitong, zhishimulu_data, xiangxing,zhishi,huiyi,xingsheng,zhuanzhu,jiajie,tongzi,xingfeizi,huxun,zhiyan,lianmianci,yinshen,benyi,gujinyi,gouyi
+from .views import catalogue_data, zitou_detail, zstag_detail, index, search, yinyitong, zhishimulu_data, xiangxing,zhishi,huiyi,xingsheng,zhuanzhu,jiajie,tongzi,xingfeizi,huxun,zhiyan,lianmianci,yinshen,benyi,gujinyi,gouyi,gujinzi,hunyanxiyan,ezi,suzi,you,suiwen,shuozi,feishi,fanxun,tongxun,shuangsheng,dieyun,yijinshigu,hujian,guyu,shengfushiyuan,fangsu,tongyu,zhuanyu,yixiangzu,yintongyiyi,bieyiyi,guyin,jinyin,yinzhuan,yinbian,zuijin,guheyun,yiwen,shan,duotuo,wanggai,zheng,benzuo
 
 urlpatterns = [
     path('', index, name='index'),
@@ -25,4 +25,39 @@ urlpatterns = [
     path('benyi/', benyi, name='benyi'),
     path('gujinyi/', gujinyi, name='gujinyi'),
     path('gouyi/', gouyi, name='gouyi'),
+    path('gujinzi/', gujinzi, name='gujinzi'),
+    path('hunyanxiyan/', hunyanxiyan, name='hunyanxiyan'),
+
+    path('ezi/', ezi, name='ezi'),
+    path('suzi/', suzi, name='suzi'),
+    path('you/', you, name='you'),
+    path('suiwen/', suiwen, name='suiwen'),
+    path('shuozi/', shuozi, name='shuozi'),
+    path('feishi/', feishi, name='feishi'),
+    path('tongxun/', tongxun, name='tongxun'),
+    path('fanxun/', fanxun, name='fanxun'),
+    path('shuangsheng/', shuangsheng, name='shuangsheng'),
+    path('dieyun/', dieyun, name='dieyun'),
+    path('yijinshigu/', yijinshigu, name='yijinshigu'),
+    path('hujian/', hujian, name='hujian'),
+    path('guyu/', guyu, name='guyu'),
+    path('shengfushiyuan/', shengfushiyuan, name='shengfushiyuan'),
+    path('fangsu/', fangsu, name='fangsu'),
+    path('tongyu/', tongyu, name='tongyu'),
+    path('zhuanyu/', zhuanyu, name='zhuanyu'),
+    path('yixiangzu/', yixiangzu, name='yixiangzu'),
+    path('yintongyiyi/', yintongyiyi, name='yintongyiyi'),
+    path('bieyiyi/', bieyiyi, name='bieyiyi'),
+    path('guyin/', guyin, name='guyin'),
+    path('jinyin/', jinyin, name='jinyin'),
+    path('yinzhuan/', yinzhuan, name='yinzhuan'),
+    path('yinbian/', yinbian, name='yinbian'),
+    path('zuijin/', zuijin, name='zuijin'),
+    path('guheyun/', guheyun, name='guheyun'),
+    path('yiwen/', yiwen, name='yiwen'),
+    path('shan/', shan, name='shan'),
+    path('duotuo/', duotuo, name='duotuo'),
+    path('wanggai/', wanggai, name='wanggai'),
+    path('zheng/', zheng, name='zheng'),
+    path('benzuo/', benzuo, name='benzuo'),
 ]

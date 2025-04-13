@@ -5,15 +5,15 @@
           {% include "manuscript/zsd_catalogue.html" %}
      </div>
      <div class="zsd_middle">
-          <h3>知识点实例：同字的实例</h3>
-          {% for tongzi in models %}
-          <div id="{{tongzi.id}}" class="yyt-item">
+          <h3>知识点实例：音转的实例</h3>
+          {% for yinzhuan in models %}
+          <div id="{{yinzhuan.id}}" class="yyt-item">
               <div class="character-section">
-                  <div class="character-info">{{tongzi.duanzhu.juan}}-{{tongzi.duanzhu.bushou}}</div>
-                  <div class="character">{{tongzi.duanzhu.zitou}}</div>
+                  <div class="character-info">{{yinzhuan.duanzhu.juan}}-{{yinzhuan.duanzhu.bushou}}</div>
+                  <div class="character">{{yinzhuan.duanzhu.zitou}}</div>
               </div>
               <div class="yyt-content">
-                  {{tongzi.duanzhu.zhengwen_zhushi | safe}}
+                  {{yinzhuan.duanzhu.zhengwen_zhushi | safe}}
               </div>
 
           </div>
@@ -45,13 +45,13 @@
      </div>
      <div class="zsd_right">
           <h3>知识点说明</h3>
-          <p>指不同文字形体表示的为同一个词。</p>
-          <!--<h4>相关研究：</h4>
+          <p>音转是指历时状态下的韵部转变现象,古今音的变化而导致韵部转变。如:“葩:按賁聲本在十五部,音轉入十三部。"</p>
+          <h4>相关研究：</h4>
           <ul class="research-list">
-               &lt;!&ndash;<li class="research-item">刘丽群. 《说文解字注》"音义同"、"音义近"考察[D]. 北京:北京师范大学,2006.</li>
-               <li class="research-item">李涛. 论段玉裁《说文解字注》中的同义词[D]. 重庆:西南大学,2009.</li>
-               <li class="research-item">毛毓松. 《段注》"音义皆同"的同源字与"音义皆同"的异体字[J]. 广西师范学院学报（哲学社会科学版）,2008,29(4):104-107.</li>&ndash;&gt;
-          </ul>-->
+               <li class="research-item">[1] 刘忠华. 段玉裁语音“变转”理论探索[J]. 陕西理工学院学报（社会科学版）, 2010, 28(3): 84-89.</li>
+               <li class="research-item">[2] 海肖肖. 段玉裁“音转”理论研究[D/OL]. 中央民族大学, 2019.</li>
+              <li class="research-item">[3] 黄易青, 王宁, 曹述敬著. 传统古音学研究通论[M]. 北京: 商务印书馆, 2015.</li>
+          </ul>
      </div>
     <script>
     $(document).ready(function(){
@@ -68,19 +68,19 @@
         }
 
         $('#tree-container').on('loaded.jstree',function(e,data){
-            $('#tree-container').jstree(false).select_node('25');
-            //$('#tree-container').jstree(true).select_node('25', false);
+            $('#tree-container').jstree(false).select_node('74');
+            //$('#tree-container').jstree(true).select_node('74', false);
         });
 
         $("a.page_link").click(function () {
-            location.href = '/tongzi/?page='+$(this).data("page")
+            location.href = '/yinzhuan/?page='+$(this).data("page")
         });
         $("#toPageGo").click(function () {
-            location.href = '/tongzi/?page='+$("#toPageInput").val()
+            location.href = '/yinzhuan/?page='+$("#toPageInput").val()
         });
         $("#toPageInput").keypress(function(e){
             if(e.keyCode == 13){
-                location.href = '/tongzi/?page='+$(this).val()
+                location.href = '/yinzhuan/?page='+$(this).val()
                 return false;
             }
         });

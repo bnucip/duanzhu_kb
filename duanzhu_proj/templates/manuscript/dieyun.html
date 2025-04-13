@@ -5,15 +5,15 @@
           {% include "manuscript/zsd_catalogue.html" %}
      </div>
      <div class="zsd_middle">
-          <h3>知识点实例：同字的实例</h3>
-          {% for tongzi in models %}
-          <div id="{{tongzi.id}}" class="yyt-item">
+          <h3>知识点实例：叠韵的实例</h3>
+          {% for dieyun in models %}
+          <div id="{{dieyun.id}}" class="yyt-item">
               <div class="character-section">
-                  <div class="character-info">{{tongzi.duanzhu.juan}}-{{tongzi.duanzhu.bushou}}</div>
-                  <div class="character">{{tongzi.duanzhu.zitou}}</div>
+                  <div class="character-info">{{dieyun.duanzhu.juan}}-{{dieyun.duanzhu.bushou}}</div>
+                  <div class="character">{{dieyun.duanzhu.zitou}}</div>
               </div>
               <div class="yyt-content">
-                  {{tongzi.duanzhu.zhengwen_zhushi | safe}}
+                  {{dieyun.duanzhu.zhengwen_zhushi | safe}}
               </div>
 
           </div>
@@ -45,13 +45,12 @@
      </div>
      <div class="zsd_right">
           <h3>知识点说明</h3>
-          <p>指不同文字形体表示的为同一个词。</p>
-          <!--<h4>相关研究：</h4>
+          <p>声训的一种，训释词和被训释词在语音上有叠韵的关系。段氏叠韵的概念较为宽泛《段注》言叠韵有441处,大部分在段玉裁古韵系统中是同部叠韵。如“造”下云“造就叠韵”,同为段氏古韵的第三部。但是也有39处是异部叠韵,其中有25处是邻部叠韵,例如“毒”下“毒厚叠韵”,毒第三部,厚第四部。“异部叠韵”这个术语在《段注》中多次出现:“?”下注“凡异部叠韵必部分相近”,“死”下段注“死澌异部叠韵”,死十五部(脂部),澌第十六部(支部)。《段注》与《六书音均表》的归部略有差异,如“?进叠韵”,“?”十二部,“进”字《段注》十三部,为邻部叠韵;《六书音均表》十二部,则为同部叠韵。</p>
+          <h4>相关研究：</h4>
           <ul class="research-list">
-               &lt;!&ndash;<li class="research-item">刘丽群. 《说文解字注》"音义同"、"音义近"考察[D]. 北京:北京师范大学,2006.</li>
-               <li class="research-item">李涛. 论段玉裁《说文解字注》中的同义词[D]. 重庆:西南大学,2009.</li>
-               <li class="research-item">毛毓松. 《段注》"音义皆同"的同源字与"音义皆同"的异体字[J]. 广西师范学院学报（哲学社会科学版）,2008,29(4):104-107.</li>&ndash;&gt;
-          </ul>-->
+               <li class="research-item">[1] 张道俊. 说文段注“叠韵为训”论[J]. 湖北师范学院学报（哲学社会科学版）, 2011, 31(6): 32-34, 38.</li>
+               <li class="research-item">[2] 张道俊. 说文段注“叠韵字”论[J/OL]. 长江学术, 2011(4): 171-174. DOI:10.3969/j.issn.1673-9221.2011.04.027.</li>
+          </ul>
      </div>
     <script>
     $(document).ready(function(){
@@ -68,19 +67,19 @@
         }
 
         $('#tree-container').on('loaded.jstree',function(e,data){
-            $('#tree-container').jstree(false).select_node('25');
-            //$('#tree-container').jstree(true).select_node('25', false);
+            $('#tree-container').jstree(false).select_node('36');
+            //$('#tree-container').jstree(true).select_node('36', false);
         });
 
         $("a.page_link").click(function () {
-            location.href = '/tongzi/?page='+$(this).data("page")
+            location.href = '/dieyun/?page='+$(this).data("page")
         });
         $("#toPageGo").click(function () {
-            location.href = '/tongzi/?page='+$("#toPageInput").val()
+            location.href = '/dieyun/?page='+$("#toPageInput").val()
         });
         $("#toPageInput").keypress(function(e){
             if(e.keyCode == 13){
-                location.href = '/tongzi/?page='+$(this).val()
+                location.href = '/dieyun/?page='+$(this).val()
                 return false;
             }
         });

@@ -5,15 +5,15 @@
           {% include "manuscript/zsd_catalogue.html" %}
      </div>
      <div class="zsd_middle">
-          <h3>知识点实例：同字的实例</h3>
-          {% for tongzi in models %}
-          <div id="{{tongzi.id}}" class="yyt-item">
+          <h3>知识点实例：古语的实例</h3>
+          {% for guyu in models %}
+          <div id="{{guyu.id}}" class="yyt-item">
               <div class="character-section">
-                  <div class="character-info">{{tongzi.duanzhu.juan}}-{{tongzi.duanzhu.bushou}}</div>
-                  <div class="character">{{tongzi.duanzhu.zitou}}</div>
+                  <div class="character-info">{{guyu.duanzhu.juan}}-{{guyu.duanzhu.bushou}}</div>
+                  <div class="character">{{guyu.duanzhu.zitou}}</div>
               </div>
               <div class="yyt-content">
-                  {{tongzi.duanzhu.zhengwen_zhushi | safe}}
+                  {{guyu.duanzhu.zhengwen_zhushi | safe}}
               </div>
 
           </div>
@@ -45,12 +45,11 @@
      </div>
      <div class="zsd_right">
           <h3>知识点说明</h3>
-          <p>指不同文字形体表示的为同一个词。</p>
+          <p>后代已不再使用的古代的词语。</p>
           <!--<h4>相关研究：</h4>
           <ul class="research-list">
-               &lt;!&ndash;<li class="research-item">刘丽群. 《说文解字注》"音义同"、"音义近"考察[D]. 北京:北京师范大学,2006.</li>
-               <li class="research-item">李涛. 论段玉裁《说文解字注》中的同义词[D]. 重庆:西南大学,2009.</li>
-               <li class="research-item">毛毓松. 《段注》"音义皆同"的同源字与"音义皆同"的异体字[J]. 广西师范学院学报（哲学社会科学版）,2008,29(4):104-107.</li>&ndash;&gt;
+               <li class="research-item">[1] 蒋冀骋. 说文段注改篆评议[M]. 长沙: 湖南教育出版社, 1993].</li>
+               <li class="research-item">[2] 刘冬慧. 段玉裁《说文解字注》所论讹字研究[D]. 西南大学, 2009.</li>
           </ul>-->
      </div>
     <script>
@@ -68,19 +67,19 @@
         }
 
         $('#tree-container').on('loaded.jstree',function(e,data){
-            $('#tree-container').jstree(false).select_node('25');
-            //$('#tree-container').jstree(true).select_node('25', false);
+            $('#tree-container').jstree(false).select_node('39');
+            //$('#tree-container').jstree(true).select_node('39', false);
         });
 
         $("a.page_link").click(function () {
-            location.href = '/tongzi/?page='+$(this).data("page")
+            location.href = '/guyu/?page='+$(this).data("page")
         });
         $("#toPageGo").click(function () {
-            location.href = '/tongzi/?page='+$("#toPageInput").val()
+            location.href = '/guyu/?page='+$("#toPageInput").val()
         });
         $("#toPageInput").keypress(function(e){
             if(e.keyCode == 13){
-                location.href = '/tongzi/?page='+$(this).val()
+                location.href = '/guyu/?page='+$(this).val()
                 return false;
             }
         });

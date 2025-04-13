@@ -6,7 +6,7 @@
     {% load static %}
 
     <!-- Load CSS files -->
-<!--    <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">-->
+   <!--<link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">-->
 
     <!-- Load JavaScript files -->
     <script src="{% static 'js/vendor/jquery/jquery.min.js' %}"></script>
@@ -20,6 +20,19 @@
             margin: 0 auto;
             padding: 20px;
             background-color: #f5f5f5;
+        }
+        body:before{
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url({% static 'images/bg.jpeg' %});
+            background-size: cover;
+            background-position: center;
+            opacity: 0.15;
+            z-index: -1;
         }
         h1 {
             text-align: center;
@@ -36,6 +49,7 @@
             border: none;
             border-radius: 5px;
             cursor: pointer;
+            background-color:#cedadf;
         }
         .search-type button.active {
             background-color: #4CAF50;
@@ -141,13 +155,34 @@
         .highlight {
             background-color: yellow;
         }
+        .result-item-2 {
+            background-color: white;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+        .zhishi_tag_name{
+            font-size:20px;
+            border-bottom:solid 1px #eee;
+            margin-bottom:10px;
+        }
+        .zhishi_tag_name a{
+            color:#1e3a8a;
+            font-weight:bold;
+            text-decoration:none;
+        }
+        .zhishi_tag_name a:hover{
+            color:#f90;
+        }
     </style>
 </head>
 <body>
     <h1>《说文解字注》检索系统</h1>
     
     <div class="search-type">
-        <button id="character-search" {% if categ != 'quanwen' %} class="active"{% endif %}>字头检索</button>
+        <button id="zhishi-search" {% if categ == 'zhishi' %} class="active"{% endif %}>知识检索</button>
+        <button id="character-search" {% if categ == 'zitou' %} class="active"{% endif %}>字头检索</button>
         <button id="fulltext-search" {% if categ == 'quanwen' %} class="active"{% endif %}>全文检索</button>
     </div>
 
@@ -157,34 +192,52 @@
         <div class="search-container">
             <input type="hidden" id="categ" name="categ" value="{{ categ|default:'zitou' }}"/>
             <input type="text" id="search-input" name="keyword" placeholder="输入汉字..." value="{{ keyword }}"/>
-            <input type="submit" id="search-button" />
+            <input type="submit" id="search-button" value="检索" />
         </div>
         <div class="pagination">
         {% include 'paginate.html' %}
         </div>
         <div id="results">
-        {% for duanzhu in models %}
-            <div class="result-item">
-                <div class="character">
-                    <a href="/?id={{duanzhu.id}}">{{ duanzhu.zitou }}</a>
-                    <div class="special">{{ duanzhu.chongwen|default:"" }}</div>
+        {% for result in models %}
+            {% if categ != 'zhishi' %}
+                <div class="result-item">
+                    <div class="character">
+                        <a href="/?id={{result.id}}">{{ result.zitou }}</a>
+                        <div class="special">{{ result.chongwen|default:"" }}</div>
+                    </div>
+                    <div class="content">
+                        {{ result.zhengwen_zhushi|safe }}
+                    </div>
                 </div>
-                <div class="content">
-                    {{ duanzhu.zhengwen_zhushi|safe }}
+            {% endif %}
+            {% if categ == 'zhishi' %}
+                <div class="result-item-2">
+                    <div class="zhishi_tag_name"><a href="{{ result.url }}">{{ result.tag_name }}</a></div>
+                    <div>{{ result.zhishishuoming }}</div>
                 </div>
-            </div>
+            {% endif %}
         {% endfor %}
         </div>
     </form>
 
     <script>
         const searchInput = document.getElementById('search-input');
+        const zhishiSearchBtn = document.getElementById('zhishi-search');
         const characterSearchBtn = document.getElementById('character-search');
         const fulltextSearchBtn = document.getElementById('fulltext-search');
+
+        zhishiSearchBtn.addEventListener('click', () => {
+            $("input[name='categ']").val('zhishi');
+            zhishiSearchBtn.classList.add('active');
+            characterSearchBtn.classList.remove('active');
+            fulltextSearchBtn.classList.remove('active');
+            searchInput.placeholder = "输入汉字...";
+        });
 
         characterSearchBtn.addEventListener('click', () => {
             $("input[name='categ']").val('zitou');
             characterSearchBtn.classList.add('active');
+            zhishiSearchBtn.classList.remove('active');
             fulltextSearchBtn.classList.remove('active');
             searchInput.placeholder = "输入汉字...";
         });
@@ -192,6 +245,7 @@
         fulltextSearchBtn.addEventListener('click', () => {
             $("input[name='categ']").val('quanwen');
             fulltextSearchBtn.classList.add('active');
+            zhishiSearchBtn.classList.remove('active');
             characterSearchBtn.classList.remove('active');
             searchInput.placeholder = "输入检索关键字...";
         });

@@ -7,7 +7,7 @@
      <div class="zsd_middle">
           <h3>知识点实例：音义同的实例</h3>
           {% for yyt in models %}
-          <div class="yyt-item">
+          <div id="{{yyt.id}}" class="yyt-item">
               <div class="character-section">
                   <div class="character-info">{{yyt.duanzhu1.juan}}-{{yyt.duanzhu1.bushou}}</div>
                   <div class="character">{{yyt.object1}}</div>
@@ -62,6 +62,18 @@
      </div>
     <script>
     $(document).ready(function(){
+        var queryString = window.location.search;
+        var urlParams = new URLSearchParams(queryString);
+        var paramValue = urlParams.get('id');
+        console.log(paramValue);
+        if(paramValue){
+            var element = document.getElementById(paramValue);
+            window.scrollTo({
+              top: element.offsetTop,
+              behavior: 'smooth'  // 可选，使滚动平滑进行
+            });
+        }
+
         $('#tree-container').on('loaded.jstree',function(e,data){
             $('#tree-container').jstree(false).select_node('51');
             //$('#tree-container').jstree(true).select_node('51', false);

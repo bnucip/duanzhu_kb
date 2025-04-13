@@ -5,15 +5,15 @@
           {% include "manuscript/zsd_catalogue.html" %}
      </div>
      <div class="zsd_middle">
-          <h3>知识点实例：同字的实例</h3>
-          {% for tongzi in models %}
-          <div id="{{tongzi.id}}" class="yyt-item">
+          <h3>知识点实例：方言俗语的实例</h3>
+          {% for fangsu in models %}
+          <div id="{{fangsu.id}}" class="yyt-item">
               <div class="character-section">
-                  <div class="character-info">{{tongzi.duanzhu.juan}}-{{tongzi.duanzhu.bushou}}</div>
-                  <div class="character">{{tongzi.duanzhu.zitou}}</div>
+                  <div class="character-info">{{fangsu.duanzhu.juan}}-{{fangsu.duanzhu.bushou}}</div>
+                  <div class="character">{{fangsu.duanzhu.zitou}}</div>
               </div>
               <div class="yyt-content">
-                  {{tongzi.duanzhu.zhengwen_zhushi | safe}}
+                  {{fangsu.duanzhu.zhengwen_zhushi | safe}}
               </div>
 
           </div>
@@ -45,13 +45,12 @@
      </div>
      <div class="zsd_right">
           <h3>知识点说明</h3>
-          <p>指不同文字形体表示的为同一个词。</p>
-          <!--<h4>相关研究：</h4>
+          <p>地区对同一概念存在用语差异。段玉裁在注疏时常有以今语释古语，以方俗语释雅言的情况。</p>
+          <h4>相关研究：</h4>
           <ul class="research-list">
-               &lt;!&ndash;<li class="research-item">刘丽群. 《说文解字注》"音义同"、"音义近"考察[D]. 北京:北京师范大学,2006.</li>
-               <li class="research-item">李涛. 论段玉裁《说文解字注》中的同义词[D]. 重庆:西南大学,2009.</li>
-               <li class="research-item">毛毓松. 《段注》"音义皆同"的同源字与"音义皆同"的异体字[J]. 广西师范学院学报（哲学社会科学版）,2008,29(4):104-107.</li>&ndash;&gt;
-          </ul>-->
+               <li class="research-item">[1] 马树杉. 《说文段注》引今方言证古语考辨[J]. 常州工业技术学院学报, 1988(1): 34-38.</li>
+               <li class="research-item">[2] 罗宪华,经本植. 《说文解字注》与四川的方言和名物——兼及以方言证古语的训诂方式[J]. 四川大学学报（哲学社会科学版）, 1982(3): 35-42.</li>
+          </ul>
      </div>
     <script>
     $(document).ready(function(){
@@ -68,19 +67,19 @@
         }
 
         $('#tree-container').on('loaded.jstree',function(e,data){
-            $('#tree-container').jstree(false).select_node('25');
-            //$('#tree-container').jstree(true).select_node('25', false);
+            $('#tree-container').jstree(false).select_node('44');
+            //$('#tree-container').jstree(true).select_node('44', false);
         });
 
         $("a.page_link").click(function () {
-            location.href = '/tongzi/?page='+$(this).data("page")
+            location.href = '/fangsu/?page='+$(this).data("page")
         });
         $("#toPageGo").click(function () {
-            location.href = '/tongzi/?page='+$("#toPageInput").val()
+            location.href = '/fangsu/?page='+$("#toPageInput").val()
         });
         $("#toPageInput").keypress(function(e){
             if(e.keyCode == 13){
-                location.href = '/tongzi/?page='+$(this).val()
+                location.href = '/fangsu/?page='+$(this).val()
                 return false;
             }
         });

@@ -1,0 +1,128 @@
+{% extends "../base.html" %}
+{% block container %}
+     <div class="zsd_left">
+          <h3>知识点目录</h3>
+          {% include "manuscript/zsd_catalogue.html" %}
+     </div>
+     <div class="zsd_middle">
+          <h3>知识点实例：浑言析言的实例</h3>
+          {% for hyxy in models %}
+          <div id="{{hyxy.id}}" class="yyt-item">
+              <div class="character-section">
+                  <div class="character-info">{{hyxy.duanzhu.juan}}-{{hyxy.duanzhu.bushou}}</div>
+                  <div class="character">{{hyxy.duanzhu.zitou}}</div>
+              </div>
+              <div class="yyt-content">
+                  {{hyxy.duanzhu.zhengwen_zhushi | safe}}
+                  {% if hyxy.duanzhu1 and hyxy.obj1_duanzhu_id != hyxy.duanzhu_bianhao %}
+                      <div class="example-meta">
+                          <div class="meta-content">
+                              <div class="meta-character">{{hyxy.duanzhu1.zitou}}</div>
+                              <div class="meta-text">{{hyxy.duanzhu1.zhengwen_zhushi | safe}}</div>
+                          </div>
+                      </div>
+                  {% endif %}
+                  {% if hyxy.duanzhu2 and hyxy.obj2_duanzhu_id != hyxy.duanzhu_bianhao %}
+                      <div class="example-meta">
+                          <div class="meta-content">
+                              <div class="meta-character">{{hyxy.duanzhu2.zitou}}</div>
+                              <div class="meta-text">{{hyxy.duanzhu2.zhengwen_zhushi | safe}}</div>
+                          </div>
+                      </div>
+                  {% endif %}
+                  {% if hyxy.duanzhu3 and hyxy.obj3_duanzhu_id != hyxy.duanzhu_bianhao %}
+                      <div class="example-meta">
+                          <div class="meta-content">
+                              <div class="meta-character">{{hyxy.duanzhu3.zitou}}</div>
+                              <div class="meta-text">{{hyxy.duanzhu3.zhengwen_zhushi | safe}}</div>
+                          </div>
+                      </div>
+                  {% endif %}
+                  {% if hyxy.duanzhu4 and hyxy.obj4_duanzhu_id != hyxy.duanzhu_bianhao %}
+                      <div class="example-meta">
+                          <div class="meta-content">
+                              <div class="meta-character">{{hyxy.duanzhu4.zitou}}</div>
+                              <div class="meta-text">{{hyxy.duanzhu4.zhengwen_zhushi | safe}}</div>
+                          </div>
+                      </div>
+                  {% endif %}
+                  {% if hyxy.duanzhu5 and hyxy.obj5_duanzhu_id != hyxy.duanzhu_bianhao %}
+                      <div class="example-meta">
+                          <div class="meta-content">
+                              <div class="meta-character">{{hyxy.duanzhu5.zitou}}</div>
+                              <div class="meta-text">{{hyxy.duanzhu5.zhengwen_zhushi | safe}}</div>
+                          </div>
+                      </div>
+                  {% endif %}
+              </div>
+          </div>
+          {% endfor %}
+
+          <div class="yyt_page">
+              <div class="pagination">
+                  <input id="pageInput" type="hidden" name="page" value="{{ models.number }}"/>
+                  <span class="step-links">
+                      {% if models.has_previous %}
+                          <a href="#" class="page_link" data-page="1">&laquo; 首页</a>
+                          <a href="#" class="page_link" data-page="{{ models.previous_page_number }}">上一页</a>
+                      {% endif %}
+
+                      <span class="current">
+                           {{ models.number }} / {{ models.paginator.num_pages }}
+                      </span>
+
+                      {% if models.has_next %}
+                          <a href="#" class="page_link" data-page="{{ models.next_page_number }}">下一页</a>
+                          <a href="#" class="page_link" data-page="{{ models.paginator.num_pages }}">末页 &raquo;</a>
+                      {% endif %}
+                      总计：{{ models.paginator.count }}条　　
+                      <a href="#" id="toPageGo">跳至</a>
+                      第<input id="toPageInput" type="number" style="width: 60px; font-size: large;" name="page_to" value="{{ models.number }}"/>页
+                  </span>
+              </div>
+          </div>
+     </div>
+     <div class="zsd_right">
+          <h3>知识点说明</h3>
+          <p>析言：指同一句中或相临近的几个句子中处于相对应位置上的几个同义词意义有别。浑言：指文献中单独使用一组同义词中的一个来表达这组同义词的类义，上下文中没有与这个词对举、比较的同义词。</p>
+          <h4>相关研究：</h4>
+          <ul class="research-list">
+               <li class="research-item">[1] 李涛. 论段玉裁《说文解字注》中的同义词[D]. 西南大学, 2009.</li>
+               <li class="research-item">[2] 梅书静. 段玉裁《说文解字注》“浑言”、“析言”术语研究[D]. 2025.</li>
+               <li class="research-item">[3] 赵明丽. 《说文解字读》与《说文解字》注“浑言·析言”类训诂术语比较研究[D]. 北京: 北京师范大学, 2014.</li>
+          </ul>
+     </div>
+    <script>
+    $(document).ready(function(){
+        var queryString = window.location.search;
+        var urlParams = new URLSearchParams(queryString);
+        var paramValue = urlParams.get('id');
+        console.log(paramValue);
+        if(paramValue){
+            var element = document.getElementById(paramValue);
+            window.scrollTo({
+              top: element.offsetTop,
+              behavior: 'smooth'  // 可选，使滚动平滑进行
+            });
+        }
+
+        $('#tree-container').on('loaded.jstree',function(e,data){
+            $('#tree-container').jstree(false).select_node('40');
+            //$('#tree-container').jstree(true).select_node('40', false);
+        });
+
+        $("a.page_link").click(function () {
+            location.href = '/hunyanxiyan/?page='+$(this).data("page")
+        });
+        $("#toPageGo").click(function () {
+            location.href = '/hunyanxiyan/?page='+$("#toPageInput").val()
+        });
+        $("#toPageInput").keypress(function(e){
+            if(e.keyCode == 13){
+                location.href = '/hunyanxiyan/?page='+$(this).val()
+                return false;
+            }
+        });
+    });
+</script>
+{% endblock %}

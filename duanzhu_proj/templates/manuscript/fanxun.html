@@ -5,15 +5,15 @@
           {% include "manuscript/zsd_catalogue.html" %}
      </div>
      <div class="zsd_middle">
-          <h3>知识点实例：同字的实例</h3>
-          {% for tongzi in models %}
-          <div id="{{tongzi.id}}" class="yyt-item">
+          <h3>知识点实例：反训的实例</h3>
+          {% for fanxun in models %}
+          <div id="{{fanxun.id}}" class="yyt-item">
               <div class="character-section">
-                  <div class="character-info">{{tongzi.duanzhu.juan}}-{{tongzi.duanzhu.bushou}}</div>
-                  <div class="character">{{tongzi.duanzhu.zitou}}</div>
+                  <div class="character-info">{{fanxun.duanzhu.juan}}-{{fanxun.duanzhu.bushou}}</div>
+                  <div class="character">{{fanxun.duanzhu.zitou}}</div>
               </div>
               <div class="yyt-content">
-                  {{tongzi.duanzhu.zhengwen_zhushi | safe}}
+                  {{fanxun.duanzhu.zhengwen_zhushi | safe}}
               </div>
 
           </div>
@@ -45,13 +45,16 @@
      </div>
      <div class="zsd_right">
           <h3>知识点说明</h3>
-          <p>指不同文字形体表示的为同一个词。</p>
-          <!--<h4>相关研究：</h4>
+          <p>相反或相对立的两个意义，可以在同一个词形上体现。反训是否存在具有争议，本文只使用“反训”这一术语来体现段注中，泛時层面上，一个词形具有相反的意义的情况。正反义同词，“词”在这里指的是书写形式，有可能是该词形的假借义和词形的本身意义形成了相反的关系；也有可能是文意训释体现的正反义在同一个词形上有所体现。参见王宁《论反训》。</p>
+          <h4>相关研究：</h4>
           <ul class="research-list">
-               &lt;!&ndash;<li class="research-item">刘丽群. 《说文解字注》"音义同"、"音义近"考察[D]. 北京:北京师范大学,2006.</li>
-               <li class="research-item">李涛. 论段玉裁《说文解字注》中的同义词[D]. 重庆:西南大学,2009.</li>
-               <li class="research-item">毛毓松. 《段注》"音义皆同"的同源字与"音义皆同"的异体字[J]. 广西师范学院学报（哲学社会科学版）,2008,29(4):104-107.</li>&ndash;&gt;
-          </ul>-->
+               <li class="research-item">[1] 马景仑. 《说文》段注对“反训”的阐释[J/OL]. 古汉语研究, 1997(4)[2025-02-23]. https://kns.cnki.net/KCMS/detail/detail.aspx?dbcode=CJFQ&dbname=CJFD9697&filename=ghyy704.013.</li>
+               <li class="research-item">[2] 张幼军. 反训与辩证法[J]. 古汉语研究, 2002(1): 54-59.</li>
+              <li class="research-item">[3] 陳菡. 反訓成因探究[J]. 汉语史研究集刊, 2024(1): 33-46.</li>
+              <li class="research-item">[4] 赵芳媛, 叶冬梅. 段玉裁“义相反而相成”观念及其思想来源——兼辨“我”“吾”[J]. 民俗典籍文字研究, 2019(1): 42-56, 286-287.</li>
+              <li class="research-item">[5] 崔重庆. 思维的发展与词义的引申──兼及所谓反训问题[J]. 求是学刊, 1987(5): 66-70.</li>
+              <li class="research-item">[6] 王宁. 训诂学原理  增补本[M]. 中华书局, 2023.[7]李万福.反训即反义同词吗?[J].四川师范大学学报(社会科学版),1987,(01):59-63+70.</li>
+          </ul>
      </div>
     <script>
     $(document).ready(function(){
@@ -68,19 +71,19 @@
         }
 
         $('#tree-container').on('loaded.jstree',function(e,data){
-            $('#tree-container').jstree(false).select_node('25');
-            //$('#tree-container').jstree(true).select_node('25', false);
+            $('#tree-container').jstree(false).select_node('32');
+            //$('#tree-container').jstree(true).select_node('32', false);
         });
 
         $("a.page_link").click(function () {
-            location.href = '/tongzi/?page='+$(this).data("page")
+            location.href = '/fanxun/?page='+$(this).data("page")
         });
         $("#toPageGo").click(function () {
-            location.href = '/tongzi/?page='+$("#toPageInput").val()
+            location.href = '/fanxun/?page='+$("#toPageInput").val()
         });
         $("#toPageInput").keypress(function(e){
             if(e.keyCode == 13){
-                location.href = '/tongzi/?page='+$(this).val()
+                location.href = '/fanxun/?page='+$(this).val()
                 return false;
             }
         });

@@ -7,7 +7,7 @@
      <div class="zsd_middle">
           <h3>知识点实例：之言的实例</h3>
           {% for zhiyan in models %}
-          <div class="yyt-item">
+          <div id="{{zhiyan.id}}" class="yyt-item">
               <div class="character-section">
                   <div class="character-info">{{zhiyan.duanzhu.juan}}-{{zhiyan.duanzhu.bushou}}</div>
                   <div class="character">{{zhiyan.duanzhu.zitou}}</div>
@@ -45,16 +45,28 @@
      </div>
      <div class="zsd_right">
           <h3>知识点说明</h3>
-          <!--<p>"音义同"、"音义近"是《段注》中出现频率很高的一类术语，探索了字词之间音、义相同或相近的关系。对象之间存在同源关系、同义、异体等词际和字际关系。</p>-->
-          <h4>相关研究：</h4>
+          <p>又称”之为言”，是表示通过声训的方式探求语源或揭示训释词与被释词音义相通的关系。</p>
+          <!--<h4>相关研究：</h4>
           <ul class="research-list">
-               <!--<li class="research-item">刘丽群. 《说文解字注》"音义同"、"音义近"考察[D]. 北京:北京师范大学,2006.</li>
+               &lt;!&ndash;<li class="research-item">刘丽群. 《说文解字注》"音义同"、"音义近"考察[D]. 北京:北京师范大学,2006.</li>
                <li class="research-item">李涛. 论段玉裁《说文解字注》中的同义词[D]. 重庆:西南大学,2009.</li>
-               <li class="research-item">毛毓松. 《段注》"音义皆同"的同源字与"音义皆同"的异体字[J]. 广西师范学院学报（哲学社会科学版）,2008,29(4):104-107.</li>-->
-          </ul>
+               <li class="research-item">毛毓松. 《段注》"音义皆同"的同源字与"音义皆同"的异体字[J]. 广西师范学院学报（哲学社会科学版）,2008,29(4):104-107.</li>&ndash;&gt;
+          </ul>-->
      </div>
     <script>
     $(document).ready(function(){
+        var queryString = window.location.search;
+        var urlParams = new URLSearchParams(queryString);
+        var paramValue = urlParams.get('id');
+        console.log(paramValue);
+        if(paramValue){
+            var element = document.getElementById(paramValue);
+            window.scrollTo({
+              top: element.offsetTop,
+              behavior: 'smooth'  // 可选，使滚动平滑进行
+            });
+        }
+
         $('#tree-container').on('loaded.jstree',function(e,data){
             $('#tree-container').jstree(false).select_node('42');
             //$('#tree-container').jstree(true).select_node('42', false);

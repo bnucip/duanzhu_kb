@@ -5,15 +5,15 @@
           {% include "manuscript/zsd_catalogue.html" %}
      </div>
      <div class="zsd_middle">
-          <h3>知识点实例：同字的实例</h3>
-          {% for tongzi in models %}
-          <div id="{{tongzi.id}}" class="yyt-item">
+          <h3>知识点实例：古音的实例</h3>
+          {% for guyin in models %}
+          <div id="{{guyin.id}}" class="yyt-item">
               <div class="character-section">
-                  <div class="character-info">{{tongzi.duanzhu.juan}}-{{tongzi.duanzhu.bushou}}</div>
-                  <div class="character">{{tongzi.duanzhu.zitou}}</div>
+                  <div class="character-info">{{guyin.duanzhu.juan}}-{{guyin.duanzhu.bushou}}</div>
+                  <div class="character">{{guyin.duanzhu.zitou}}</div>
               </div>
               <div class="yyt-content">
-                  {{tongzi.duanzhu.zhengwen_zhushi | safe}}
+                  {{guyin.duanzhu.zhengwen_zhushi | safe}}
               </div>
 
           </div>
@@ -45,13 +45,12 @@
      </div>
      <div class="zsd_right">
           <h3>知识点说明</h3>
-          <p>指不同文字形体表示的为同一个词。</p>
-          <!--<h4>相关研究：</h4>
+          <p>又名“古本音”，与“音转”相对的一个概念。标注“古音在某部”,意味着该字反切仅适合中古音,并不适合上古音。音随时代迁移,段氏为每个字标注的是上古音韵部,或与中古读音异。戴震也在《答段若膺论韵》中也提及“古本音不同今韵”。反切下字与被切字在中古音中的归韵与上古音中的归部不一致所以需要在反切读音之后特别指出其“古音”的归部。如隶部“隶,及也。”段注:“徒耐切,古音在十五部。”按“徒耐切”在《广韵》是去声十九代韵的读音,按《六书音均表一》,《广韵》十九代韵属上古音第一部,按《六书音均表二》,反切下字“耐”为“而声”,也在第一部,而“隶声”在古音十五部。二者归部矛盾,因此段注要特别标明“隶”字上古音在十五部。</p>
+          <h4>相关研究：</h4>
           <ul class="research-list">
-               &lt;!&ndash;<li class="research-item">刘丽群. 《说文解字注》"音义同"、"音义近"考察[D]. 北京:北京师范大学,2006.</li>
-               <li class="research-item">李涛. 论段玉裁《说文解字注》中的同义词[D]. 重庆:西南大学,2009.</li>
-               <li class="research-item">毛毓松. 《段注》"音义皆同"的同源字与"音义皆同"的异体字[J]. 广西师范学院学报（哲学社会科学版）,2008,29(4):104-107.</li>&ndash;&gt;
-          </ul>-->
+               <li class="research-item">[1] 孙珊. 段玉裁《说文解字注》“古音在某部”的解析[J]. 牡丹江大学学报, 2022, 31(3): 14-20.</li>
+               <li class="research-item">[2] 李艳辉. 段玉裁《说文解字注》“古音在某部”研究[D]. 陕西理工大学, 2019.</li>
+          </ul>
      </div>
     <script>
     $(document).ready(function(){
@@ -68,19 +67,19 @@
         }
 
         $('#tree-container').on('loaded.jstree',function(e,data){
-            $('#tree-container').jstree(false).select_node('25');
-            //$('#tree-container').jstree(true).select_node('25', false);
+            $('#tree-container').jstree(false).select_node('72');
+            //$('#tree-container').jstree(true).select_node('72', false);
         });
 
         $("a.page_link").click(function () {
-            location.href = '/tongzi/?page='+$(this).data("page")
+            location.href = '/guyin/?page='+$(this).data("page")
         });
         $("#toPageGo").click(function () {
-            location.href = '/tongzi/?page='+$("#toPageInput").val()
+            location.href = '/guyin/?page='+$("#toPageInput").val()
         });
         $("#toPageInput").keypress(function(e){
             if(e.keyCode == 13){
-                location.href = '/tongzi/?page='+$(this).val()
+                location.href = '/guyin/?page='+$(this).val()
                 return false;
             }
         });

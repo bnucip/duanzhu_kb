@@ -7,7 +7,7 @@
      <div class="zsd_middle">
           <h3>知识点实例：假借的实例</h3>
           {% for jiajie in models %}
-          <div class="yyt-item">
+          <div id="{{jiajie.id}}" class="yyt-item">
               <div class="character-section">
                   <div class="character-info">{{jiajie.duanzhu.juan}}-{{jiajie.duanzhu.bushou}}</div>
                   <div class="character">{{jiajie.duanzhu.zitou}}</div>
@@ -45,16 +45,29 @@
      </div>
      <div class="zsd_right">
           <h3>知识点说明</h3>
-          <!--<p>"音义同"、"音义近"是《段注》中出现频率很高的一类术语，探索了字词之间音、义相同或相近的关系。对象之间存在同源关系、同义、异体等词际和字际关系。</p>-->
+          <p>1.没有本字，假借已有的同音或音近的字来代表，这种跟借用的字的形义完全不合的字就称为假借字。2.是在日常使用的文字当中本来有表示某个词义的书写形式，但是在使用当中不用本来约定俗成的字形而写为另外一个意义不相涉而音同或音近的字。3.含在假借里的引申</p>
           <h4>相关研究：</h4>
           <ul class="research-list">
-               <!--<li class="research-item">刘丽群. 《说文解字注》"音义同"、"音义近"考察[D]. 北京:北京师范大学,2006.</li>
-               <li class="research-item">李涛. 论段玉裁《说文解字注》中的同义词[D]. 重庆:西南大学,2009.</li>
-               <li class="research-item">毛毓松. 《段注》"音义皆同"的同源字与"音义皆同"的异体字[J]. 广西师范学院学报（哲学社会科学版）,2008,29(4):104-107.</li>-->
+               <li class="research-item">[1] 郑贤章. 论段玉裁在《说文解字注》中的假借观[J/OL]. 古汉语研究, 1998.</li>
+               <li class="research-item">[2] 韩琳. 段玉裁“引申假借”再探讨[J/OL]. 励耘语言学刊, 2016(1): 237-247..</li>
+               <li class="research-item">[3] 邱德修. 说文假借段注新笺[J]. 師大學報:人文與社會類, 2008(52): 1-17.</li>
+              <li class="research-item">[4] 杜秀云. 段玉裁《说文解字注》中的假借研究[D]. 陕西师范大学, 2007.</li>
           </ul>
      </div>
     <script>
     $(document).ready(function(){
+        var queryString = window.location.search;
+        var urlParams = new URLSearchParams(queryString);
+        var paramValue = urlParams.get('id');
+        console.log(paramValue);
+        if(paramValue){
+            var element = document.getElementById(paramValue);
+            window.scrollTo({
+              top: element.offsetTop,
+              behavior: 'smooth'  // 可选，使滚动平滑进行
+            });
+        }
+
         $('#tree-container').on('loaded.jstree',function(e,data){
             $('#tree-container').jstree(false).select_node('21');
             //$('#tree-container').jstree(true).select_node('21', false);

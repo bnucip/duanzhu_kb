@@ -7,7 +7,7 @@
      <div class="zsd_middle">
           <h3>知识点实例：互训的实例</h3>
           {% for huxun in models %}
-          <div class="yyt-item">
+          <div id="{{huxun.id}}" class="yyt-item">
               <div class="character-section">
                   <div class="character-info">{{huxun.duanzhu.juan}}-{{huxun.duanzhu.bushou}}</div>
                   <div class="character">{{huxun.duanzhu.zitou}}</div>
@@ -45,16 +45,30 @@
      </div>
      <div class="zsd_right">
           <h3>知识点说明</h3>
-          <!--<p>"音义同"、"音义近"是《段注》中出现频率很高的一类术语，探索了字词之间音、义相同或相近的关系。对象之间存在同源关系、同义、异体等词际和字际关系。</p>-->
+          <p>用同义词来相互训释。常见的形式是“甲，乙也。”；“乙，甲也。”广义的互训还包括“直训”、“同训”、“递训”等释义方式。段玉裁对《说文》的互训现象特别重视，不仅对《说文》原文就存在的互训词进行了分析研究，更是博采众长对《说文》进行该字，将原文《说文》中不互训的词也改为了互训。</p>
           <h4>相关研究：</h4>
           <ul class="research-list">
-               <!--<li class="research-item">刘丽群. 《说文解字注》"音义同"、"音义近"考察[D]. 北京:北京师范大学,2006.</li>
-               <li class="research-item">李涛. 论段玉裁《说文解字注》中的同义词[D]. 重庆:西南大学,2009.</li>
-               <li class="research-item">毛毓松. 《段注》"音义皆同"的同源字与"音义皆同"的异体字[J]. 广西师范学院学报（哲学社会科学版）,2008,29(4):104-107.</li>-->
+               <li class="research-item">[1]朱小健. 段玉裁对《说文》中互训的发明阐释[M]//北京师范大学中文系. 北京师范大学学报增刊  学术之声  3. 北京: 北京昌平亭自庄福利印刷厂, 1990.</li>
+               <li class="research-item">[2] 钟明立. 段玉裁转注理论试析[J]. 古汉语研究, 2002(1): 28-31.</li>
+               <li class="research-item">[3] 冯蒸著. 《说文》同义词研究[M/OL]. 北京: 首都师范大学出版社, 1995.</li>
+              <li class="research-item">[4] 李朝虹. 《说文解字》互训词研究[D/OL]. 浙江大学, 2007. </li>
+              <li class="research-item">[5] 周觐. 說文段注改字互訓研究[D/OL]. 湖南师范大学, 2013.[6] 杨蓉蓉. 段玉裁的转注理论[J/OL]. 辞书研究, 1985(5): 18-28, 101. DOI:10.16134/j.cnki.cn31-1997/g2.1985.05.004</li>
           </ul>
      </div>
     <script>
     $(document).ready(function(){
+        var queryString = window.location.search;
+        var urlParams = new URLSearchParams(queryString);
+        var paramValue = urlParams.get('id');
+        console.log(paramValue);
+        if(paramValue){
+            var element = document.getElementById(paramValue);
+            window.scrollTo({
+              top: element.offsetTop,
+              behavior: 'smooth'  // 可选，使滚动平滑进行
+            });
+        }
+
         $('#tree-container').on('loaded.jstree',function(e,data){
             $('#tree-container').jstree(false).select_node('34');
             //$('#tree-container').jstree(true).select_node('34', false);

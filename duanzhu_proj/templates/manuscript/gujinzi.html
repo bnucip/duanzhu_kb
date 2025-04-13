@@ -5,17 +5,32 @@
           {% include "manuscript/zsd_catalogue.html" %}
      </div>
      <div class="zsd_middle">
-          <h3>知识点实例：转注的实例</h3>
-          {% for zhuanzhu in models %}
-          <div id="{{zhuanzhu.id}}" class="yyt-item">
+          <h3>知识点实例：古今字的实例</h3>
+          {% for gujinzi in models %}
+          <div id="{{gujinzi.id}}" class="yyt-item">
               <div class="character-section">
-                  <div class="character-info">{{zhuanzhu.duanzhu.juan}}-{{zhuanzhu.duanzhu.bushou}}</div>
-                  <div class="character">{{zhuanzhu.duanzhu.zitou}}</div>
+                  <div class="character-info">{{gujinzi.duanzhu.juan}}-{{gujinzi.duanzhu.bushou}}</div>
+                  <div class="character">{{gujinzi.duanzhu.zitou}}</div>
               </div>
               <div class="yyt-content">
-                  {{zhuanzhu.duanzhu.zhengwen_zhushi | safe}}
+                  {{gujinzi.duanzhu.zhengwen_zhushi | safe}}
+                  {% if gujinzi.duanzhu1 and gujinzi.guzi_id != gujinzi.duanzhu_bianhao %}
+                      <div class="example-meta">
+                          <div class="meta-content">
+                              <div class="meta-character">{{gujinzi.duanzhu1.zitou}}</div>
+                              <div class="meta-text">{{gujinzi.duanzhu1.zhengwen_zhushi | safe}}</div>
+                          </div>
+                      </div>
+                  {% endif %}
+                  {% if gujinzi.duanzhu2 and gujinzi.jinzi_id != gujinzi.duanzhu_bianhao %}
+                      <div class="example-meta">
+                          <div class="meta-content">
+                              <div class="meta-character">{{gujinzi.duanzhu2.zitou}}</div>
+                              <div class="meta-text">{{gujinzi.duanzhu2.zhengwen_zhushi | safe}}</div>
+                          </div>
+                      </div>
+                  {% endif %}
               </div>
-
           </div>
           {% endfor %}
 
@@ -45,15 +60,13 @@
      </div>
      <div class="zsd_right">
           <h3>知识点说明</h3>
-          <p>互训。用A训B，再用B训A。</p>
+          <p>古代汉语中不同时代记录同一个词时所用字的不同，前一个时代所用的字称为古字，后一个时代所用的字称为今字。</p>
           <h4>相关研究：</h4>
           <ul class="research-list">
-               <li class="research-item">[1] 田村加代子. 段玉裁《说文解字注》四字转注与三字转注[J]. 北斗语言学刊, 2023(1): 202-213.</li>
-               <li class="research-item">[2] 杨蓉蓉. 段玉裁的转注理论[J/OL]. 辞书研究, 1985(5): 18-28, 101. </li>
-               <li class="research-item">[3] 钟明立. 段玉裁转注理论试析[J]. 古汉语研究, 2002(1): 28-31.</li>
-              <li class="research-item">[4] 韩琳, 黄冉. 段玉裁“转注”相关问题考察[J/OL]. 励耘语言学刊, 2018(2): 181-189.</li>
-               <li class="research-item">[5] 李传书. 段玉裁的转注论及其运用[J/OL]. 长沙电力学院社会科学学报, 1997(3). </li>
-               <li class="research-item">[6] 钟如雄. 汉字转注系统研究[D/OL]. 四川大学, 2005]. </li>
+               <li class="research-item">[1] 馬建民, 徐正考. 《説文解字注》古今字立體化研究及其他——以數量統計爲基礎[J]. 汉语史学报, 2022(2): 340-356.</li>
+               <li class="research-item">[2] 殷晟. 《说文解字》段注古今字、正俗字研究[J/OL]. 南京理工大学学报（社会科学版）, 2025, 38(1): 71-77, 88. DOI:10.19847/j.ISSN1008-2646.2025.01.010.</li>
+               <li class="research-item">[3] 刘琳. 古今字学术史丛书 段玉裁说文解字注古今字研究[M]. 北京: 社会科学文献出版社, 2023.</li>
+               <li class="research-item">[4] 陆燕婷. 《说文解字注》历史演变观述考--基于“古今字”“古今语”“古今义”的研究[D/OL]. 浙江大学, 2019[2025-02-23]. https://d.wanfangdata.com.cn/thesis/Y3595327.</li>
           </ul>
      </div>
     <script>
@@ -71,19 +84,19 @@
         }
 
         $('#tree-container').on('loaded.jstree',function(e,data){
-            $('#tree-container').jstree(false).select_node('19');
-            //$('#tree-container').jstree(true).select_node('19', false);
+            $('#tree-container').jstree(false).select_node('26');
+            //$('#tree-container').jstree(true).select_node('26', false);
         });
 
         $("a.page_link").click(function () {
-            location.href = '/zhuanzhu/?page='+$(this).data("page")
+            location.href = '/gujinzi/?page='+$(this).data("page")
         });
         $("#toPageGo").click(function () {
-            location.href = '/zhuanzhu/?page='+$("#toPageInput").val()
+            location.href = '/gujinzi/?page='+$("#toPageInput").val()
         });
         $("#toPageInput").keypress(function(e){
             if(e.keyCode == 13){
-                location.href = '/zhuanzhu/?page='+$(this).val()
+                location.href = '/gujinzi/?page='+$(this).val()
                 return false;
             }
         });

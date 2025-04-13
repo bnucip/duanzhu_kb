@@ -7,7 +7,7 @@
      <div class="zsd_middle">
           <h3>知识点实例：行废字的实例</h3>
           {% for xingfeizi in models %}
-          <div class="yyt-item">
+          <div id="{{xingfeizi.id}}" class="yyt-item">
               <div class="character-section">
                   <div class="character-info">{{xingfeizi.duanzhu.juan}}-{{xingfeizi.duanzhu.bushou}}</div>
                   <div class="character">{{xingfeizi.duanzhu.zitou}}</div>
@@ -55,6 +55,18 @@
      </div>
     <script>
     $(document).ready(function(){
+        var queryString = window.location.search;
+        var urlParams = new URLSearchParams(queryString);
+        var paramValue = urlParams.get('id');
+        console.log(paramValue);
+        if(paramValue){
+            var element = document.getElementById(paramValue);
+            window.scrollTo({
+              top: element.offsetTop,
+              behavior: 'smooth'  // 可选，使滚动平滑进行
+            });
+        }
+
         $('#tree-container').on('loaded.jstree',function(e,data){
             $('#tree-container').jstree(false).select_node('22');
             //$('#tree-container').jstree(true).select_node('22', false);

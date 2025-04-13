@@ -5,15 +5,15 @@
           {% include "manuscript/zsd_catalogue.html" %}
      </div>
      <div class="zsd_middle">
-          <h3>知识点实例：同字的实例</h3>
-          {% for tongzi in models %}
-          <div id="{{tongzi.id}}" class="yyt-item">
+          <h3>知识点实例：俗字的实例</h3>
+          {% for suzi in models %}
+          <div id="{{suzi.id}}" class="yyt-item">
               <div class="character-section">
-                  <div class="character-info">{{tongzi.duanzhu.juan}}-{{tongzi.duanzhu.bushou}}</div>
-                  <div class="character">{{tongzi.duanzhu.zitou}}</div>
+                  <div class="character-info">{{suzi.duanzhu.juan}}-{{suzi.duanzhu.bushou}}</div>
+                  <div class="character">{{suzi.duanzhu.zitou}}</div>
               </div>
               <div class="yyt-content">
-                  {{tongzi.duanzhu.zhengwen_zhushi | safe}}
+                  {{suzi.duanzhu.zhengwen_zhushi | safe}}
               </div>
 
           </div>
@@ -45,13 +45,15 @@
      </div>
      <div class="zsd_right">
           <h3>知识点说明</h3>
-          <p>指不同文字形体表示的为同一个词。</p>
-          <!--<h4>相关研究：</h4>
+          <p>汉字的通俗字体。与“正字”相对。一般在民间流行。俗字可以是简体字，也可以是繁体字；可以是后起字，也可以是古体字。就具体的单字来说，正字和俗字的关系会随时代的变化而变化。例如“躬”在《说文解字》中是俗字，但汉代以后，“躬”成了唯一的正字。对于俗字的研究，过去一直比较欠缺。20世纪以来，随着大批敦煌写卷文书逐渐公布，出土墓志碑铭也日见增多，现在，俗字的研究已成为汉字学研究的一个分支。</p>
+          <h4>相关研究：</h4>
           <ul class="research-list">
-               &lt;!&ndash;<li class="research-item">刘丽群. 《说文解字注》"音义同"、"音义近"考察[D]. 北京:北京师范大学,2006.</li>
-               <li class="research-item">李涛. 论段玉裁《说文解字注》中的同义词[D]. 重庆:西南大学,2009.</li>
-               <li class="research-item">毛毓松. 《段注》"音义皆同"的同源字与"音义皆同"的异体字[J]. 广西师范学院学报（哲学社会科学版）,2008,29(4):104-107.</li>&ndash;&gt;
-          </ul>-->
+               <li class="research-item">[1]刘洋. 《说文段注》俗字类型考略[J/OL]. 殷都学刊, 2000(3): 94-96. DOI:10.16140/j.cnki.ydxk.2000.03.023.</li>
+               <li class="research-item">[2]殷晟. 《说文解字》段注古今字、正俗字研究[J/OL]. 南京理工大学学报（社会科学版）, 2025, 38(1): 71-77, 88. DOI:10.19847/j.ISSN1008-2646.2025.01.010.</li>
+              <li class="research-item">[3]马寿龄述. 说文段注撰要 1-5册[M/OL]. 北京: 中华书局, 1985.</li>
+              <li class="research-item">[4] 马伟成. 論段玉裁《說文解字注》言「俗作某」之字例([J]. 兴大中文学报, [2025].</li>
+              <li class="research-item">[5] 蔡信發. 段注《說文》論列俗字滋生之因[J]. (23): 79-100.[6] 李占平. 段注俗字研究[D/OL]. 陕西师范大学, 2002.</li>
+          </ul>
      </div>
     <script>
     $(document).ready(function(){
@@ -68,19 +70,19 @@
         }
 
         $('#tree-container').on('loaded.jstree',function(e,data){
-            $('#tree-container').jstree(false).select_node('25');
-            //$('#tree-container').jstree(true).select_node('25', false);
+            $('#tree-container').jstree(false).select_node('24');
+            //$('#tree-container').jstree(true).select_node('24', false);
         });
 
         $("a.page_link").click(function () {
-            location.href = '/tongzi/?page='+$(this).data("page")
+            location.href = '/suzi/?page='+$(this).data("page")
         });
         $("#toPageGo").click(function () {
-            location.href = '/tongzi/?page='+$("#toPageInput").val()
+            location.href = '/suzi/?page='+$("#toPageInput").val()
         });
         $("#toPageInput").keypress(function(e){
             if(e.keyCode == 13){
-                location.href = '/tongzi/?page='+$(this).val()
+                location.href = '/suzi/?page='+$(this).val()
                 return false;
             }
         });

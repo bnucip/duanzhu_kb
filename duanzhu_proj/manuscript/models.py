@@ -94,6 +94,9 @@ class Zhishimulu(models.Model):
     tag_name = models.TextField('目录名', null=True, blank=True)
     parent_id = models.IntegerField('父级id', null=True, blank=True)
     level = models.IntegerField('目录层级', null=True, blank=True)
+    zhishishuoming = models.TextField('知识说明', null=True, blank=True)
+    shuyuxingshi = models.TextField('术语形式', null=True, blank=True)
+    yanjiutuijie = models.TextField('研究推介', null=True, blank=True)
     url = models.TextField('请求url', null=True, blank=True)
     class Meta:
         verbose_name = '知识目录'
@@ -219,3 +222,313 @@ class Gujinyi(models.Model):
         verbose_name = '古义今义'
         verbose_name_plural = verbose_name
 
+class Hunyanxiyan(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    duanzhu_bianhao = models.CharField('段注编号', max_length=20, null=True, blank=True)
+    duanzhu = models.ForeignKey(DuanZhu, on_delete=models.CASCADE, db_constraint=True, verbose_name='段注ID', null=True)
+    duanzhushuyu = models.TextField('段注术语', null=True, blank=True)
+    xibianduixiang = models.TextField('辨析对象', null=True, blank=True)
+    obj1_duanzhu_id = models.TextField('对象1_duanzhu_id', null=True, blank=True)
+    obj2_duanzhu_id = models.TextField('对象2_duanzhu_id', null=True, blank=True)
+    obj3_duanzhu_id = models.TextField('对象3_duanzhu_id', null=True, blank=True)
+    obj4_duanzhu_id = models.TextField('对象4_duanzhu_id', null=True, blank=True)
+    obj5_duanzhu_id = models.TextField('对象5_duanzhu_id', null=True, blank=True)
+    class Meta:
+        verbose_name = '浑言析言'
+        verbose_name_plural = verbose_name
+
+class Ezi(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    duanzhu_bianhao = models.CharField('段注编号', max_length=20, null=True, blank=True)
+    duanzhu = models.ForeignKey(DuanZhu, on_delete=models.CASCADE, db_constraint=True, verbose_name='段注ID', null=True)
+    match_content = models.TextField('匹配内容', null=True, blank=True)
+    class Meta:
+        verbose_name = '讹字'
+        verbose_name_plural = verbose_name
+
+class Suzi(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    duanzhu_bianhao = models.CharField('段注编号', max_length=20, null=True, blank=True)
+    duanzhu = models.ForeignKey(DuanZhu, on_delete=models.CASCADE, db_constraint=True, verbose_name='段注ID', null=True)
+    match_content = models.TextField('匹配内容', null=True, blank=True)
+    class Meta:
+        verbose_name = '俗字'
+        verbose_name_plural = verbose_name
+
+class You(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    duanzhu_bianhao = models.CharField('段注编号', max_length=20, null=True, blank=True)
+    duanzhu = models.ForeignKey(DuanZhu, on_delete=models.CASCADE, db_constraint=True, verbose_name='段注ID', null=True)
+    match_content = models.TextField('匹配内容', null=True, blank=True)
+    a = models.TextField('A', null=True, blank=True)
+    a_id = models.TextField('A_id', null=True, blank=True)
+    b = models.TextField('B', null=True, blank=True)
+    b_id = models.TextField('B_id', null=True, blank=True)
+    class Meta:
+        verbose_name = '犹'
+        verbose_name_plural = verbose_name
+
+class Suiwen(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    duanzhu_bianhao = models.CharField('段注编号', max_length=20, null=True, blank=True)
+    duanzhu = models.ForeignKey(DuanZhu, on_delete=models.CASCADE, db_constraint=True, verbose_name='段注ID', null=True)
+    match_content = models.TextField('匹配内容', null=True, blank=True)
+    class Meta:
+        verbose_name = '随文'
+        verbose_name_plural = verbose_name
+
+class Shuozi(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    duanzhu_bianhao = models.CharField('段注编号', max_length=20, null=True, blank=True)
+    duanzhu = models.ForeignKey(DuanZhu, on_delete=models.CASCADE, db_constraint=True, verbose_name='段注ID', null=True)
+    match_content = models.TextField('匹配内容', null=True, blank=True)
+    class Meta:
+        verbose_name = '说字'
+        verbose_name_plural = verbose_name
+
+class Feishi(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    duanzhu_bianhao = models.CharField('段注编号', max_length=20, null=True, blank=True)
+    duanzhu = models.ForeignKey(DuanZhu, on_delete=models.CASCADE, db_constraint=True, verbose_name='段注ID', null=True)
+    match_content = models.TextField('匹配内容', null=True, blank=True)
+    class Meta:
+        verbose_name = '非是'
+        verbose_name_plural = verbose_name
+
+class Fanxun(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    duanzhu_bianhao = models.CharField('段注编号', max_length=20, null=True, blank=True)
+    duanzhu = models.ForeignKey(DuanZhu, on_delete=models.CASCADE, db_constraint=True, verbose_name='段注ID', null=True)
+    match_content = models.TextField('匹配内容', null=True, blank=True)
+    class Meta:
+        verbose_name = '反训'
+        verbose_name_plural = verbose_name
+
+class Tongxun(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    duanzhu_bianhao = models.CharField('段注编号', max_length=20, null=True, blank=True)
+    duanzhu = models.ForeignKey(DuanZhu, on_delete=models.CASCADE, db_constraint=True, verbose_name='段注ID', null=True)
+    match_content = models.TextField('匹配内容', null=True, blank=True)
+    class Meta:
+        verbose_name = '同训'
+        verbose_name_plural = verbose_name
+
+class Shuangsheng(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    duanzhu_bianhao = models.CharField('段注编号', max_length=20, null=True, blank=True)
+    duanzhu = models.ForeignKey(DuanZhu, on_delete=models.CASCADE, db_constraint=True, verbose_name='段注ID', null=True)
+    match_content = models.TextField('匹配内容', null=True, blank=True)
+    obj1 = models.TextField('双声对象1', null=True, blank=True)
+    obj2 = models.TextField('双声对象2', null=True, blank=True)
+    class Meta:
+        verbose_name = '双声'
+        verbose_name_plural = verbose_name
+
+class Dieyun(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    duanzhu_bianhao = models.CharField('段注编号', max_length=20, null=True, blank=True)
+    duanzhu = models.ForeignKey(DuanZhu, on_delete=models.CASCADE, db_constraint=True, verbose_name='段注ID', null=True)
+    match_content = models.TextField('匹配内容', null=True, blank=True)
+    class Meta:
+        verbose_name = '叠韵'
+        verbose_name_plural = verbose_name
+
+class Yijinshigu(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    duanzhu_bianhao = models.CharField('段注编号', max_length=20, null=True, blank=True)
+    duanzhu = models.ForeignKey(DuanZhu, on_delete=models.CASCADE, db_constraint=True, verbose_name='段注ID', null=True)
+    match_content = models.TextField('匹配内容', null=True, blank=True)
+    class Meta:
+        verbose_name = '以今释古'
+        verbose_name_plural = verbose_name
+
+class Hujian(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    duanzhu_bianhao = models.CharField('段注编号', max_length=20, null=True, blank=True)
+    duanzhu = models.ForeignKey(DuanZhu, on_delete=models.CASCADE, db_constraint=True, verbose_name='段注ID', null=True)
+    match_content = models.TextField('匹配内容', null=True, blank=True)
+    class Meta:
+        verbose_name = '互见'
+        verbose_name_plural = verbose_name
+
+class Guyu(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    duanzhu_bianhao = models.CharField('段注编号', max_length=20, null=True, blank=True)
+    duanzhu = models.ForeignKey(DuanZhu, on_delete=models.CASCADE, db_constraint=True, verbose_name='段注ID', null=True)
+    match_content = models.TextField('匹配内容', null=True, blank=True)
+    class Meta:
+        verbose_name = '古语'
+        verbose_name_plural = verbose_name
+
+class Shengfushiyuan(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    duanzhu_bianhao = models.CharField('段注编号', max_length=20, null=True, blank=True)
+    duanzhu = models.ForeignKey(DuanZhu, on_delete=models.CASCADE, db_constraint=True, verbose_name='段注ID', null=True)
+    match_content = models.TextField('匹配内容', null=True, blank=True)
+    class Meta:
+        verbose_name = '声符示源'
+        verbose_name_plural = verbose_name
+
+class Fangsu(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    duanzhu_bianhao = models.CharField('段注编号', max_length=20, null=True, blank=True)
+    duanzhu = models.ForeignKey(DuanZhu, on_delete=models.CASCADE, db_constraint=True, verbose_name='段注ID', null=True)
+    match_content = models.TextField('匹配内容', null=True, blank=True)
+    class Meta:
+        verbose_name = '方言俗语'
+        verbose_name_plural = verbose_name
+
+class Tongyu(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    duanzhu_bianhao = models.CharField('段注编号', max_length=20, null=True, blank=True)
+    duanzhu = models.ForeignKey(DuanZhu, on_delete=models.CASCADE, db_constraint=True, verbose_name='段注ID', null=True)
+    match_content = models.TextField('匹配内容', null=True, blank=True)
+    class Meta:
+        verbose_name = '通语'
+        verbose_name_plural = verbose_name
+
+class Zhuanyu(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    duanzhu_bianhao = models.CharField('段注编号', max_length=20, null=True, blank=True)
+    duanzhu = models.ForeignKey(DuanZhu, on_delete=models.CASCADE, db_constraint=True, verbose_name='段注ID', null=True)
+    match_content = models.TextField('匹配内容', null=True, blank=True)
+    class Meta:
+        verbose_name = '转语'
+        verbose_name_plural = verbose_name
+
+class Yixiangzu(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    duanzhu_bianhao = models.CharField('段注编号', max_length=20, null=True, blank=True)
+    duanzhu = models.ForeignKey(DuanZhu, on_delete=models.CASCADE, db_constraint=True, verbose_name='段注ID', null=True)
+    match_content = models.TextField('匹配内容', null=True, blank=True)
+    class Meta:
+        verbose_name = '义相足'
+        verbose_name_plural = verbose_name
+
+class Yintongyiyi(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    duanzhu_bianhao = models.CharField('段注编号', max_length=20, null=True, blank=True)
+    duanzhu = models.ForeignKey(DuanZhu, on_delete=models.CASCADE, db_constraint=True, verbose_name='段注ID', null=True)
+    match_content = models.TextField('匹配内容', null=True, blank=True)
+    class Meta:
+        verbose_name = '音同义异'
+        verbose_name_plural = verbose_name
+
+class Bieyiyi(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    duanzhu_bianhao = models.CharField('段注编号', max_length=20, null=True, blank=True)
+    duanzhu = models.ForeignKey(DuanZhu, on_delete=models.CASCADE, db_constraint=True, verbose_name='段注ID', null=True)
+    match_content = models.TextField('匹配内容', null=True, blank=True)
+    class Meta:
+        verbose_name = '别一义'
+        verbose_name_plural = verbose_name
+
+
+class Guyin(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    duanzhu_bianhao = models.CharField('段注编号', max_length=20, null=True, blank=True)
+    duanzhu = models.ForeignKey(DuanZhu, on_delete=models.CASCADE, db_constraint=True, verbose_name='段注ID', null=True)
+    match_content = models.TextField('匹配内容', null=True, blank=True)
+    class Meta:
+        verbose_name = '古音'
+        verbose_name_plural = verbose_name
+
+class Jinyin(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    duanzhu_bianhao = models.CharField('段注编号', max_length=20, null=True, blank=True)
+    duanzhu = models.ForeignKey(DuanZhu, on_delete=models.CASCADE, db_constraint=True, verbose_name='段注ID', null=True)
+    match_content = models.TextField('匹配内容', null=True, blank=True)
+    class Meta:
+        verbose_name = '今音'
+        verbose_name_plural = verbose_name
+
+class Yinzhuan(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    duanzhu_bianhao = models.CharField('段注编号', max_length=20, null=True, blank=True)
+    duanzhu = models.ForeignKey(DuanZhu, on_delete=models.CASCADE, db_constraint=True, verbose_name='段注ID', null=True)
+    match_content = models.TextField('匹配内容', null=True, blank=True)
+    class Meta:
+        verbose_name = '音转'
+        verbose_name_plural = verbose_name
+
+class Yinbian(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    duanzhu_bianhao = models.CharField('段注编号', max_length=20, null=True, blank=True)
+    duanzhu = models.ForeignKey(DuanZhu, on_delete=models.CASCADE, db_constraint=True, verbose_name='段注ID', null=True)
+    match_content = models.TextField('匹配内容', null=True, blank=True)
+    class Meta:
+        verbose_name = '音变'
+        verbose_name_plural = verbose_name
+
+class Zuijin(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    duanzhu_bianhao = models.CharField('段注编号', max_length=20, null=True, blank=True)
+    duanzhu = models.ForeignKey(DuanZhu, on_delete=models.CASCADE, db_constraint=True, verbose_name='段注ID', null=True)
+    match_content = models.TextField('匹配内容', null=True, blank=True)
+    class Meta:
+        verbose_name = '最近'
+        verbose_name_plural = verbose_name
+
+class Guheyun(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    duanzhu_bianhao = models.CharField('段注编号', max_length=20, null=True, blank=True)
+    duanzhu = models.ForeignKey(DuanZhu, on_delete=models.CASCADE, db_constraint=True, verbose_name='段注ID', null=True)
+    match_content = models.TextField('匹配内容', null=True, blank=True)
+    class Meta:
+        verbose_name = '古合韵'
+        verbose_name_plural = verbose_name
+
+class Yiwen(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    duanzhu_bianhao = models.CharField('段注编号', max_length=20, null=True, blank=True)
+    duanzhu = models.ForeignKey(DuanZhu, on_delete=models.CASCADE, db_constraint=True, verbose_name='段注ID', null=True)
+    match_content = models.TextField('匹配内容', null=True, blank=True)
+    class Meta:
+        verbose_name = '异文'
+        verbose_name_plural = verbose_name
+
+class Shan(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    duanzhu_bianhao = models.CharField('段注编号', max_length=20, null=True, blank=True)
+    duanzhu = models.ForeignKey(DuanZhu, on_delete=models.CASCADE, db_constraint=True, verbose_name='段注ID', null=True)
+    match_content = models.TextField('匹配内容', null=True, blank=True)
+    class Meta:
+        verbose_name = '删'
+        verbose_name_plural = verbose_name
+
+class Duotuo(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    duanzhu_bianhao = models.CharField('段注编号', max_length=20, null=True, blank=True)
+    duanzhu = models.ForeignKey(DuanZhu, on_delete=models.CASCADE, db_constraint=True, verbose_name='段注ID', null=True)
+    match_content1 = models.TextField('匹配内容1', null=True, blank=True)
+    match_content2 = models.TextField('匹配内容2', null=True, blank=True)
+    class Meta:
+        verbose_name = '夺'
+        verbose_name_plural = verbose_name
+
+class Wanggai(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    duanzhu_bianhao = models.CharField('段注编号', max_length=20, null=True, blank=True)
+    duanzhu = models.ForeignKey(DuanZhu, on_delete=models.CASCADE, db_constraint=True, verbose_name='段注ID', null=True)
+    match_content = models.TextField('匹配内容', null=True, blank=True)
+    class Meta:
+        verbose_name = '妄改'
+        verbose_name_plural = verbose_name
+
+class Zheng(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    duanzhu_bianhao = models.CharField('段注编号', max_length=20, null=True, blank=True)
+    duanzhu = models.ForeignKey(DuanZhu, on_delete=models.CASCADE, db_constraint=True, verbose_name='段注ID', null=True)
+    match_content = models.TextField('匹配内容', null=True, blank=True)
+    class Meta:
+        verbose_name = '正'
+        verbose_name_plural = verbose_name
+
+class Benzuo(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    duanzhu_bianhao = models.CharField('段注编号', max_length=20, null=True, blank=True)
+    duanzhu = models.ForeignKey(DuanZhu, on_delete=models.CASCADE, db_constraint=True, verbose_name='段注ID', null=True)
+    match_content = models.TextField('匹配内容', null=True, blank=True)
+    class Meta:
+        verbose_name = '本作'
+        verbose_name_plural = verbose_name
