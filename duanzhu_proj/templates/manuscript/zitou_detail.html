@@ -108,6 +108,9 @@ function loadZitou(zitouId) {
         if(zstag){
             loadZsTag(zitouId,zstag);
             $("#zstag").val(zstag);
+        }else{
+            loadZsTag(zitouId,'xg');
+            $("#zstag").val('xg');
         }
     });
 }

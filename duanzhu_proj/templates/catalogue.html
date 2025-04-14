@@ -81,6 +81,9 @@ $(document).ready(function() {
                 if(zstag){
                     loadZsTag(node.id,zstag);
                     $("#zstag").val(zstag);
+                }else{
+                    loadZsTag(node.id,'xg');
+                    $("#zstag").val('xg');
                 }
             });
         }

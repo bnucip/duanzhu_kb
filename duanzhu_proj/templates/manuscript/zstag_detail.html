@@ -27,31 +27,31 @@
         {% if xingfeizis %}
             <div class="wz_btn">行废字</div>
             {% for xfz in xingfeizis%}
-            <div class="zstag_p">{{xfz.pipeizifuchuan }}&nbsp;&nbsp;<a class="btn" href="/xingfeizi/?id={{xfz.id}}"><i class="fa fa-external-link"></i></a></div>
+            <div class="zstag_p">{{xfz.pipeizifuchuan }}&nbsp;&nbsp;<a class="btn" href="/xingfeizi/?id={{xfz.id}}" target="_blank"><i class="fa fa-external-link"></i></a></div>
             {% endfor %}
         {% endif %}
         {% if ezis %}
             <div class="wz_btn">讹字</div>
             {% for ezi in ezis%}
-            <div class="zstag_p">{{ezi.match_content }}&nbsp;&nbsp;<a class="btn" href="/ezi/?id={{ezi.id}}"><i class="fa fa-external-link"></i></a></div>
+            <div class="zstag_p">{{ezi.match_content }}&nbsp;&nbsp;<a class="btn" href="/ezi/?id={{ezi.id}}" target="_blank"><i class="fa fa-external-link"></i></a></div>
             {% endfor %}
         {% endif %}
         {% if suzis %}
             <div class="wz_btn">俗字</div>
             {% for suzi in suzis%}
-            <div class="zstag_p">{{suzi.match_content }}&nbsp;&nbsp;<a class="btn" href="/suzi/?id={{suzi.id}}"><i class="fa fa-external-link"></i></a></div>
+            <div class="zstag_p">{{suzi.match_content }}&nbsp;&nbsp;<a class="btn" href="/suzi/?id={{suzi.id}}" target="_blank"><i class="fa fa-external-link"></i></a></div>
             {% endfor %}
         {% endif %}
         {% if tongzis %}
             <div class="wz_btn">同字</div>
             {% for tongzi in tongzis%}
-            <div class="zstag_p">{{tongzi.match_content }}&nbsp;&nbsp;<a class="btn" href="/tongzi/?id={{tongzi.id}}"><i class="fa fa-external-link"></i></a></div>
+            <div class="zstag_p">{{tongzi.match_content }}&nbsp;&nbsp;<a class="btn" href="/tongzi/?id={{tongzi.id}}" target="_blank"><i class="fa fa-external-link"></i></a></div>
             {% endfor %}
         {% endif %}
         {% if gujinzis %}
             <div class="wz_btn">古今字</div>
             {% for gjz in gujinzis%}
-                <div class="zstag_p">{{gjz.miaoshu }}&nbsp;&nbsp;<a class="btn" href="/gujinzi/?id={{gjz.id}}"><i class="fa fa-external-link"></i></a></div>
+                <div class="zstag_p">{{gjz.miaoshu }}&nbsp;&nbsp;<a class="btn" href="/gujinzi/?id={{gjz.id}}" target="_blank"><i class="fa fa-external-link"></i></a></div>
             {% endfor %}
         {% endif %}
     {% endif %}
@@ -67,37 +67,37 @@
         {% if guyins %}
             <div class="yy_btn">古音</div>
             {% for guyin in guyins%}
-                <div class="zstag_p">{{guyin.match_content }}&nbsp;&nbsp;<a class="btn" href="/guyin/?id={{guyin.id}}"><i class="fa fa-external-link"></i></a></div>
+                <div class="zstag_p">{{guyin.match_content }}&nbsp;&nbsp;<a class="btn" href="/guyin/?id={{guyin.id}}" target="_blank"><i class="fa fa-external-link"></i></a></div>
             {% endfor %}
         {% endif %}
         {% if jinyins %}
             <div class="yy_btn">今音</div>
             {% for jinyin in jinyins%}
-                <div class="zstag_p">{{jinyin.match_content }}&nbsp;&nbsp;<a class="btn" href="/jinyin/?id={{jinyin.id}}"><i class="fa fa-external-link"></i></a></div>
+                <div class="zstag_p">{{jinyin.match_content }}&nbsp;&nbsp;<a class="btn" href="/jinyin/?id={{jinyin.id}}" target="_blank"><i class="fa fa-external-link"></i></a></div>
             {% endfor %}
         {% endif %}
         {% if yinzhuans %}
             <div class="yy_btn">音转</div>
             {% for yinzhuan in yinzhuans%}
-                <div class="zstag_p">{{yinzhuan.match_content }}&nbsp;&nbsp;<a class="btn" href="/yinzhuan/?id={{yinzhuan.id}}"><i class="fa fa-external-link"></i></a></div>
+                <div class="zstag_p">{{yinzhuan.match_content }}&nbsp;&nbsp;<a class="btn" href="/yinzhuan/?id={{yinzhuan.id}}" target="_blank"><i class="fa fa-external-link"></i></a></div>
             {% endfor %}
         {% endif %}
         {% if yinbians %}
             <div class="yy_btn">音变</div>
             {% for yinbian in yinbians%}
-                <div class="zstag_p">{{yinbian.match_content }}&nbsp;&nbsp;<a class="btn" href="/yinbian/?id={{yinbian.id}}"><i class="fa fa-external-link"></i></a></div>
+                <div class="zstag_p">{{yinbian.match_content }}&nbsp;&nbsp;<a class="btn" href="/yinbian/?id={{yinbian.id}}" target="_blank"><i class="fa fa-external-link"></i></a></div>
             {% endfor %}
         {% endif %}
         {% if zuijins %}
             <div class="yy_btn">最近</div>
             {% for zuijin in zuijins%}
-                <div class="zstag_p">{{zuijin.match_content }}&nbsp;&nbsp;<a class="btn" href="/zuijin/?id={{zuijin.id}}"><i class="fa fa-external-link"></i></a></div>
+                <div class="zstag_p">{{zuijin.match_content }}&nbsp;&nbsp;<a class="btn" href="/zuijin/?id={{zuijin.id}}" target="_blank"><i class="fa fa-external-link"></i></a></div>
             {% endfor %}
         {% endif %}
         {% if guheyuns %}
             <div class="yy_btn">古合韵</div>
             {% for guheyun in guheyuns%}
-                <div class="zstag_p">{{guheyun.match_content }}&nbsp;&nbsp;<a class="btn" href="/guheyun/?id={{guheyun.id}}"><i class="fa fa-external-link"></i></a></div>
+                <div class="zstag_p">{{guheyun.match_content }}&nbsp;&nbsp;<a class="btn" href="/guheyun/?id={{guheyun.id}}" target="_blank"><i class="fa fa-external-link"></i></a></div>
             {% endfor %}
         {% endif %}
     {% endif %}
@@ -107,76 +107,76 @@
         {% if yous %}
             <div class="xg_btn">犹</div>
             {% for you in yous%}
-                <div class="zstag_p">{{you.match_content }}&nbsp;&nbsp;<a class="btn" href="/you/?id={{you.id}}"><i class="fa fa-external-link"></i></a></div>
+                <div class="zstag_p">{{you.match_content }}&nbsp;&nbsp;<a class="btn" href="/you/?id={{you.id}}" target="_blank"><i class="fa fa-external-link"></i></a></div>
             {% endfor %}
         {% endif %}
         {% if gouyis %}
             <div class="xg_btn">构意</div>
             {% for gouyi in gouyis%}
-                {% if gouyi.gouyi1 %}<div class="zstag_p">{{gouyi.gouyi1 }}&nbsp;&nbsp;<a class="btn" href="/gouyi/?id={{gouyi.id}}"><i class="fa fa-external-link"></i></a></div>{% endif %}
-                {% if gouyi.gouyi2 %}<div class="zstag_p">{{gouyi.gouyi2 }}&nbsp;&nbsp;<a class="btn" href="/gouyi/?id={{gouyi.id}}"><i class="fa fa-external-link"></i></a></div>{% endif %}
-                {% if gouyi.gouyi3 %}<div class="zstag_p">{{gouyi.gouyi3 }}&nbsp;&nbsp;<a class="btn" href="/gouyi/?id={{gouyi.id}}"><i class="fa fa-external-link"></i></a></div>{% endif %}
-                {% if gouyi.shengfugouyi %}<div class="zstag_p">{{gouyi.shengfugouyi }}&nbsp;&nbsp;<a class="btn" href="/gouyi/?id={{gouyi.id}}"><i class="fa fa-external-link"></i></a></div>{% endif %}
+                {% if gouyi.gouyi1 %}<div class="zstag_p">{{gouyi.gouyi1 }}&nbsp;&nbsp;<a class="btn" href="/gouyi/?id={{gouyi.id}}" target="_blank"><i class="fa fa-external-link"></i></a></div>{% endif %}
+                {% if gouyi.gouyi2 %}<div class="zstag_p">{{gouyi.gouyi2 }}&nbsp;&nbsp;<a class="btn" href="/gouyi/?id={{gouyi.id}}" target="_blank"><i class="fa fa-external-link"></i></a></div>{% endif %}
+                {% if gouyi.gouyi3 %}<div class="zstag_p">{{gouyi.gouyi3 }}&nbsp;&nbsp;<a class="btn" href="/gouyi/?id={{gouyi.id}}" target="_blank"><i class="fa fa-external-link"></i></a></div>{% endif %}
+                {% if gouyi.shengfugouyi %}<div class="zstag_p">{{gouyi.shengfugouyi }}&nbsp;&nbsp;<a class="btn" href="/gouyi/?id={{gouyi.id}}" target="_blank"><i class="fa fa-external-link"></i></a></div>{% endif %}
             {% endfor %}
         {% endif %}
         {% if suiwens %}
             <div class="xg_btn">随文解之</div>
             {% for suiwen in suiwens%}
-                <div class="zstag_p">{{suiwen.match_content }}&nbsp;&nbsp;<a class="btn" href="/suiwen/?id={{suiwen.id}}"><i class="fa fa-external-link"></i></a></div>
+                <div class="zstag_p">{{suiwen.match_content }}&nbsp;&nbsp;<a class="btn" href="/suiwen/?id={{suiwen.id}}" target="_blank"><i class="fa fa-external-link"></i></a></div>
             {% endfor %}
         {% endif %}
         {% if shuozis %}
             <div class="xg_btn">说字训诂</div>
             {% for shuozi in shuozis%}
-                <div class="zstag_p">{{shuozi.match_content }}&nbsp;&nbsp;<a class="btn" href="/shuozi/?id={{shuozi.id}}"><i class="fa fa-external-link"></i></a></div>
+                <div class="zstag_p">{{shuozi.match_content }}&nbsp;&nbsp;<a class="btn" href="/shuozi/?id={{shuozi.id}}" target="_blank"><i class="fa fa-external-link"></i></a></div>
             {% endfor %}
         {% endif %}
         {% if feishis %}
             <div class="xg_btn">非是</div>
             {% for feishi in feishis%}
-                <div class="zstag_p">{{feishi.match_content }}&nbsp;&nbsp;<a class="btn" href="/feishi/?id={{feishi.id}}"><i class="fa fa-external-link"></i></a></div>
+                <div class="zstag_p">{{feishi.match_content }}&nbsp;&nbsp;<a class="btn" href="/feishi/?id={{feishi.id}}" target="_blank"><i class="fa fa-external-link"></i></a></div>
             {% endfor %}
         {% endif %}
         {% if fanxuns %}
             <div class="xg_btn">反训</div>
             {% for fanxun in fanxuns%}
-                <div class="zstag_p">{{fanxun.match_content }}&nbsp;&nbsp;<a class="btn" href="/fanxun/?id={{fanxun.id}}"><i class="fa fa-external-link"></i></a></div>
+                <div class="zstag_p">{{fanxun.match_content }}&nbsp;&nbsp;<a class="btn" href="/fanxun/?id={{fanxun.id}}" target="_blank"><i class="fa fa-external-link"></i></a></div>
             {% endfor %}
         {% endif %}
         {% if tongxuns %}
             <div class="xg_btn">同训</div>
             {% for tongxun in tongxuns%}
-                <div class="zstag_p">{{tongxun.match_content }}&nbsp;&nbsp;<a class="btn" href="/tongxun/?id={{tongxun.id}}"><i class="fa fa-external-link"></i></a></div>
+                <div class="zstag_p">{{tongxun.match_content }}&nbsp;&nbsp;<a class="btn" href="/tongxun/?id={{tongxun.id}}" target="_blank"><i class="fa fa-external-link"></i></a></div>
             {% endfor %}
         {% endif %}
         {% if huxuns %}
             <div class="xg_btn">互训</div>
             {% for huxun in huxuns%}
-                <div class="zstag_p">{{huxun.shuojie }}&nbsp;&nbsp;<a class="btn" href="/huxun/?id={{huxun.id}}"><i class="fa fa-external-link"></i></a></div>
+                <div class="zstag_p">{{huxun.shuojie }}&nbsp;&nbsp;<a class="btn" href="/huxun/?id={{huxun.id}}" target="_blank"><i class="fa fa-external-link"></i></a></div>
             {% endfor %}
         {% endif %}
         {% if shuangshengs %}
             <div class="xg_btn">双声</div>
             {% for shuangsheng in shuangshengs%}
-                <div class="zstag_p">{{shuangsheng.match_content }}&nbsp;&nbsp;<a class="btn" href="/shuangsheng/?id={{shuangsheng.id}}"><i class="fa fa-external-link"></i></a></div>
+                <div class="zstag_p">{{shuangsheng.match_content }}&nbsp;&nbsp;<a class="btn" href="/shuangsheng/?id={{shuangsheng.id}}" target="_blank"><i class="fa fa-external-link"></i></a></div>
             {% endfor %}
         {% endif %}
         {% if dieyuns %}
             <div class="xg_btn">叠韵</div>
             {% for dieyun in dieyuns%}
-                <div class="zstag_p">{{dieyun.match_content }}&nbsp;&nbsp;<a class="btn" href="/dieyun/?id={{dieyun.id}}"><i class="fa fa-external-link"></i></a></div>
+                <div class="zstag_p">{{dieyun.match_content }}&nbsp;&nbsp;<a class="btn" href="/dieyun/?id={{dieyun.id}}" target="_blank"><i class="fa fa-external-link"></i></a></div>
             {% endfor %}
         {% endif %}
         {% if yijinshigus %}
             <div class="xg_btn">以今释古</div>
             {% for yijinshigu in yijinshigus%}
-                <div class="zstag_p">{{yijinshigu.match_content }}&nbsp;&nbsp;<a class="btn" href="/yijinshigu/?id={{yijinshigu.id}}"><i class="fa fa-external-link"></i></a></div>
+                <div class="zstag_p">{{yijinshigu.match_content }}&nbsp;&nbsp;<a class="btn" href="/yijinshigu/?id={{yijinshigu.id}}" target="_blank"><i class="fa fa-external-link"></i></a></div>
             {% endfor %}
         {% endif %}
         {% if hujians %}
             <div class="xg_btn">互见</div>
             {% for hujian in hujians%}
-                <div class="zstag_p">{{hujian.match_content }}&nbsp;&nbsp;<a class="btn" href="/hujian/?id={{hujian.id}}"><i class="fa fa-external-link"></i></a></div>
+                <div class="zstag_p">{{hujian.match_content }}&nbsp;&nbsp;<a class="btn" href="/hujian/?id={{hujian.id}}" target="_blank"><i class="fa fa-external-link"></i></a></div>
             {% endfor %}
         {% endif %}
     {% endif %}
@@ -185,49 +185,49 @@
         {% if guyus %}
             <div class="xg_btn">古语</div>
             {% for guyu in guyus%}
-                <div class="zstag_p">{{guyu.match_content }}&nbsp;&nbsp;<a class="btn" href="/guyu/?id={{guyu.id}}"><i class="fa fa-external-link"></i></a></div>
+                <div class="zstag_p">{{guyu.match_content }}&nbsp;&nbsp;<a class="btn" href="/guyu/?id={{guyu.id}}" target="_blank"><i class="fa fa-external-link"></i></a></div>
             {% endfor %}
         {% endif %}
         {% if hunyanxiyans %}
             <div class="xg_btn">浑言析言</div>
             {% for hunyanxiyan in hunyanxiyans%}
-                <div class="zstag_p">{{hunyanxiyan.xibianduixiang }}&nbsp;&nbsp;<a class="btn" href="/hunyanxiyan/?id={{hunyanxiyan.id}}"><i class="fa fa-external-link"></i></a></div>
+                <div class="zstag_p">{{hunyanxiyan.xibianduixiang }}&nbsp;&nbsp;<a class="btn" href="/hunyanxiyan/?id={{hunyanxiyan.id}}" target="_blank"><i class="fa fa-external-link"></i></a></div>
             {% endfor %}
         {% endif %}
         {% if shengfushiyuans %}
             <div class="xg_btn">声符示源</div>
             {% for shengfushiyuan in shengfushiyuans%}
-                <div class="zstag_p">{{shengfushiyuan.match_content }}&nbsp;&nbsp;<a class="btn" href="/shengfushiyuan/?id={{shengfushiyuan.id}}"><i class="fa fa-external-link"></i></a></div>
+                <div class="zstag_p">{{shengfushiyuan.match_content }}&nbsp;&nbsp;<a class="btn" href="/shengfushiyuan/?id={{shengfushiyuan.id}}" target="_blank"><i class="fa fa-external-link"></i></a></div>
             {% endfor %}
         {% endif %}
         {% if zhiyans %}
             <div class="xg_btn">之言</div>
             {% for zhiyan in zhiyans%}
-                <div class="zstag_p">{{zhiyan.zhiyanshuojie }}&nbsp;&nbsp;<a class="btn" href="/zhiyan/?id={{zhiyan.id}}"><i class="fa fa-external-link"></i></a></div>
+                <div class="zstag_p">{{zhiyan.zhiyanshuojie }}&nbsp;&nbsp;<a class="btn" href="/zhiyan/?id={{zhiyan.id}}" target="_blank"><i class="fa fa-external-link"></i></a></div>
             {% endfor %}
         {% endif %}
         {% if lianmiancis %}
             <div class="xg_btn">联绵词</div>
             {% for lianmianci in lianmiancis%}
-                <div class="zstag_p">{{lianmianci.lianmianci }}&nbsp;&nbsp;<a class="btn" href="/lianmianci/?id={{lianmianci.id}}"><i class="fa fa-external-link"></i></a></div>
+                <div class="zstag_p">{{lianmianci.lianmianci }}&nbsp;&nbsp;<a class="btn" href="/lianmianci/?id={{lianmianci.id}}" target="_blank"><i class="fa fa-external-link"></i></a></div>
             {% endfor %}
         {% endif %}
         {% if fangsus %}
             <div class="xg_btn">方言俗语</div>
             {% for fangsu in fangsus%}
-                <div class="zstag_p">{{fangsu.match_content }}&nbsp;&nbsp;<a class="btn" href="/fangsu/?id={{fangsu.id}}"><i class="fa fa-external-link"></i></a></div>
+                <div class="zstag_p">{{fangsu.match_content }}&nbsp;&nbsp;<a class="btn" href="/fangsu/?id={{fangsu.id}}" target="_blank"><i class="fa fa-external-link"></i></a></div>
             {% endfor %}
         {% endif %}
         {% if tongyus %}
             <div class="xg_btn">通语</div>
             {% for tongyu in tongyus%}
-                <div class="zstag_p">{{tongyu.match_content }}&nbsp;&nbsp;<a class="btn" href="/tongyu/?id={{tongyu.id}}"><i class="fa fa-external-link"></i></a></div>
+                <div class="zstag_p">{{tongyu.match_content }}&nbsp;&nbsp;<a class="btn" href="/tongyu/?id={{tongyu.id}}" target="_blank"><i class="fa fa-external-link"></i></a></div>
             {% endfor %}
         {% endif %}
         {% if zhuanyus %}
             <div class="xg_btn">转语</div>
             {% for zhuanyu in zhuanyus%}
-                <div class="zstag_p">{{zhuanyu.match_content }}&nbsp;&nbsp;<a class="btn" href="/zhuanyu/?id={{zhuanyu.id}}"><i class="fa fa-external-link"></i></a></div>
+                <div class="zstag_p">{{zhuanyu.match_content }}&nbsp;&nbsp;<a class="btn" href="/zhuanyu/?id={{zhuanyu.id}}" target="_blank"><i class="fa fa-external-link"></i></a></div>
             {% endfor %}
         {% endif %}
     {% endif %}
@@ -236,44 +236,44 @@
         {% if yinshens %}
             <div class="xg_btn">引申义</div>
             {% for yinshen in yinshens%}
-                <div class="zstag_p">{{yinshen.yinshen }}&nbsp;&nbsp;<a class="btn" href="/yinshen/?id={{yinshen.id}}"><i class="fa fa-external-link"></i></a></div>
+                <div class="zstag_p">{{yinshen.yinshen }}&nbsp;&nbsp;<a class="btn" href="/yinshen/?id={{yinshen.id}}" target="_blank"><i class="fa fa-external-link"></i></a></div>
             {% endfor %}
         {% endif %}
         {% if benyis %}
             <div class="xg_btn">本义</div>
             {% for benyi in benyis%}
-                {% if benyi.benyi_1 %}<div class="zstag_p">{{benyi.benyi_1 }}&nbsp;&nbsp;<a class="btn" href="/benyi/?id={{benyi.id}}"><i class="fa fa-external-link"></i></a></div>{% endif %}
-                {% if benyi.benyi_2 %}<div class="zstag_p">{{benyi.benyi_2 }}&nbsp;&nbsp;<a class="btn" href="/benyi/?id={{benyi.id}}"><i class="fa fa-external-link"></i></a></div>{% endif %}
+                {% if benyi.benyi_1 %}<div class="zstag_p">{{benyi.benyi_1 }}&nbsp;&nbsp;<a class="btn" href="/benyi/?id={{benyi.id}}" target="_blank"><i class="fa fa-external-link"></i></a></div>{% endif %}
+                {% if benyi.benyi_2 %}<div class="zstag_p">{{benyi.benyi_2 }}&nbsp;&nbsp;<a class="btn" href="/benyi/?id={{benyi.id}}" target="_blank"><i class="fa fa-external-link"></i></a></div>{% endif %}
             {% endfor %}
         {% endif %}
         {% if gujinyis %}
             <div class="xg_btn">古义今义</div>
             {% for gujinyi in gujinyis%}
-                <div class="zstag_p">{{gujinyi.shuojie }}&nbsp;&nbsp;<a class="btn" href="/gujinyi/?id={{gujinyi.id}}"><i class="fa fa-external-link"></i></a></div>
+                <div class="zstag_p">{{gujinyi.shuojie }}&nbsp;&nbsp;<a class="btn" href="/gujinyi/?id={{gujinyi.id}}" target="_blank"><i class="fa fa-external-link"></i></a></div>
             {% endfor %}
         {% endif %}
         {% if yixiangzus %}
             <div class="xg_btn">义相足</div>
             {% for yixiangzu in yixiangzus%}
-                <div class="zstag_p">{{yixiangzu.match_content }}&nbsp;&nbsp;<a class="btn" href="/yixiangzu/?id={{yixiangzu.id}}"><i class="fa fa-external-link"></i></a></div>
+                <div class="zstag_p">{{yixiangzu.match_content }}&nbsp;&nbsp;<a class="btn" href="/yixiangzu/?id={{yixiangzu.id}}" target="_blank"><i class="fa fa-external-link"></i></a></div>
             {% endfor %}
         {% endif %}
         {% if yinyitongs %}
             <div class="xg_btn">音义同</div>
             {% for yinyitong in yinyitongs%}
-                <div class="zstag_p">{{ yinyitong.object1 }}-{{yinyitong.object2}}&nbsp;{{ yinyitong.duanshianyu }}&nbsp;&nbsp;<a class="btn" href="/yixiangzu/?id={{yixiangzu.id}}"><i class="fa fa-external-link"></i></a></div>
+                <div class="zstag_p">{{ yinyitong.object1 }}-{{yinyitong.object2}}&nbsp;{{ yinyitong.duanshianyu }}&nbsp;&nbsp;<a class="btn" href="/yixiangzu/?id={{yixiangzu.id}}" target="_blank"><i class="fa fa-external-link"></i></a></div>
             {% endfor %}
         {% endif %}
         {% if yintongyiyis %}
             <div class="xg_btn">音同义异</div>
             {% for yintongyiyi in yintongyiyis%}
-                <div class="zstag_p">{{ yintongyiyi.match_content }}&nbsp;&nbsp;<a class="btn" href="/yintongyiyi/?id={{yintongyiyi.id}}"><i class="fa fa-external-link"></i></a></div>
+                <div class="zstag_p">{{ yintongyiyi.match_content }}&nbsp;&nbsp;<a class="btn" href="/yintongyiyi/?id={{yintongyiyi.id}}" target="_blank"><i class="fa fa-external-link"></i></a></div>
             {% endfor %}
         {% endif %}
         {% if bieyiyis %}
             <div class="xg_btn">别一义</div>
             {% for bieyiyi in bieyiyis%}
-                <div class="zstag_p">{{ bieyiyi.match_content }}&nbsp;&nbsp;<a class="btn" href="/bieyiyi/?id={{bieyiyi.id}}"><i class="fa fa-external-link"></i></a></div>
+                <div class="zstag_p">{{ bieyiyi.match_content }}&nbsp;&nbsp;<a class="btn" href="/bieyiyi/?id={{bieyiyi.id}}" target="_blank"><i class="fa fa-external-link"></i></a></div>
             {% endfor %}
         {% endif %}
     {% endif %}
@@ -283,26 +283,26 @@
         {% if yiwens %}
             <div class="xk_btn">异文</div>
             {% for yiwen in yiwens%}
-                <div class="zstag_p">{{ yiwen.match_content }}&nbsp;&nbsp;<a class="btn" href="/yiwen/?id={{yiwen.id}}"><i class="fa fa-external-link"></i></a></div>
+                <div class="zstag_p">{{ yiwen.match_content }}&nbsp;&nbsp;<a class="btn" href="/yiwen/?id={{yiwen.id}}" target="_blank"><i class="fa fa-external-link"></i></a></div>
             {% endfor %}
         {% endif %}
         {% if shans %}
             <div class="xk_btn">删</div>
             {% for shan in shans%}
-                <div class="zstag_p">{{ shan.match_content }}&nbsp;&nbsp;<a class="btn" href="/shan/?id={{shan.id}}"><i class="fa fa-external-link"></i></a></div>
+                <div class="zstag_p">{{ shan.match_content }}&nbsp;&nbsp;<a class="btn" href="/shan/?id={{shan.id}}" target="_blank"><i class="fa fa-external-link"></i></a></div>
             {% endfor %}
         {% endif %}
         {% if duotuos %}
             <div class="xk_btn">夺</div>
             {% for duotuo in duotuos%}
-                <div class="zstag_p">{{ duotuo.match_content }}&nbsp;&nbsp;<a class="btn" href="/duotuo/?id={{duotuo.id}}"><i class="fa fa-external-link"></i></a></div>
+                <div class="zstag_p">{{ duotuo.match_content }}&nbsp;&nbsp;<a class="btn" href="/duotuo/?id={{duotuo.id}}" target="_blank"><i class="fa fa-external-link"></i></a></div>
             {% endfor %}
         {% endif %}
         {% if wanggais %}
             <div class="xk_btn">夺</div>
             {% for wanggai in wanggais%}
-                {% if wanggai.match_content1 %}<div class="zstag_p">{{ wanggai.match_content1 }}&nbsp;&nbsp;<a class="btn" href="/wanggai/?id={{wanggai.id}}"><i class="fa fa-external-link"></i></a></div>{% endif %}
-                {% if wanggai.match_content2 %}<div class="zstag_p">{{ wanggai.match_content2 }}&nbsp;&nbsp;<a class="btn" href="/wanggai/?id={{wanggai.id}}"><i class="fa fa-external-link"></i></a></div>{% endif %}
+                {% if wanggai.match_content1 %}<div class="zstag_p">{{ wanggai.match_content1 }}&nbsp;&nbsp;<a class="btn" href="/wanggai/?id={{wanggai.id}}" target="_blank"><i class="fa fa-external-link"></i></a></div>{% endif %}
+                {% if wanggai.match_content2 %}<div class="zstag_p">{{ wanggai.match_content2 }}&nbsp;&nbsp;<a class="btn" href="/wanggai/?id={{wanggai.id}}" target="_blank"><i class="fa fa-external-link"></i></a></div>{% endif %}
             {% endfor %}
         {% endif %}
     {% endif %}
@@ -311,13 +311,13 @@
         {% if zhengs %}
             <div class="xk_btn">正</div>
             {% for zheng in zhengs%}
-                <div class="zstag_p">{{ zheng.match_content }}&nbsp;&nbsp;<a class="btn" href="/zheng/?id={{zheng.id}}"><i class="fa fa-external-link"></i></a></div>
+                <div class="zstag_p">{{ zheng.match_content }}&nbsp;&nbsp;<a class="btn" href="/zheng/?id={{zheng.id}}" target="_blank"><i class="fa fa-external-link"></i></a></div>
             {% endfor %}
         {% endif %}
         {% if benzuos %}
             <div class="xk_btn">本作</div>
             {% for benzuo in benzuos%}
-                <div class="zstag_p">{{ benzuo.match_content }}&nbsp;&nbsp;<a class="btn" href="/benzuo/?id={{benzuo.id}}"><i class="fa fa-external-link"></i></a></div>
+                <div class="zstag_p">{{ benzuo.match_content }}&nbsp;&nbsp;<a class="btn" href="/benzuo/?id={{benzuo.id}}" target="_blank"><i class="fa fa-external-link"></i></a></div>
             {% endfor %}
         {% endif %}
     {% endif %}
