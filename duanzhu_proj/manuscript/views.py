@@ -1,11 +1,12 @@
 from django.core.exceptions import ValidationError
+from django.db.models import Subquery, OuterRef
 from django.shortcuts import render, get_object_or_404
 from django.http import JsonResponse, Http404
 from .models import DuanZhu, SwDu, Gujinzi, Guyunbu, Gouyi, Yinyitong, Yinshu, Zhishimulu, Liushu, Zhuanzhu, Jiajie, \
     Tongzi, Xingfeizi, Huxun, Zhiyan, Lianmianci, Yinshen, Benyi, Gujinyi, Hunyanxiyan, Ezi, Suzi, Suiwen, You, Shuozi, \
     Feishi, Fanxun, Tongxun, Shuangsheng, Dieyun, Yijinshigu, Hujian, Guyu, Shengfushiyuan, Fangsu, Tongyu, Zhuanyu, \
     Yixiangzu, Yintongyiyi, Bieyiyi, Guyin, Jinyin, Yinzhuan, Yinbian, Zuijin, Guheyun, Yiwen, Shan, Duotuo, Wanggai, \
-    Zheng, Benzuo
+    Zheng, Benzuo, Xingfeiyi
 from django.core.paginator import Paginator
 
 def index(request):
@@ -217,10 +218,35 @@ def search(request):
 
     return render(request, "manuscript/search.html", context)
 
+# def yinyitong(request):
+#     context = {}
+#     data = Yinyitong.objects.all()
+#     paginator = Paginator(data, 10)
+#     page = request.GET.get('page')
+#     page_obj = paginator.get_page(page)
+#     for p in page_obj:
+#         duanzhu1 = DuanZhu.objects.filter(duanzhu_bianhao=p.object1_duanzhu_bianhao).first()
+#         if duanzhu1:
+#             duanzhu1.zhengwen_zhushi = duanzhu1.zhengwen_zhushi.replace(p.duanshianyu,'<span>' + p.duanshianyu + '</span>')
+#             p.duanzhu1 = duanzhu1
+#         duanzhu2 = DuanZhu.objects.filter(duanzhu_bianhao=p.object2_duanzhu_bianhao).first()
+#         if duanzhu2:
+#             duanzhu2.zhengwen_zhushi = duanzhu2.zhengwen_zhushi.replace(p.duanshianyu, '<span>' + p.duanshianyu + '</span>')
+#             p.duanzhu2 = duanzhu2
+#     context['models'] = page_obj
+#
+#     return render(request, "manuscript/yinyitong.html", context)
+
 def yinyitong(request):
     context = {}
+    items = []
+    filterData = []
     data = Yinyitong.objects.all()
-    paginator = Paginator(data, 10)
+    for item in data:
+        if item.object1_duanzhu_bianhao not in items:
+            items.append(item.object1_duanzhu_bianhao)
+            filterData.append(item)
+    paginator = Paginator(filterData, 10)
     page = request.GET.get('page')
     page_obj = paginator.get_page(page)
     for p in page_obj:
@@ -228,10 +254,13 @@ def yinyitong(request):
         if duanzhu1:
             duanzhu1.zhengwen_zhushi = duanzhu1.zhengwen_zhushi.replace(p.duanshianyu,'<span>' + p.duanshianyu + '</span>')
             p.duanzhu1 = duanzhu1
-        duanzhu2 = DuanZhu.objects.filter(duanzhu_bianhao=p.object2_duanzhu_bianhao).first()
-        if duanzhu2:
-            duanzhu2.zhengwen_zhushi = duanzhu2.zhengwen_zhushi.replace(p.duanshianyu, '<span>' + p.duanshianyu + '</span>')
-            p.duanzhu2 = duanzhu2
+        relList = list(Yinyitong.objects.filter(object1_duanzhu_bianhao=p.object1_duanzhu_bianhao))
+        for rel in relList:
+            dz = DuanZhu.objects.filter(duanzhu_bianhao=rel.object2_duanzhu_bianhao).first()
+            if dz:
+                dz.zhengwen_zhushi = dz.zhengwen_zhushi.replace(rel.duanshianyu, '<span>' + rel.duanshianyu + '</span>')
+                rel.dz = dz
+        p.relList = relList
     context['models'] = page_obj
 
     return render(request, "manuscript/yinyitong.html", context)
@@ -1209,3 +1238,22 @@ def benzuo(request):
     context['models'] = page_obj
 
     return render(request, "manuscript/benzuo.html", context)
+
+def xingfeiyi(request):
+    context = {}
+    data = Xingfeiyi.objects.all()
+    paginator = Paginator(data, 10)
+    id = request.GET.get('id')
+    if id:
+        position = data.filter(id__lte=id).count()
+        page = (position - 1) // 10 + 1
+    else:
+        page = request.GET.get('page')
+    page_obj = paginator.get_page(page)
+    for p in page_obj:
+        duanzhu = DuanZhu.objects.filter(duanzhu_bianhao=p.duanzhu_bianhao).first()
+        duanzhu.zhengwen_zhushi = duanzhu.zhengwen_zhushi.replace(p.yixingyifeishuojie, '<span>' + p.yixingyifeishuojie + '</span>')
+        p.duanzhu = duanzhu
+    context['models'] = page_obj
+
+    return render(request, "manuscript/xingfeiyi.html", context)

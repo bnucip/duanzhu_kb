@@ -532,3 +532,12 @@ class Benzuo(models.Model):
     class Meta:
         verbose_name = '本作'
         verbose_name_plural = verbose_name
+
+class Xingfeiyi(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    duanzhu_bianhao = models.CharField('段注编号', max_length=20, null=True, blank=True)
+    duanzhu = models.ForeignKey(DuanZhu, on_delete=models.CASCADE, db_constraint=True, verbose_name='段注ID', null=True)
+    yixingyifeishuojie = models.TextField('义行义废说解', null=True, blank=True)
+    class Meta:
+        verbose_name = '行废义'
+        verbose_name_plural = verbose_name
