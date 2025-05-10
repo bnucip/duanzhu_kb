@@ -32,7 +32,7 @@ $(document).ready(function() {
     $('#tree-container').on("select_node.jstree", function (e, data) {
         let node = data.node;
         if  (node.type === "level3") {
-            console.log(location.href);
+            //console.log(location.href);
             if(node.original.url && location.href.indexOf(node.original.url)<0){
                 location.href = node.original.url
             }

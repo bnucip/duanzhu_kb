@@ -18,6 +18,13 @@ def index(request):
             context['zitou'] = zitou
         except ValidationError:
             raise Http404
+    if 'zitou' in request.GET:  # 先检查参数是否存在
+        zitou = request.GET['zitou']
+        try:
+            zitou = get_object_or_404(DuanZhu, zitou=zitou)
+            context['zitou'] = zitou
+        except ValidationError:
+            raise Http404
 
     return render(request, 'index.html',context)
 
@@ -1257,3 +1264,7 @@ def xingfeiyi(request):
     context['models'] = page_obj
 
     return render(request, "manuscript/xingfeiyi.html", context)
+
+def yunbu(request):
+    context = {}
+    return render(request, "manuscript/yunbu.html", context)

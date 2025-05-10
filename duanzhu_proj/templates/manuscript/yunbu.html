@@ -1,0 +1,342 @@
+{% extends "../base.html" %}
+{% load static %}
+
+{% block container %}
+    <style>
+        /* 网格布局 - 每行4个 */
+        .grid-container {
+          display: grid;
+          grid-template-columns: repeat(4, 1fr);
+          gap: 1rem;
+          color:#333;
+        }
+
+        /* 响应式布局 */
+        @media (max-width: 1200px) {
+          .grid-container {
+            grid-template-columns: repeat(3, 1fr);
+          }
+        }
+
+        @media (max-width: 900px) {
+          .grid-container {
+            grid-template-columns: repeat(2, 1fr);
+          }
+        }
+
+        @media (max-width: 600px) {
+          .grid-container {
+            grid-template-columns: 1fr;
+          }
+        }
+
+        /* 谐声系卡片 */
+        .series-card {
+          background: white;
+          border-radius: 8px;
+          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+          overflow: hidden;
+          transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .series-card:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .series-header {
+          background: #f8f9fa;
+          padding: 1rem;
+          border-bottom: 1px solid #e9ecef;
+          font-weight: bold;
+          font-size: 1.1rem;
+          cursor: pointer;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+        }
+
+        .series-header:hover {
+          background: #f1f3f5;
+        }
+
+        .series-content {
+          padding: 1rem;
+          display: none;
+        }
+
+        .series-content.active {
+          display: block;
+        }
+
+        /* 树状结构样式 */
+        .tree-node {
+          margin-bottom: 0.5rem;
+        }
+
+        .tree-node-content {
+          display: flex;
+          align-items: center;
+          padding: 0.25rem 0;
+        }
+
+        .tree-node-text {
+          font-size: 1.1rem;
+          cursor:pointer;
+        }
+
+        .tree-toggle {
+          width: 20px;
+          height: 20px;
+          margin-right: 0.5rem;
+          cursor: pointer;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          border-radius: 3px;
+          transition: background-color 0.2s;
+        }
+
+        .tree-toggle:hover {
+          background-color: #e9ecef;
+        }
+
+        .tree-children {
+          margin-left: 1.5rem;
+          padding-left: 1rem;
+          border-left: 1px solid #dee2e6;
+          display: none;
+        }
+
+        .tree-children.active {
+          display: block;
+          animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+          from { opacity: 0; }
+          to { opacity: 1; }
+        }
+
+        /* 图标样式 */
+        .icon {
+          display: inline-block;
+          width: 16px;
+          height: 16px;
+          position: relative;
+        }
+
+        .icon-chevron-right::before,
+        .icon-chevron-down::before {
+          content: '';
+          position: absolute;
+          width: 8px;
+          height: 8px;
+          border-style: solid;
+          border-width: 0 2px 2px 0;
+          top: 4px;
+        }
+
+        .icon-chevron-right::before {
+          transform: rotate(-45deg);
+          right: 6px;
+        }
+
+        .icon-chevron-down::before {
+          transform: rotate(45deg);
+          right: 4px;
+          top: 2px;
+        }
+
+        .root-node > .tree-node-content > .tree-node-text {
+          font-weight: bold;
+          font-size: 1.2rem;
+        }
+        .yunbu h2{
+            text-align:center;
+        }
+        .xsx-txt{
+            text-align:center;
+            color:#6c757d;
+            margin-bottom:20px;
+        }
+        .yunbu-number{
+            padding-bottom:10px;
+            margin-bottom:15px;
+            border-bottom:solid 1px #e0e4eb;
+            font-size:20px;
+        }
+    </style>
+     <div class="zsd_left">
+          <h3>知识点目录</h3>
+          {% include "manuscript/zsd_catalogue.html" %}
+     </div>
+     <div class="yunbu">
+        <h2>韵部知识点</h2>
+        <div class="xsx-txt">谐声系</div>
+        <div class="yunbu-number">第<span id="yunbuNo"></span>部：谐声系</div>
+        <div class="grid-container" id="series-grid">
+            <!-- 谐声系卡片将通过JavaScript动态生成 -->
+          </div>
+     </div>
+    <script>
+    $(document).ready(function(){
+        var queryString = window.location.search;
+        var urlParams = new URLSearchParams(queryString);
+        var id = urlParams.get('id');
+        var number = urlParams.get('number');
+        var chineseNum = ['一', '二', '三', '四', '五', '六', '七', '八', '九', '十', '十一', '十二', '十三', '十四', '十五', '十六', '十七'];
+        $("#yunbuNo").text(chineseNum[number-1]);
+
+        $('#tree-container').on('loaded.jstree',function(e,data){
+            $('#tree-container').jstree(false).select_node(id);
+            //$('#tree-container').jstree(true).select_node('48', false);
+        });
+
+        $.ajax({
+            url:'{% static "data/yunbu.json" %}',
+            type:'GET',
+            dataType: 'json',
+            success:function(data) {
+                const dataList = [];
+                const keys = Object.keys(data);
+                keys.forEach(key => {
+                    dataList.push(data[key]);
+                });
+                const seriesData = dataList.filter(i => i.yunbu==number);
+                //console.log(seriesData);
+
+                createSeriesCards(seriesData);
+            }
+        });
+
+    });
+
+    function createSeriesCards(seriesData) {
+        const gridContainer = document.getElementById('series-grid');
+
+        seriesData.forEach( item => {
+            // 创建卡片容器
+            const card = document.createElement('div');
+            card.className = 'series-card';
+
+            // 创建卡片头部
+            const header = document.createElement('div');
+            header.className = 'series-header';
+            header.innerHTML = `谐声系：${item.xsxName} <span class="icon icon-chevron-right"></span>`;
+            header.addEventListener('click', () => toggleSeriesContent(header));
+
+            // 创建卡片内容
+            const content = document.createElement('div');
+            content.className = 'series-content';
+            content.id = `series-${item.xsxName}`;
+
+            // 添加树状结构
+            item.children.forEach(node => {
+              content.appendChild(createTreeNode(node, true));
+            });
+
+            // 组装卡片
+            card.appendChild(header);
+            card.appendChild(content);
+
+            // 添加到网格
+            gridContainer.appendChild(card);
+        });
+    }
+
+    // 创建树节点
+    function createTreeNode(node, isRoot = false) {
+      const nodeElement = document.createElement('div');
+      nodeElement.className = `tree-node ${isRoot ? 'root-node' : ''}`;
+
+      // 创建节点内容
+      const nodeContent = document.createElement('div');
+      nodeContent.className = 'tree-node-content';
+
+      // 如果有子节点，添加展开/折叠按钮
+      if (node.children && node.children.length > 0) {
+        const toggle = document.createElement('span');
+        toggle.className = 'tree-toggle';
+        toggle.innerHTML = '<span class="icon icon-chevron-down"></span>';
+        toggle.addEventListener('click', (e) => {
+          e.stopPropagation();
+          toggleTreeNode(toggle, nodeElement);
+        });
+        nodeContent.appendChild(toggle);
+      } else {
+        // 如果没有子节点，添加空白占位
+        const spacer = document.createElement('span');
+        spacer.style.width = '20px';
+        spacer.style.display = 'inline-block';
+        nodeContent.appendChild(spacer);
+      }
+
+      // 添加节点文本
+      const nodeText = document.createElement('span');
+      nodeText.className = 'tree-node-text';
+      const regex = /(\d+)\)$/;
+      if(regex.test(node.text)){
+        nodeText.innerHTML = '<font style="color:red">' + node.text + '</font>';
+      }else{
+        nodeText.innerHTML = '<font>' + node.text + '</font>';
+      }
+      nodeText.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const zitou = node.text.replace(/\([0-9|\\]+\)/g, '');
+          location.href = '/?zitou=' + zitou;
+        });
+
+      nodeContent.appendChild(nodeText);
+
+      nodeElement.appendChild(nodeContent);
+
+      // 如果有子节点，创建子节点容器
+      if (node.children && node.children.length > 0) {
+        const childrenContainer = document.createElement('div');
+        childrenContainer.className = 'tree-children active';
+
+        // 递归创建子节点
+        node.children.forEach(childNode => {
+          childrenContainer.appendChild(createTreeNode(childNode));
+        });
+
+        nodeElement.appendChild(childrenContainer);
+      }
+
+      return nodeElement;
+    }
+
+    // 切换谐声系内容显示/隐藏
+    function toggleSeriesContent(header) {
+      const content = header.nextElementSibling;
+      const icon = header.querySelector('.icon');
+
+      if (content.classList.contains('active')) {
+        content.classList.remove('active');
+        icon.classList.remove('icon-chevron-down');
+        icon.classList.add('icon-chevron-right');
+      } else {
+        content.classList.add('active');
+        icon.classList.remove('icon-chevron-right');
+        icon.classList.add('icon-chevron-down');
+      }
+    }
+
+    // 切换树节点展开/折叠
+    function toggleTreeNode(toggle, nodeElement) {
+      const childrenContainer = nodeElement.querySelector('.tree-children');
+      const icon = toggle.querySelector('.icon');
+
+      if (childrenContainer.classList.contains('active')) {
+        childrenContainer.classList.remove('active');
+        icon.classList.remove('icon-chevron-down');
+        icon.classList.add('icon-chevron-right');
+      } else {
+        childrenContainer.classList.add('active');
+        icon.classList.remove('icon-chevron-right');
+        icon.classList.add('icon-chevron-down');
+      }
+    }
+</script>
+{% endblock %}

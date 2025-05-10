@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import catalogue_data, zitou_detail, zstag_detail, index, search, yinyitong, zhishimulu_data, xiangxing,zhishi,huiyi,xingsheng,zhuanzhu,jiajie,tongzi,xingfeizi,huxun,zhiyan,lianmianci,yinshen,benyi,gujinyi,gouyi,gujinzi,hunyanxiyan,ezi,suzi,you,suiwen,shuozi,feishi,fanxun,tongxun,shuangsheng,dieyun,yijinshigu,hujian,guyu,shengfushiyuan,fangsu,tongyu,zhuanyu,yixiangzu,yintongyiyi,bieyiyi,guyin,jinyin,yinzhuan,yinbian,zuijin,guheyun,yiwen,shan,duotuo,wanggai,zheng,benzuo,xingfeiyi
+from .views import catalogue_data, zitou_detail, zstag_detail, index, search, yinyitong, zhishimulu_data, xiangxing,zhishi,huiyi,xingsheng,zhuanzhu,jiajie,tongzi,xingfeizi,huxun,zhiyan,lianmianci,yinshen,benyi,gujinyi,gouyi,gujinzi,hunyanxiyan,ezi,suzi,you,suiwen,shuozi,feishi,fanxun,tongxun,shuangsheng,dieyun,yijinshigu,hujian,guyu,shengfushiyuan,fangsu,tongyu,zhuanyu,yixiangzu,yintongyiyi,bieyiyi,guyin,jinyin,yinzhuan,yinbian,zuijin,guheyun,yiwen,shan,duotuo,wanggai,zheng,benzuo,xingfeiyi,yunbu
 
 urlpatterns = [
     path('', index, name='index'),
@@ -61,4 +61,5 @@ urlpatterns = [
     path('zheng/', zheng, name='zheng'),
     path('benzuo/', benzuo, name='benzuo'),
     path('xingfeiyi/', xingfeiyi, name='xingfeiyi'),
+    path('yunbu/', yunbu, name='yunbu'),
 ]

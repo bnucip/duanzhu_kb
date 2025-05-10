@@ -690,3 +690,9 @@ span.origin_text{
     padding:8px 12px;
     color:#000;
 }
+.yunbu{
+    flex:1;
+    background:#fff;
+    border-radius:8px;
+    padding:0 15px 15px 15px;
+}
