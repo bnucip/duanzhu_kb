@@ -1,12 +1,15 @@
 from django.urls import path
-from .views import catalogue_data, zitou_detail, zstag_detail, index, search, yinyitong, zhishimulu_data, xiangxing,zhishi,huiyi,xingsheng,zhuanzhu,jiajie,tongzi,xingfeizi,huxun,zhiyan,lianmianci,yinshen,benyi,gujinyi,gouyi,gujinzi,hunyanxiyan,ezi,suzi,you,suiwen,shuozi,feishi,fanxun,tongxun,shuangsheng,dieyun,yijinshigu,hujian,guyu,shengfushiyuan,fangsu,tongyu,zhuanyu,yixiangzu,yintongyiyi,bieyiyi,guyin,jinyin,yinzhuan,yinbian,zuijin,guheyun,yiwen,shan,duotuo,wanggai,zheng,benzuo,xingfeiyi,yunbu
+from .views import catalogue_data, zitou, zitou_detail, zstag_detail, index, search, zstxSearch, yinyitong, zhishimulu_data, xiangxing,zhishi,huiyi,xingsheng,zhuanzhu,jiajie,tongzi,xingfeizi,huxun,zhiyan,lianmianci,yinshen,benyi,gujinyi,gouyi,gujinzi,hunyanxiyan,ezi,suzi,you,suiwen,shuozi,feishi,fanxun,tongxun,shuangsheng,dieyun,yijinshigu,hujian,guyu,shengfushiyuan,fangsu,tongyu,zhuanyu,yixiangzu,yintongyiyi,bieyiyi,guyin,jinyin,yinzhuan,yinbian,zuijin,guheyun,yiwen,shan,duotuo,wanggai,zheng,benzuo,xingfeiyi,yunbu
 
 urlpatterns = [
     path('', index, name='index'),
+    path('zitouInfo/', zitou, name='zitou'),
     path('catalogue/', catalogue_data, name='catalogue'),
     path('zsTag/<uuid:zitou_id>/tag/<str:tag>/', zstag_detail, name='zstag_detail'),
     path('zitou/<uuid:zitou_id>/', zitou_detail, name='zitou_detail'),
     path('search/', search, name='search'),
+    path('zstxSearch/', zstxSearch, name='zstxSearch'),
+    # path('zsGuideSearch/', knowledge_guide_search, name='knowledge_guide_search'),
     path('zhishimulu/', zhishimulu_data, name='zhishimulu'),
     path('yinyitong/', yinyitong, name='yinyitong'),
     path('xiangxing/', xiangxing, name='xiangxing'),

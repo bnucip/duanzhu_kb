@@ -11,6 +11,7 @@ class DuanZhu(models.Model):
     bushou = models.CharField('部首',max_length=20,null=True,blank=True)
     juan = models.CharField('卷',max_length=20,null=True,blank=True)
     img_path = models.CharField('图片路径',max_length=200,null=True,blank=True)
+    yema = models.CharField('页码',max_length=200,null=True,blank=True)
     swxz = models.CharField('说文小篆',max_length=20,null=True,blank=True)
     class Meta:
         verbose_name = '段注'

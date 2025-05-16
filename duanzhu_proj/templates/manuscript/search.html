@@ -178,11 +178,11 @@
     </style>
 </head>
 <body>
-    <h1>《说文解字注》检索系统</h1>
+    <h1>原文阅读与检索</h1>
     
     <div class="search-type">
-        <button id="zhishi-search" {% if categ == 'zhishi' %} class="active"{% endif %}>知识检索</button>
-        <button id="character-search" {% if categ == 'zitou' %} class="active"{% endif %}>字头检索</button>
+        <!--<button id="zhishi-search" {% if categ == 'zhishi' %} class="active"{% endif %}>知识检索</button>-->
+        <button id="character-search" {% if categ == 'zitou' or categ == '' %} class="active"{% endif %}>字头检索</button>
         <button id="fulltext-search" {% if categ == 'quanwen' %} class="active"{% endif %}>全文检索</button>
     </div>
 
@@ -194,19 +194,26 @@
             <input type="text" id="search-input" name="keyword" placeholder="输入汉字..." value="{{ keyword }}"/>
             <input type="submit" id="search-button" value="检索" />
         </div>
+        {% if keyword %}
         <div class="pagination">
         {% include 'paginate.html' %}
         </div>
+        {% endif %}
         <div id="results">
         {% for result in models %}
             {% if categ != 'zhishi' %}
                 <div class="result-item">
                     <div class="character">
-                        <a href="/?id={{result.id}}">{{ result.zitou }}</a>
+                        <a href="/zitouInfo/?id={{result.id}}">{{ result.zitou }}</a>
                         <div class="special">{{ result.chongwen|default:"" }}</div>
                     </div>
                     <div class="content">
-                        {{ result.zhengwen_zhushi|safe }}
+                        <h3>段玉裁《說文解字注》</h3>
+                        <div>{{ result.zhengwen_zhushi|safe }}</div>
+                        {% if result.swdu %}
+                        <h3>段玉裁《說文解字读》</h3>
+                        <div>{{ result.swdu.zhushi|safe }}</div>
+                        {% endif %}
                     </div>
                 </div>
             {% endif %}
@@ -226,18 +233,18 @@
         const characterSearchBtn = document.getElementById('character-search');
         const fulltextSearchBtn = document.getElementById('fulltext-search');
 
-        zhishiSearchBtn.addEventListener('click', () => {
+        /*zhishiSearchBtn.addEventListener('click', () => {
             $("input[name='categ']").val('zhishi');
             zhishiSearchBtn.classList.add('active');
             characterSearchBtn.classList.remove('active');
             fulltextSearchBtn.classList.remove('active');
             searchInput.placeholder = "输入汉字...";
-        });
+        });*/
 
         characterSearchBtn.addEventListener('click', () => {
             $("input[name='categ']").val('zitou');
             characterSearchBtn.classList.add('active');
-            zhishiSearchBtn.classList.remove('active');
+            //zhishiSearchBtn.classList.remove('active');
             fulltextSearchBtn.classList.remove('active');
             searchInput.placeholder = "输入汉字...";
         });
@@ -245,7 +252,7 @@
         fulltextSearchBtn.addEventListener('click', () => {
             $("input[name='categ']").val('quanwen');
             fulltextSearchBtn.classList.add('active');
-            zhishiSearchBtn.classList.remove('active');
+            //zhishiSearchBtn.classList.remove('active');
             characterSearchBtn.classList.remove('active');
             searchInput.placeholder = "输入检索关键字...";
         });

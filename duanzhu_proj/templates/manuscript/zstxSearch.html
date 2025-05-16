@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>段注知识体系检索系统</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        body:before{
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url(https://hebbkx1anhila5yf.public.blob.vercel-storage.com/%E6%88%AA%E5%B1%8F2025-05-10%2016.33.41.png-rToDqrsoxzaluLqmVPhlk3WpgnyUTF.jpeg);
+            background-size: cover;
+            background-position: center;
+            opacity: 0.15;
+            z-index: -1;
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #5c3b00;
+        }
+        .search-container {
+            display: flex;
+            margin-bottom: 20px;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        #search-input {
+            flex-grow: 1;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ddd;
+            border-radius: 5px 0 0 5px;
+            background-color: rgba(255, 255, 255, 0.9);
+        }
+        #search-button {
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #d4b96e; /* 黄色调按钮 */
+            color: #5c3b00;
+            border: none;
+            border-radius: 0 5px 5px 0;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        #search-button:hover {
+            background-color: #c4a95e; /* 悬停时稍微深一点 */
+        }
+        .knowledge-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 5px;
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        .knowledge-table th {
+            background-color: #d4b96e; /* 黄色调表头 */
+            color: #5c3b00;
+            text-align: left;
+            padding: 12px 15px;
+            font-weight: bold;
+        }
+        .knowledge-table td {
+            padding: 10px 15px;
+            border-bottom: 1px solid #ddd;
+            vertical-align: top;
+        }
+        .knowledge-table tr:nth-child(even) {
+            background-color: rgba(249, 246, 240, 0.7);
+        }
+        .knowledge-table tr:hover {
+            background-color: rgba(244, 235, 217, 0.9);
+        }
+        .category-cell {
+            font-weight: bold;
+            width: 15%;
+            border-right: 1px solid #ddd;
+            color: #5c3b00;
+        }
+        .set-cell {
+            width: 15%;
+            border-right: 1px solid #ddd;
+        }
+        .points-cell {
+            width: 70%;
+        }
+        .knowledge-point {
+            color: #0066cc;
+            text-decoration: none;
+            margin-right: 5px;
+        }
+        .knowledge-point:hover {
+            text-decoration: underline;
+            color: #f90;
+        }
+        .highlight {
+            background-color: #fff2cc;
+        }
+        .zhishi_tag_name {
+            font-size: 20px;
+            border-bottom: solid 1px #eee;
+            margin-bottom: 10px;
+        }
+        .zhishi_tag_name a {
+            color: #1e3a8a;
+            font-weight: bold;
+            text-decoration: none;
+        }
+        .zhishi_tag_name a:hover {
+            color: #f90;
+        }
+        h2 {
+            text-align: center;
+            margin-top: 30px;
+            margin-bottom: 20px;
+            color: #5c3b00;
+        }
+        .content-wrapper {
+            background-color: rgba(255, 255, 255, 0.85);
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        #results{
+            margin-top:20px;
+        }
+        .result-item-2{
+            padding:15px;
+            margin-bottom:15px;
+            box-shadow:0 0px 10px #cfc9c9;
+        }
+        .pagination {
+            display: flex;
+            justify-content: right;
+            margin-top: 10px;
+            margin-bottom: 2px;
+        }
+    </style>
+</head>
+<body>
+    <div class="content-wrapper">
+        <h1>段注知识体系检索系统</h1>
+        
+        <form id="searchForm" action="/zstxSearch/" method="post">
+            {% csrf_token %}
+            <div class="search-container">
+                <input type="text" id="search-input" name="keyword" value="{{ keyword }}" placeholder="输入《段注》知识术语，如：音義同..." />
+                <input type="submit" id="search-button" value="检索" />
+            </div>
+        </form>
+
+        <h2>段注知识体系</h2>
+
+        <table class="knowledge-table">
+            <thead>
+                <tr>
+                    <th style="width: 15%;">知识范畴</th>
+                    <th style="width: 15%;">知识集</th>
+                    <th style="width: 70%;">知识点</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- 文字类 -->
+                <tr>
+                    <td class="category-cell" rowspan="2">文字类</td>
+                    <td class="set-cell">六书</td>
+                    <td class="points-cell">
+                        <a href="/xiangxing/" class="knowledge-point">象形</a>、
+                        <a href="/zhishi/" class="knowledge-point">指事</a>、
+                        <a href="/huiyi/" class="knowledge-point">会意</a>、
+                        <a href="/zhuanzhu/" class="knowledge-point">转注</a>、
+                        <a href="/xingsheng/" class="knowledge-point">形声</a>、
+                        <a href="/jiajie/" class="knowledge-point">假借</a>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="set-cell">字际关系</td>
+                    <td class="points-cell">
+                        <a href="/xingfeizi/" class="knowledge-point">行废字</a>、
+                        <a href="/ezi/" class="knowledge-point">讹字</a>、
+                        <a href="/suzi/" class="knowledge-point">俗字</a>、
+                        <a href="/tongzi/" class="knowledge-point">同字</a>、
+                        <a href="/gujinzi/" class="knowledge-point">古今字</a>
+                    </td>
+                </tr>
+
+                <!-- 训诂类 -->
+                <tr>
+                    <td class="category-cell" rowspan="3">训诂类</td>
+                    <td class="set-cell">训</td>
+                    <td class="points-cell">
+                        <a href="/you/" class="knowledge-point">犹</a>、
+                        <a href="/gouyi/" class="knowledge-point">构意</a>、
+                        <a href="/knowledge/非是" class="knowledge-point">非是</a>、
+                        <a href="/feishi/" class="knowledge-point">互见</a>、
+                        <a href="/tongxun/" class="knowledge-point">同训</a>、
+                        <a href="/huxun/" class="knowledge-point">互训</a>、
+                        <a href="/shuangsheng/" class="knowledge-point">双声</a>、
+                        <a href="/dieyun/" class="knowledge-point">叠韵</a>、
+                        <a href="/yijinshigu/" class="knowledge-point">以今释古</a>、
+                        <a href="/suiwen/" class="knowledge-point">随文解之</a>、
+                        <a href="/shuozi/" class="knowledge-point">说字训诂</a>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="set-cell">词</td>
+                    <td class="points-cell">
+                        <a href="/guyu/" class="knowledge-point">古语</a>、
+                        <a href="/tongyu/" class="knowledge-point">通语</a>、
+                        <a href="/zhuanyu/" class="knowledge-point">转语</a>、
+                        <a href="/zhiyan/" class="knowledge-point">之言</a>、
+                        <a href="/lianmianci/" class="knowledge-point">联绵词</a>、
+                        <a href="/hunyanxiyan/" class="knowledge-point">浑言析言</a>、
+                        <a href="/shengfushiyuan/" class="knowledge-point">声符示源</a>、
+                        <a href="/fangsu/" class="knowledge-point">方言俗语</a>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="set-cell">义</td>
+                    <td class="points-cell">
+                        <a href="/yinshen/" class="knowledge-point">引申义</a>、
+                        <a href="/benyi/" class="knowledge-point">本义</a>、
+                        <a href="/fanxun/" class="knowledge-point">反训</a>、
+                        <a href="/gujinyi/" class="knowledge-point">古今义</a>、
+                        <a href="/yixiangzu/" class="knowledge-point">义相足</a>、
+                        <a href="/yinyitong/" class="knowledge-point">音义同</a>、
+                        <a href="/yintongyiyi/" class="knowledge-point">音同义异</a>、
+                        <a href="/bieyiyi/" class="knowledge-point">别一义</a>、
+                        <a href="/xingfeiyi/" class="knowledge-point">行废义</a>
+                    </td>
+                </tr>
+
+                <!-- 音韵类 -->
+                <tr>
+                    <td class="category-cell" rowspan="2">音韵类</td>
+                    <td class="set-cell">韵部</td>
+                    <td class="points-cell">
+                        <a href="/yunbu/?id=55&number=1" class="knowledge-point">第一部至第十七部</a>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="set-cell">音韵术语</td>
+                    <td class="points-cell">
+                        <a href="/guheyun/" class="knowledge-point">合韵</a>、
+                        <a href="/guyin/" class="knowledge-point">古音</a>、
+                        <a href="/jinyin/" class="knowledge-point">今音</a>、
+                        <a href="/yinzhuan/" class="knowledge-point">音转</a>、
+                        <a href="/yinbian/" class="knowledge-point">音变</a>、
+                        <a href="/zuijin/" class="knowledge-point">最近</a>
+                    </td>
+                </tr>
+
+                <!-- 校勘类 -->
+                <tr>
+                    <td class="category-cell" rowspan="2">校勘类</td>
+                    <td class="set-cell">文献特征</td>
+                    <td class="points-cell">
+                        <a href="/shan/" class="knowledge-point">删</a>、
+                        <a href="/duotuo/" class="knowledge-point">夺</a>、
+                        <a href="/yiwen/" class="knowledge-point">异文</a>、
+                        <a href="/wanggai/" class="knowledge-point">妄改</a>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="set-cell">校正</td>
+                    <td class="points-cell">
+                        <a href="/zheng/" class="knowledge-point">正</a>、
+                        <a href="/benzuo/" class="knowledge-point">本作</a>
+                    </td>
+                </tr>
+
+                <!-- 引书类 -->
+                <tr>
+                    <td class="category-cell">引书类</td>
+                    <td class="set-cell">引证书目</td>
+                    <td class="points-cell">
+                        <a href="#" class="knowledge-point">经</a>、
+                        <a href="#" class="knowledge-point">史</a>、
+                        <a href="#" class="knowledge-point">子</a>、
+                        <a href="#" class="knowledge-point">集</a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div id="results">
+        {% for result in models %}
+            <div class="result-item-2">
+                <div class="zhishi_tag_name"><a href="{{ result.url }}">{{ result.tag_name }}</a></div>
+                <div>{{ result.zhishishuoming }}</div>
+            </div>
+        {% endfor %}
+        </div>
+        {% if models %}
+        <div class="pagination">
+        {% include 'paginate.html' %}
+        </div>
+        {% endif %}
+
+    </div>
+
+    <script>
+        $(document).ready(function() {
+            // 搜索功能
+            $("#searchForm").submit(function(e) {
+                //e.preventDefault();
+                const searchTerm = $("#search-input").val().toLowerCase();
+                
+                if (!searchTerm) return;
+                
+                // 清除之前的高亮
+                /*$(".highlight").each(function() {
+                    $(this).replaceWith($(this).text());
+                });*/
+                
+                // 高亮匹配的知识点
+                /*$(".knowledge-point").each(function() {
+                    const text = $(this).text();
+                    if (text.toLowerCase().includes(searchTerm)) {
+                        const regex = new RegExp(`(${searchTerm})`, 'gi');
+                        const newText = text.replace(regex, '<span class="highlight">$1</span>');
+                        $(this).html(newText);
+                        
+                        // 滚动到第一个匹配项
+                        if ($(".highlight").length === 1) {
+                            $('html, body').animate({
+                                scrollTop: $(this).offset().top - 100
+                            }, 500);
+                        }
+                    }
+                });*/
+            });
+
+            const searchTerm = $("#search-input").val().toLowerCase();
+            if(searchTerm){
+                $('html, body').animate({
+                    scrollTop: $("#results").offset().top - 100
+                }, 500);
+            }
+        });
+    </script>
+</body>
+</html>

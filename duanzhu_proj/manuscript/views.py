@@ -1,5 +1,4 @@
 from django.core.exceptions import ValidationError
-from django.db.models import Subquery, OuterRef
 from django.shortcuts import render, get_object_or_404
 from django.http import JsonResponse, Http404
 from .models import DuanZhu, SwDu, Gujinzi, Guyunbu, Gouyi, Yinyitong, Yinshu, Zhishimulu, Liushu, Zhuanzhu, Jiajie, \
@@ -10,6 +9,9 @@ from .models import DuanZhu, SwDu, Gujinzi, Guyunbu, Gouyi, Yinyitong, Yinshu, Z
 from django.core.paginator import Paginator
 
 def index(request):
+    return render(request, 'home.html')
+
+def zitou(request):
     context = {}
     if 'id' in request.GET:  # 先检查参数是否存在
         zitou_id = request.GET['id']
@@ -26,7 +28,10 @@ def index(request):
         except ValidationError:
             raise Http404
 
-    return render(request, 'index.html',context)
+    return render(request, 'zitou.html',context)
+
+# def knowledge_guide_search(request):
+#     return render(request, 'manuscript/knowledge_guide_search.html')
 
 
 def catalogue_data(request):
@@ -73,7 +78,7 @@ def zitou_detail(request, zitou_id):
             "next_zitou": next_zitou,
         })
 
-    return render(request, "manuscript/index.html", {
+    return render(request, "manuscript/zitou.html", {
         "zitou": zitou,
         "swdu": swdu,
         "prev_zitou": prev_zitou,
@@ -214,16 +219,36 @@ def search(request):
             data = DuanZhu.objects
             data = data.filter(zhengwen_zhushi__contains=keyword)
             paginator = Paginator(data.order_by('duanzhu_bianhao'), 10)
-        else:
-            data = Zhishimulu.objects
-            data = data.filter(shuyuxingshi__contains=keyword)
-            paginator = Paginator(data,10)
+        # else:
+        #     data = Zhishimulu.objects
+        #     data = data.filter(shuyuxingshi__contains=keyword)
+        #     paginator = Paginator(data,10)
         page = request.POST.get('page')
-        context['models'] = paginator.get_page(page)
+        page_obj = paginator.get_page(page)
+        for p in page_obj:
+            swdu = SwDu.objects.filter(duanzhu=p.id).first()
+            if swdu:
+                p.swdu = swdu
+        context['models'] = page_obj
     else:
         context['models'] = []
 
     return render(request, "manuscript/search.html", context)
+
+def zstxSearch(request):
+    keyword = request.POST.get('keyword', '').strip()
+    context = {'keyword': keyword}
+    if keyword:
+        data = Zhishimulu.objects
+        data = data.filter(shuyuxingshi__contains=keyword)
+        paginator = Paginator(data,10)
+        page = request.POST.get('page')
+        page_obj = paginator.get_page(page)
+        context['models'] = page_obj
+    else:
+        context['models'] = []
+
+    return render(request, "manuscript/zstxSearch.html", context)
 
 # def yinyitong(request):
 #     context = {}
