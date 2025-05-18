@@ -97,6 +97,7 @@ class Zhishimulu(models.Model):
     level = models.IntegerField('目录层级', null=True, blank=True)
     zhishishuoming = models.TextField('知识说明', null=True, blank=True)
     shuyuxingshi = models.TextField('术语形式', null=True, blank=True)
+    shuyuxingshi_jian = models.TextField('术语形式-简体', null=True, blank=True)
     yanjiutuijie = models.TextField('研究推介', null=True, blank=True)
     url = models.TextField('请求url', null=True, blank=True)
     class Meta:

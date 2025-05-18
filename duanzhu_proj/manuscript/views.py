@@ -1,4 +1,5 @@
 from django.core.exceptions import ValidationError
+from django.db.models import Q
 from django.shortcuts import render, get_object_or_404
 from django.http import JsonResponse, Http404
 from .models import DuanZhu, SwDu, Gujinzi, Guyunbu, Gouyi, Yinyitong, Yinshu, Zhishimulu, Liushu, Zhuanzhu, Jiajie, \
@@ -240,7 +241,7 @@ def zstxSearch(request):
     context = {'keyword': keyword}
     if keyword:
         data = Zhishimulu.objects
-        data = data.filter(shuyuxingshi__contains=keyword)
+        data = data.filter(Q(shuyuxingshi__contains=keyword)|Q(shuyuxingshi_jian__contains=keyword))
         paginator = Paginator(data,10)
         page = request.POST.get('page')
         page_obj = paginator.get_page(page)

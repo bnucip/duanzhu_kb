@@ -146,6 +146,11 @@
             margin-bottom:15px;
             box-shadow:0 0px 10px #cfc9c9;
         }
+        .shuyu{
+            padding-top:5px;
+            font-size:13px;
+            color:gray;
+        }
         .pagination {
             display: flex;
             justify-content: right;
@@ -305,6 +310,7 @@
             <div class="result-item-2">
                 <div class="zhishi_tag_name"><a href="{{ result.url }}">{{ result.tag_name }}</a></div>
                 <div>{{ result.zhishishuoming }}</div>
+                <div class="shuyu">术语：{{ result.shuyuxingshi }}</div>
             </div>
         {% endfor %}
         </div>
