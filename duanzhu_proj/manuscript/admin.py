@@ -9,6 +9,7 @@ admin.site.site_title = '说文段注知识库'
 class DuanZhuAdmin(admin.ModelAdmin):
     list_display = ('duanzhu_bianhao', 'zitou', 'chongwen', 'zhengwen_zhushi', 'bushou', 'juan')  # Customize the admin list view
     search_fields = ('zitou', 'zhengwen_zhushi',)  # Enable search functionality
+    list_filter = ('status','juan',)
 
 @admin.register(SwDu)
 class SwDuZhuAdmin(admin.ModelAdmin):

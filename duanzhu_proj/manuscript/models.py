@@ -8,11 +8,15 @@ class DuanZhu(models.Model):
     zitou = models.CharField('字头',max_length=20,null=True,blank=True)
     chongwen = models.CharField('重文',max_length=20,null=True,blank=True)
     zhengwen_zhushi = models.TextField('正文注释',null=True,blank=True)
+    zhengwen_zhushi_bz = models.TextField('正文注释标注',null=True,blank=True)
     bushou = models.CharField('部首',max_length=20,null=True,blank=True)
     juan = models.CharField('卷',max_length=20,null=True,blank=True)
     img_path = models.CharField('图片路径',max_length=200,null=True,blank=True)
     yema = models.CharField('页码',max_length=200,null=True,blank=True)
     swxz = models.CharField('说文小篆',max_length=20,null=True,blank=True)
+    status = models.IntegerField('标注状态',default=0)
+    user_id = models.IntegerField('标注用户id',null=True)
+    update_time = models.DateTimeField('修改时间',null=True)
     class Meta:
         verbose_name = '段注'
         verbose_name_plural = verbose_name

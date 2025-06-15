@@ -1,9 +1,20 @@
 from django.urls import path
-from .views import catalogue_data, zitou, zitou_detail, zstag_detail, index, search, zstxSearch, yinyitong, zhishimulu_data, xiangxing,zhishi,huiyi,xingsheng,zhuanzhu,jiajie,tongzi,xingfeizi,huxun,zhiyan,lianmianci,yinshen,benyi,gujinyi,gouyi,gujinzi,hunyanxiyan,ezi,suzi,you,suiwen,shuozi,feishi,fanxun,tongxun,shuangsheng,dieyun,yijinshigu,hujian,guyu,shengfushiyuan,fangsu,tongyu,zhuanyu,yixiangzu,yintongyiyi,bieyiyi,guyin,jinyin,yinzhuan,yinbian,zuijin,guheyun,yiwen,shan,duotuo,wanggai,zheng,benzuo,xingfeiyi,yunbu
+from .views import catalogue_data, zitou, zitou_detail, zstag_detail, index, search, zstxSearch, yinyitong, \
+    zhishimulu_data, xiangxing, zhishi, huiyi, xingsheng, zhuanzhu, jiajie, tongzi, xingfeizi, huxun, zhiyan, \
+    lianmianci, yinshen, benyi, gujinyi, gouyi, gujinzi, hunyanxiyan, ezi, suzi, you, suiwen, shuozi, feishi, fanxun, \
+    tongxun, shuangsheng, dieyun, yijinshigu, hujian, guyu, shengfushiyuan, fangsu, tongyu, zhuanyu, yixiangzu, \
+    yintongyiyi, bieyiyi, guyin, jinyin, yinzhuan, yinbian, zuijin, guheyun, yiwen, shan, duotuo, wanggai, zheng, \
+    benzuo, xingfeiyi, yunbu, user_login, user_logout, mark, getZitous, getZitouParagraphs, bzZitou
 
 urlpatterns = [
     path('', index, name='index'),
+    path('login/', user_login, name='login'),
+    path('logout/', user_logout, name='logout'),
+    path('mark/', mark, name='mark'),
     path('zitouInfo/', zitou, name='zitou'),
+    path('zitous/',getZitous, name='zitous'),
+    path('zitouParagraphs/',getZitouParagraphs, name='zitouParagraphs'),
+    path('bzZitou/', bzZitou, name='bzZitou'),
     path('catalogue/', catalogue_data, name='catalogue'),
     path('zsTag/<uuid:zitou_id>/tag/<str:tag>/', zstag_detail, name='zstag_detail'),
     path('zitou/<uuid:zitou_id>/', zitou_detail, name='zitou_detail'),

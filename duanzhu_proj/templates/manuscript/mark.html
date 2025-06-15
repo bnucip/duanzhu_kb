@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'js/message/message.css' %}"/>
+    <script src="{% static 'js/vendor/jquery/jquery.min.js' %}"></script>
+    <script src="{% static 'js/message/message.js' %}"></script>
+    <title>段注标点标注平台</title>
+    <style>
+        /* 基础样式 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            line-height: 1.5;
+            color: #333;
+            background-color: #f8f9fa;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        h1, h2, h3, h4 {
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            line-height: 1.2;
+        }
+
+        h1 {
+            font-size: 2rem;
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+
+        p {
+            margin-bottom: 1rem;
+        }
+
+        /* 卡片样式 */
+        .card {
+            background-color: #fff;
+            border-radius: 0.375rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            margin-bottom: 1rem;
+            overflow: hidden;
+        }
+
+        .card-header {
+            padding: 1rem;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .card-title {
+            font-size: 1.25rem;
+            margin: 0;
+        }
+
+        .card-content {
+            padding: 1rem;
+        }
+        .zitou-list{
+            overflow-y: auto;
+            max-height: 10rem;
+        }
+
+        /* 按钮样式 */
+        .btn {
+            display: inline-block;
+            font-weight: 400;
+            text-align: center;
+            white-space: nowrap;
+            vertical-align: middle;
+            user-select: none;
+            border: 1px solid transparent;
+            padding: 0.375rem 0.75rem;
+            font-size: 1rem;
+            line-height: 1.5;
+            border-radius: 0.25rem;
+            transition: all 0.15s ease-in-out;
+            cursor: pointer;
+        }
+
+        .btn-primary {
+            color: #fff;
+            background-color: #4f46e5;
+            border-color: #4f46e5;
+        }
+
+        .btn-primary:hover {
+            background-color: #4338ca;
+            border-color: #4338ca;
+        }
+
+        .btn-outline {
+            color: #4f46e5;
+            background-color: transparent;
+            border-color: #d1d5db;
+        }
+
+        .btn-outline:hover {
+            background-color: #f3f4f6;
+        }
+
+        .btn-sm {
+            padding: 0.25rem 0.5rem;
+            font-size: 0.875rem;
+            line-height: 1.5;
+            border-radius: 0.2rem;
+        }
+
+        /* 输入框样式 */
+        .input {
+            display: block;
+            width: 100%;
+            padding: 0.375rem 0.75rem;
+            font-size: 1rem;
+            line-height: 1.5;
+            color: #495057;
+            background-color: #fff;
+            background-clip: padding-box;
+            border: 1px solid #ced4da;
+            border-radius: 0.25rem;
+            transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+        }
+
+        .input:focus {
+            color: #495057;
+            background-color: #fff;
+            border-color: #a5b4fc;
+            outline: 0;
+            box-shadow: 0 0 0 0.2rem rgba(79, 70, 229, 0.25);
+        }
+
+        .textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        /* 标签样式 */
+        .label {
+            display: inline-block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        /* 布局样式 */
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1rem;
+        }
+
+        @media (min-width: 768px) {
+            .grid-cols-4 {
+                grid-template-columns: 1fr 3fr;
+            }
+        }
+
+        .flex {
+            display: flex;
+        }
+
+        .flex-wrap {
+            flex-wrap: wrap;
+        }
+
+        .justify-between {
+            justify-content: space-between;
+        }
+
+        .justify-end {
+            justify-content: flex-end;
+        }
+
+        .items-center {
+            align-items: center;
+        }
+
+        .space-x-2 > * + * {
+            margin-left: 0.5rem;
+        }
+
+        .space-y-2 > * + * {
+            margin-top: 0.5rem;
+        }
+
+        .space-y-4 > * + * {
+            margin-top: 1rem;
+        }
+
+        .gap-2 {
+            gap: 0.5rem;
+        }
+
+        .mt-6 {
+            margin-top: 1.5rem;
+        }
+
+        .mb-6 {
+            margin-bottom: 1.5rem;
+        }
+
+        .mb-2 {
+            margin-bottom: 0.5rem;
+        }
+
+        .p-2 {
+            padding: 0.5rem;
+        }
+
+        .p-3 {
+            padding: 0.75rem;
+        }
+
+        .p-4 {
+            padding: 1rem;
+        }
+
+        /* 特定组件样式 */
+        .volume-selector {
+            display: flex;
+            overflow-x: auto;
+            padding: 0.5rem;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .volume-btn {
+            flex-shrink: 0;
+            margin-right: 0.5rem;
+        }
+
+        .character-grid {
+            display: grid;
+            grid-template-columns: repeat(20, 1fr);
+            gap: 0.5rem;
+            padding: 0.5rem;
+        }
+
+        .character-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 2.5rem;
+            height: 2.5rem;
+            font-size: 1.25rem;
+            border-radius: 0.25rem;
+        }
+
+        .character-btn.selected {
+            background-color: rgba(79, 70, 229, 0.1);
+            border-color: #4f46e5;
+        }
+
+        .character-btn.annotated {
+            background-color: rgba(16, 185, 129, 0.1);
+            border-color: #10b981;
+        }
+
+        .segment-list {
+            max-height: 600px;
+            overflow-y: auto;
+        }
+
+        .segment-item {
+            padding: 0.75rem;
+            border-radius: 0.375rem;
+            margin-bottom: 0.5rem;
+            cursor: pointer;
+            transition: background-color 0.15s ease-in-out;
+        }
+
+        .segment-item:hover {
+            background-color: #f3f4f6;
+        }
+
+        .segment-item.selected {
+            background-color: #f3f4f6;
+        }
+
+        .segment-item.original {
+            border-left: 4px solid #4f46e5;
+        }
+
+        .segment-item.note {
+            border-left: 4px solid #d1d5db;
+            margin-left: 0.5rem;
+        }
+
+        .segment-type {
+            font-size: 0.75rem;
+            font-weight: 500;
+            margin-bottom: 0.25rem;
+        }
+
+        .segment-content {
+            width:430px;
+            font-size: 0.875rem;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .segment-status {
+            font-size: 0.75rem;
+            color: #4f46e5;
+            margin-top: 0.25rem;
+        }
+
+        .bg-muted {
+            background-color: #f3f4f6;
+        }
+
+        .rounded-md {
+            border-radius: 0.375rem;
+        }
+
+        .border {
+            border: 1px solid #e5e7eb;
+        }
+
+        .border-b {
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .punctuation-toolbar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            padding: 0.5rem;
+            border-top: 1px solid #e5e7eb;
+        }
+
+        .punctuation-btn {
+            width: 2rem;
+            height: 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
+            font-size: 1rem;
+        }
+
+        /* 辅助类 */
+        .text-center {
+            text-align: center;
+        }
+
+        .text-sm {
+            font-size: 0.875rem;
+        }
+
+        .text-xs {
+            font-size: 0.75rem;
+        }
+
+        .text-lg {
+            font-size: 1.125rem;
+        }
+
+        .text-muted {
+            color: #6c757d;
+        }
+
+        .font-medium {
+            font-weight: 500;
+        }
+
+        .font-mono {
+            font-family: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+        }
+
+        .truncate {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        .punctuated-textarea{
+            display:none;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>《段注》标点标注平台</h1>
+        <p class="text-center text-muted mb-6">基于许惟贤《段注》标点本，为《段注》增加现代标点。</p>
+        <div style="text-align:right;">欢迎{{user.username}}, <a href="/logout">退出</a></div>
+
+        <!-- 卷选择器 -->
+        <div class="card mb-6">
+            <div class="card-header">
+                <h3 class="card-title">选择卷</h3>
+            </div>
+            <div class="volume-selector">
+                <!-- 卷按钮将通过JavaScript动态生成 -->
+                {% for juan in juans %}
+                <button class="btn btn-outline volume-btn">{{juan.name}}</button>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- 字头选择器 -->
+        <div class="card mb-6">
+            <div class="card-header">
+                <div class="flex justify-between items-center">
+                    <h3 class="card-title">选择字头</h3>
+                    <div>
+                        <!--<input type="text" id="character-search" class="input" placeholder="搜索字头..." style="width: 200px;">-->
+                    </div>
+                </div>
+            </div>
+            <div class="card-content zitou-list">
+                <div class="character-grid" id="character-grid">
+                    <!-- 字头按钮将通过JavaScript动态生成 -->
+                </div>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-4">
+            <!-- 侧栏：原文和注文列表 -->
+            <div>
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title" id="segment-list-title">段落列表</h3>
+                    </div>
+                    <div class="card-content">
+                        <div class="segment-list" id="segment-list">
+                            <!-- 段落列表将通过JavaScript动态生成 -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 主要内容区：标注编辑器 -->
+            <div>
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title" id="editor-title">请选择内容</h3>
+                    </div>
+                    <div class="card-content">
+                        <div id="annotation-editor" class="space-y-4">
+                            <!-- 标注编辑器将通过JavaScript动态生成 -->
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex justify-end mt-6">
+                    <button id="submit-btn" class="btn btn-primary">提交标注</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function(){
+            var zitouId;
+            const punctuationMarks = ["，", "。", "、", "：", "；", "？", "！", "「", "」", "『", "』", "（", "）", "《", "》"];
+            $(".volume-btn").click(function(){
+                $(".volume-btn").removeClass("btn-primary");
+                $(".volume-btn").addClass("btn-outline");
+                $(this).removeClass("btn-outline");
+                $(this).addClass("btn-primary");
+                $("#segment-list-title").text("请选择字头");
+                $("#segment-list").html("");
+                $("#editor-title").text("请选择内容");
+                $("#annotation-editor").html("");
+                const juan = $(this).text();
+                $.ajax({
+                    url: "/zitous/?juan=" + juan,
+                    type: "GET",
+                    dataType: "json",
+                    success: function(data){
+                        //console.log(data);
+                        $("#character-grid").html("");
+                        $.each(data,function(index,item){
+                            //console.log(item);
+                            var zitou = $("<button id='zt-"+item[0]+"' class='btn btn-outline character-btn'>" + item[1] + "</button>");
+                            var zitouStatus = item[2];
+                            if(zitouStatus == 1){
+                                zitou.addClass("annotated");
+                            }
+                            zitou.on("click",function(){
+                                zitouId = item[0];
+                                $("#character-grid").find("button").removeClass("selected");
+                                if(!$(this).hasClass("annotated")){
+                                    $(this).addClass("selected");
+                                }
+                                var zt = $(this).text();
+                                $("#segment-list-title").text('"' + zt +'"段落列表');
+                                $("#editor-title").text(juan + "-" + zt + "-原文标注");
+                                $.ajax({
+                                    url: "/zitouParagraphs/?zitou=" + zt,
+                                    type: "GET",
+                                    dataType: "json",
+                                    success: function(data){
+                                        //console.log(data);
+                                        $("#segment-list").html("");
+                                        $.each(data,function(index, item){
+                                            var type = item.position.charAt(0)=='p'?"original":"note";
+                                            var segmentItem = $("<div class='segment-item " + type + "'></div>");
+                                            var segmentType = $("<div class='segment-type'>"+(item.position.charAt(0)=='p'?"原文":"注文")+"</div>");
+                                            var segmentContent = $("<div class='segment-content'>" + item.content + "</div>");
+                                            var bzContent;
+                                            if(item.bzContent==''){
+                                                bzContent = item.content
+                                            }else{
+                                                bzContent = item.bzContent
+                                            }
+                                            var segmentPunctuated = $("<textarea name='"+item.position+"_Punctuated' class='punctuated-textarea'>"+ bzContent +"</textarea>");
+                                            segmentItem.append(segmentType);
+                                            segmentItem.append(segmentContent);
+                                            if(zitouStatus == 1){
+                                                var segmentStatus = $("<div class='segment-status'>已标注</div>");
+                                                segmentItem.append(segmentStatus);
+                                            }
+                                            segmentItem.append(segmentPunctuated);
+                                            $("#segment-list").append(segmentItem);
+                                            segmentItem.on('click',function(){
+                                                $("#annotation-editor").html("");
+                                                $(".segment-item").removeClass("selected");
+                                                $(this).addClass("selected");
+                                                var content = $(this).find(".segment-content").text();
+                                                var punctuatedContent = $(this).find(".punctuated-textarea").val();
+
+                                                $("#editor-title").text(juan + "-" + zt + "-" + (type=='original'?"原文标注":"注文标注"));
+
+                                                var originalSection = $("<div class='p-4 bg-muted rounded-md'></div>");
+                                                var originalLabel = $("<label class='label'>原文内容</label>");
+                                                var originalContent = $("<p>"+content+"</p>")
+                                                originalSection.append(originalLabel);
+                                                originalSection.append(originalContent);
+                                                $("#annotation-editor").append(originalSection);
+
+                                                var addPunctuationSection = $("<div class='space-y-2'></div>");
+                                                var addLabel = $("<label class='label'>添加标点</label>");
+                                                var textareaObj = $("<textarea id='bz-textarea' class='input textarea font-mono'>"+punctuatedContent+"</textarea>");
+                                                textareaObj.on("change",function(){
+                                                    var newText = $(this).val();
+                                                    $(".segment-item.selected").find(".punctuated-textarea").val(newText);
+                                                    $(".segment-item.selected").find(".punctuated-textarea").text(newText);
+                                                    //console.log($(".segment-item.selected").find(".punctuated-textarea").val());
+                                                });
+                                                addPunctuationSection.append(addLabel);
+                                                addPunctuationSection.append(textareaObj);
+                                                $("#annotation-editor").append(addPunctuationSection);
+
+                                                var cardBorder = $("<div class='card border'></div>");
+                                                var toolbar = $("<div class='punctuation-toolbar'></div>");
+                                                $.each(punctuationMarks,function(index,punctuation){
+                                                    var punctuationMark = $("<button class='btn btn-outline btn-sm punctuation-btn' data-punct='"+punctuation+"'>"+punctuation+"</button>");
+                                                    punctuationMark.on("click",function(){
+                                                        const start = textareaObj.prop("selectionStart");
+                                                        const end = textareaObj.prop("selectionEnd");
+                                                        const text = textareaObj.val();
+                                                        const newText = text.substring(0, start) + punctuation + text.substring(end);
+                                                        textareaObj.text(newText);
+                                                        textareaObj.val(newText);
+                                                        // 重新设置光标位置
+                                                        setTimeout(() => {
+                                                            textareaObj.focus();
+                                                            textareaObj[0].setSelectionRange(start + punctuation.length, start + punctuation.length);
+                                                        }, 0);
+                                                        $(".segment-item.selected").find(".punctuated-textarea").val(newText);
+                                                        $(".segment-item.selected").find(".punctuated-textarea").text(newText);
+                                                        //console.log($(".segment-item.selected").find(".punctuated-textarea").val());
+                                                    });
+                                                    toolbar.append(punctuationMark);
+                                                });
+                                                cardBorder.append(toolbar);
+                                                $("#annotation-editor").append(cardBorder);
+                                            });
+                                        });
+                                        $(".segment-item:first").click();
+                                    }
+                                });
+                            });
+                            $("#character-grid").append(zitou);
+                        });
+                    },
+                    error: function(jqXHR, textStatus, errorThrown) {
+                        console.log(jqXHR);
+                    }
+                });
+            });
+
+            $("#submit-btn").click(function(){
+                if($(".punctuated-textarea").length>0){
+                    var csrftoken = '{{ csrf_token }}';
+                    var param = {
+                       zitouId: zitouId
+                    };
+                    var data = [];
+                    $(".punctuated-textarea").each(function(index,item){
+                        var textareaName = $(this).attr("name");
+                        var position = textareaName.split("_")[0];
+                        var bzContent = $(this).val();
+                        data.push({position:position,bzContent:bzContent});
+                    });
+                    param.data = data
+                    $.ajax({
+                        url:"/bzZitou/",
+                        type:"post",
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRFToken': csrftoken, // Django CSRF防护
+                        },
+                        data: JSON.stringify(param),
+                        success:function(result){
+                            //console.log(result);
+                            if(result.success == true){
+                                if(!$("#zt-"+zitouId).hasClass("annotated")){
+                                    $("#zt-"+zitouId).addClass("annotated");
+                                }
+                                $(".segment-item").each(function(){
+                                    $(this).find(".segment-status").remove();
+                                    var segmentStatus = $("<div class='segment-status'>已标注</div>");
+                                    $(this).append(segmentStatus);
+                                });
+                                $.message({type:'success',content:"提交成功。"});
+                            }else{
+                                $.message({type:'error',content:"提交失败!"});
+                            }
+                        }
+                    });
+                }else{
+                    alert("请先选择字头！");
+                }
+
+            });
+        });
+    </script>
+</body>
+</html>

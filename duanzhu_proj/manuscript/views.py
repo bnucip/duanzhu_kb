@@ -1,6 +1,13 @@
+import json
+import re
+from datetime import datetime
+
+from django.contrib import messages
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ValidationError
 from django.db.models import Q
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.http import JsonResponse, Http404
 from .models import DuanZhu, SwDu, Gujinzi, Guyunbu, Gouyi, Yinyitong, Yinshu, Zhishimulu, Liushu, Zhuanzhu, Jiajie, \
     Tongzi, Xingfeizi, Huxun, Zhiyan, Lianmianci, Yinshen, Benyi, Gujinyi, Hunyanxiyan, Ezi, Suzi, Suiwen, You, Shuozi, \
@@ -1294,3 +1301,88 @@ def xingfeiyi(request):
 def yunbu(request):
     context = {}
     return render(request, "manuscript/yunbu.html", context)
+
+def user_login(request):
+    if request.method == 'POST':
+        username = request.POST['username']
+        password = request.POST['password']
+        user = authenticate(request, username=username, password=password)
+        if user is not None:
+            login(request, user)
+            return redirect('mark')
+        else:
+            messages.error(request, '用户名或密码错误')
+    return render(request, 'login.html')
+
+def user_logout(request):
+    logout(request)
+    return redirect('index')
+
+@login_required
+def mark(request):
+    context = {}
+    user = request.user
+    context['user'] = user
+    print(user.username)
+    juans = []
+    juanNames = DuanZhu.objects.values_list('juan', flat=True).distinct()
+    for juanName in juanNames:
+        juan = {}
+        juan['name'] = juanName
+        juan['status'] = 1
+        juans.append(juan)
+    context['juans'] = juans
+    return render(request, 'manuscript/mark.html', context)
+
+@login_required
+def getZitous(request):
+    juan = request.GET['juan']
+    zitous = list(DuanZhu.objects.filter(juan=juan).values_list('id','zitou','status'))
+    return JsonResponse(zitous, safe=False)
+
+@login_required
+def getZitouParagraphs(request):
+    zt = request.GET['zitou']
+    zitou = get_object_or_404(DuanZhu, zitou=zt)
+    pattern = r'<([pz]\d+)>(.*?)</\1>'
+    result = re.findall(pattern, zitou.zhengwen_zhushi)
+    data = [{"position": item[0], "content": item[1], "bzContent":''} for item in result]
+    if zitou.zhengwen_zhushi_bz :
+        bzResult = re.findall(pattern, zitou.zhengwen_zhushi_bz)
+        for i,item in enumerate(data):
+            item["bzContent"] = bzResult[i][1]
+    # print(data)
+    return JsonResponse(data, safe=False)
+
+@login_required
+def bzZitou(request):
+    context = {}
+    success = False
+    user = request.user
+    if user:
+        try:
+            currentTime = datetime.now()
+            print(user.id)
+            print(currentTime)
+            if request.method == 'POST':
+                param = json.loads(request.body)
+                # print(param)
+                zitouId = param.get("zitouId")
+                zitou = get_object_or_404(DuanZhu, id=zitouId)
+                if zitou:
+                    bzcontent = ""
+                    segments = param.get("data")
+                    for item in segments:
+                        bzcontent += "<" + item["position"] + ">" + item["bzContent"] + "</" + item["position"] + ">"
+                    # print(bzcontent)
+                    zitou.zhengwen_zhushi_bz = bzcontent
+                    zitou.status = 1
+                    zitou.user_id = user.id
+                    zitou.update_time = currentTime
+                    zitou.save()
+                    success = True
+        except Exception as e:
+            print(e)
+    context["success"] = success
+
+    return JsonResponse(context, safe=False)
