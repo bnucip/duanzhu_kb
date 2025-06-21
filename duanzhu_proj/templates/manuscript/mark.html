@@ -508,13 +508,13 @@
                                             var type = item.position.charAt(0)=='p'?"original":"note";
                                             var segmentItem = $("<div class='segment-item " + type + "'></div>");
                                             var segmentType = $("<div class='segment-type'>"+(item.position.charAt(0)=='p'?"原文":"注文")+"</div>");
-                                            var segmentContent = $("<div class='segment-content'>" + item.content + "</div>");
                                             var bzContent;
                                             if(item.bzContent==''){
                                                 bzContent = item.content
                                             }else{
                                                 bzContent = item.bzContent
                                             }
+                                            var segmentContent = $("<div class='segment-content'>" + bzContent + "</div>");
                                             var segmentPunctuated = $("<textarea name='"+item.position+"_Punctuated' class='punctuated-textarea'>"+ bzContent +"</textarea>");
                                             segmentItem.append(segmentType);
                                             segmentItem.append(segmentContent);
@@ -626,6 +626,7 @@
                                     $(this).append(segmentStatus);
                                 });
                                 $.message({type:'success',content:"提交成功。"});
+                                $("#zt-"+zitouId).click();
                             }else{
                                 $.message({type:'error',content:"提交失败!"});
                             }
