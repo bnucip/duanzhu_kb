@@ -95,7 +95,7 @@ class Yinyitong(models.Model):
         verbose_name_plural = verbose_name
 
 class Zhishimulu(models.Model):
-    id = models.IntegerField(primary_key=True)
+    id = models.IntegerField(primary_key=True, auto_created=True)
     tag_name = models.TextField('目录名', null=True, blank=True)
     parent_id = models.IntegerField('父级id', null=True, blank=True)
     level = models.IntegerField('目录层级', null=True, blank=True)
@@ -104,6 +104,7 @@ class Zhishimulu(models.Model):
     shuyuxingshi_jian = models.TextField('术语形式-简体', null=True, blank=True)
     yanjiutuijie = models.TextField('研究推介', null=True, blank=True)
     url = models.TextField('请求url', null=True, blank=True)
+    shuxing = models.TextField('属性', null=True, blank=True)
     class Meta:
         verbose_name = '知识目录'
         verbose_name_plural = verbose_name

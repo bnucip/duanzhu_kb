@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% load static %}
+    <title>《段注》知识管理与标注系统</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'js/message/message.css' %}"/>
+    <script src="{% static 'js/vendor/jquery/jquery.min.js' %}"></script>
+    <script src="{% static 'js/message/message.js' %}"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        body:before{
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url(https://hebbkx1anhila5yf.public.blob.vercel-storage.com/%E6%88%AA%E5%B1%8F2025-05-10%2016.33.41.png-rToDqrsoxzaluLqmVPhlk3WpgnyUTF.jpeg);
+            background-size: cover;
+            background-position: center;
+            opacity: 0.15;
+            z-index: -1;
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #5c3b00;
+        }
+        .management-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        .management-btn {
+            padding: 10px 20px;
+            background-color: #d4b96e;
+            color: #5c3b00;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 14px;
+        }
+        .management-btn:hover {
+            background-color: #c4a95e;
+        }
+        .knowledge-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 5px;
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        .knowledge-table th {
+            background-color: #d4b96e;
+            color: #5c3b00;
+            text-align: left;
+            padding: 12px 15px;
+            font-weight: bold;
+        }
+        .knowledge-table td {
+            padding: 10px 15px;
+            border-bottom: 1px solid #ddd;
+            vertical-align: top;
+        }
+        .knowledge-table tr:nth-child(even) {
+            background-color: rgba(249, 246, 240, 0.7);
+        }
+        .knowledge-table tr:hover {
+            background-color: rgba(244, 235, 217, 0.9);
+        }
+        .category-cell {
+            font-weight: bold;
+            width: 15%;
+            border-right: 1px solid #ddd;
+            color: #5c3b00;
+        }
+        .set-cell {
+            width: 15%;
+            border-right: 1px solid #ddd;
+        }
+        .points-cell {
+            width: 70%;
+        }
+        .knowledge-point {
+            color: #0066cc;
+            text-decoration: none;
+            margin-right: 5px;
+            cursor: pointer;
+        }
+        .knowledge-point:hover {
+            text-decoration: underline;
+            color: #f90;
+        }
+        .knowledge-point.manageable {
+            background-color: #fff2cc;
+            padding: 2px 4px;
+            border-radius: 3px;
+        }
+        .highlight {
+            background-color: #fff2cc;
+        }
+        h2 {
+            text-align: center;
+            margin-top: 30px;
+            margin-bottom: 20px;
+            color: #5c3b00;
+        }
+        .content-wrapper {
+            background-color: rgba(255, 255, 255, 0.85);
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        /* 模态对话框样式 */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+        }
+        .modal-content {
+            background-color: rgba(255, 255, 255, 0.95);
+            margin: 5% auto;
+            padding: 20px;
+            border-radius: 8px;
+            width: 80%;
+            max-width: 500px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+        }
+        .modal-header {
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+            color: #5c3b00;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #d4b96e;
+            padding-bottom: 10px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #5c3b00;
+        }
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+            box-sizing: border-box;
+        }
+        .modal-buttons {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .modal-btn {
+            padding: 10px 20px;
+            margin: 0 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        .btn-confirm {
+            background-color: #d4b96e;
+            color: #5c3b00;
+        }
+        .btn-confirm:hover {
+            background-color: #c4a95e;
+        }
+        .btn-cancel {
+            background-color: #ccc;
+            color: #666;
+        }
+        .btn-cancel:hover {
+            background-color: #bbb;
+        }
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .close:hover {
+            color: #000;
+        }
+    </style>
+</head>
+<body>
+    <div class="content-wrapper">
+        <h1>《段注》知识管理与标注系统</h1>
+        <!-- 管理按钮 -->
+        <div class="management-buttons">
+            <button class="management-btn" id="manage-btn">管理知识点</button>
+            <button class="management-btn" id="add-btn">新增知识点</button>
+            <button class="management-btn" id="annotate-btn">开始标注</button>
+        </div>
+
+        <table class="knowledge-table">
+            <thead>
+                <tr>
+                    <th style="width: 15%;">知识范畴</th>
+                    <th style="width: 15%;">知识集</th>
+                    <th style="width: 70%;">知识点</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for mulu in mulus %}
+                    {% for mulu1 in mulu.children %}
+                    <tr>
+                        {% if forloop.first %}<td class="category-cell" rowspan="{{ mulu.children|length }}">{{ mulu.text }}</td>{% endif %}
+                        <td>{{ mulu1.text }}</td>
+                        <td>
+                            {% if mulu1.text == "韵部"%}
+                                <a href="#" class="knowledge-point" data-id="yunbu" data-category="{{ mulu.text }}" data-set="{{ mulu1.text }}"  data-attribute="单对象描述型">第一部至第十七部</a>
+                            {% else %}
+                                {% for mulu2 in mulu1.children %}
+                                <a href="#" class="knowledge-point" data-id="{{ mulu2.id }}" data-category="{{ mulu.text }}" data-set="{{ mulu1.text }}" data-attribute="{{ mulu2.shuxing }}" data-term="{{ mulu2.shuyuxingshi }}">{{ mulu2.text }}</a>{% if not forloop.last %}、{% endif %}
+                                {% endfor %}
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                {% endfor %}
+<!--                &lt;!&ndash; 文字类 &ndash;&gt;-->
+<!--                <tr>-->
+<!--                    <td class="category-cell" rowspan="2">文字类</td>-->
+<!--                    <td class="set-cell">六书</td>-->
+<!--                    <td class="points-cell">-->
+<!--                        <a href="#" class="knowledge-point" data-category="文字类" data-set="六书">象形</a>、-->
+<!--                        <a href="#" class="knowledge-point" data-category="文字类" data-set="六书">指事</a>、-->
+<!--                        <a href="#" class="knowledge-point" data-category="文字类" data-set="六书">会意</a>、-->
+<!--                        <a href="#" class="knowledge-point" data-category="文字类" data-set="六书">转注</a>、-->
+<!--                        <a href="#" class="knowledge-point" data-category="文字类" data-set="六书">形声</a>、-->
+<!--                        <a href="#" class="knowledge-point" data-category="文字类" data-set="六书">假借</a>-->
+<!--                    </td>-->
+<!--                </tr>-->
+<!--                <tr>-->
+<!--                    <td class="set-cell">字际关系</td>-->
+<!--                    <td class="points-cell">-->
+<!--                        <a href="#" class="knowledge-point" data-category="文字类" data-set="字际关系">行废字</a>、-->
+<!--                        <a href="#" class="knowledge-point" data-category="文字类" data-set="字际关系">讹字</a>、-->
+<!--                        <a href="#" class="knowledge-point" data-category="文字类" data-set="字际关系">俗字</a>、-->
+<!--                        <a href="#" class="knowledge-point" data-category="文字类" data-set="字际关系">同字</a>、-->
+<!--                        <a href="#" class="knowledge-point" data-category="文字类" data-set="字际关系">古今字</a>-->
+<!--                    </td>-->
+<!--                </tr>-->
+
+<!--                &lt;!&ndash; 训诂类 &ndash;&gt;-->
+<!--                <tr>-->
+<!--                    <td class="category-cell" rowspan="3">训诂类</td>-->
+<!--                    <td class="set-cell">训</td>-->
+<!--                    <td class="points-cell">-->
+<!--                        <a href="#" class="knowledge-point" data-category="训诂类" data-set="训">犹</a>、-->
+<!--                        <a href="#" class="knowledge-point" data-category="训诂类" data-set="训">构意</a>、-->
+<!--                        <a href="#" class="knowledge-point" data-category="训诂类" data-set="训">非是</a>、-->
+<!--                        <a href="#" class="knowledge-point" data-category="训诂类" data-set="训">互见</a>、-->
+<!--                        <a href="#" class="knowledge-point" data-category="训诂类" data-set="训">同训</a>、-->
+<!--                        <a href="#" class="knowledge-point" data-category="训诂类" data-set="训">互训</a>、-->
+<!--                        <a href="#" class="knowledge-point" data-category="训诂类" data-set="训">双声</a>、-->
+<!--                        <a href="#" class="knowledge-point" data-category="训诂类" data-set="训">叠韵</a>、-->
+<!--                        <a href="#" class="knowledge-point" data-category="训诂类" data-set="训">以今释古</a>、-->
+<!--                        <a href="#" class="knowledge-point" data-category="训诂类" data-set="训">随文解之</a>、-->
+<!--                        <a href="#" class="knowledge-point" data-category="训诂类" data-set="训">说字训诂</a>-->
+<!--                    </td>-->
+<!--                </tr>-->
+<!--                <tr>-->
+<!--                    <td class="set-cell">词</td>-->
+<!--                    <td class="points-cell">-->
+<!--                        <a href="#" class="knowledge-point" data-category="训诂类" data-set="词">古语</a>、-->
+<!--                        <a href="#" class="knowledge-point" data-category="训诂类" data-set="词">通语</a>、-->
+<!--                        <a href="#" class="knowledge-point" data-category="训诂类" data-set="词">转语</a>、-->
+<!--                        <a href="#" class="knowledge-point" data-category="训诂类" data-set="词">之言</a>、-->
+<!--                        <a href="#" class="knowledge-point" data-category="训诂类" data-set="词">联绵词</a>、-->
+<!--                        <a href="#" class="knowledge-point" data-category="训诂类" data-set="词">浑言析言</a>、-->
+<!--                        <a href="#" class="knowledge-point" data-category="训诂类" data-set="词">声符示源</a>、-->
+<!--                        <a href="#" class="knowledge-point" data-category="训诂类" data-set="词">方言俗语</a>-->
+<!--                    </td>-->
+<!--                </tr>-->
+<!--                <tr>-->
+<!--                    <td class="set-cell">义</td>-->
+<!--                    <td class="points-cell">-->
+<!--                        <a href="#" class="knowledge-point" data-category="训诂类" data-set="义">引申义</a>、-->
+<!--                        <a href="#" class="knowledge-point" data-category="训诂类" data-set="义">本义</a>、-->
+<!--                        <a href="#" class="knowledge-point" data-category="训诂类" data-set="义">反训</a>、-->
+<!--                        <a href="#" class="knowledge-point" data-category="训诂类" data-set="义">古今义</a>、-->
+<!--                        <a href="#" class="knowledge-point" data-category="训诂类" data-set="义">义相足</a>、-->
+<!--                        <a href="#" class="knowledge-point" data-category="训诂类" data-set="义">音义同</a>、-->
+<!--                        <a href="#" class="knowledge-point" data-category="训诂类" data-set="义">音同义异</a>、-->
+<!--                        <a href="#" class="knowledge-point" data-category="训诂类" data-set="义">别一义</a>、-->
+<!--                        <a href="#" class="knowledge-point" data-category="训诂类" data-set="义">行废义</a>-->
+<!--                    </td>-->
+<!--                </tr>-->
+
+<!--                &lt;!&ndash; 音韵类 &ndash;&gt;-->
+<!--                <tr>-->
+<!--                    <td class="category-cell" rowspan="2">音韵类</td>-->
+<!--                    <td class="set-cell">韵部</td>-->
+<!--                    <td class="points-cell">-->
+<!--                        <a href="#" class="knowledge-point" data-category="音韵类" data-set="韵部">第一部至第十七部</a>-->
+<!--                    </td>-->
+<!--                </tr>-->
+<!--                <tr>-->
+<!--                    <td class="set-cell">音韵术语</td>-->
+<!--                    <td class="points-cell">-->
+<!--                        <a href="#" class="knowledge-point" data-category="音韵类" data-set="音韵术语">合韵</a>、-->
+<!--                        <a href="#" class="knowledge-point" data-category="音韵类" data-set="音韵术语">古音</a>、-->
+<!--                        <a href="#" class="knowledge-point" data-category="音韵类" data-set="音韵术语">今音</a>、-->
+<!--                        <a href="#" class="knowledge-point" data-category="音韵类" data-set="音韵术语">音转</a>、-->
+<!--                        <a href="#" class="knowledge-point" data-category="音韵类" data-set="音韵术语">音变</a>、-->
+<!--                        <a href="#" class="knowledge-point" data-category="音韵类" data-set="音韵术语">最近</a>-->
+<!--                    </td>-->
+<!--                </tr>-->
+
+<!--                &lt;!&ndash; 校勘类 &ndash;&gt;-->
+<!--                <tr>-->
+<!--                    <td class="category-cell" rowspan="2">校勘类</td>-->
+<!--                    <td class="set-cell">文献特征</td>-->
+<!--                    <td class="points-cell">-->
+<!--                        <a href="#" class="knowledge-point" data-category="校勘类" data-set="文献特征">删</a>、-->
+<!--                        <a href="#" class="knowledge-point" data-category="校勘类" data-set="文献特征">夺</a>、-->
+<!--                        <a href="#" class="knowledge-point" data-category="校勘类" data-set="文献特征">异文</a>、-->
+<!--                        <a href="#" class="knowledge-point" data-category="校勘类" data-set="文献特征">妄改</a>-->
+<!--                    </td>-->
+<!--                </tr>-->
+<!--                <tr>-->
+<!--                    <td class="set-cell">校正</td>-->
+<!--                    <td class="points-cell">-->
+<!--                        <a href="#" class="knowledge-point" data-category="校勘类" data-set="校正">正</a>、-->
+<!--                        <a href="#" class="knowledge-point" data-category="校勘类" data-set="校正">本作</a>-->
+<!--                    </td>-->
+<!--                </tr>-->
+
+<!--                &lt;!&ndash; 引书类 &ndash;&gt;-->
+<!--                <tr>-->
+<!--                    <td class="category-cell">引书类</td>-->
+<!--                    <td class="set-cell">引证书目</td>-->
+<!--                    <td class="points-cell">-->
+<!--                        <a href="#" class="knowledge-point" data-category="引书类" data-set="引证书目">经</a>、-->
+<!--                        <a href="#" class="knowledge-point" data-category="引书类" data-set="引证书目">史</a>、-->
+<!--                        <a href="#" class="knowledge-point" data-category="引书类" data-set="引证书目">子</a>、-->
+<!--                        <a href="#" class="knowledge-point" data-category="引书类" data-set="引证书目">集</a>-->
+<!--                    </td>-->
+<!--                </tr>-->
+            </tbody>
+        </table>
+    </div>
+
+    <input type="hidden" id="updateId" />
+    <!-- 管理知识点模态框 -->
+    <div id="manageModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('manageModal')">&times;</span>
+            <div class="modal-header" id="manageModalTitle">知识点管理</div>
+            <form id="manageForm">
+                <div class="form-group">
+                    <label for="manageCategory">知识范畴：</label>
+                    <select id="manageCategory" name="category">
+<!--                        {% for mulu in mulus %}-->
+<!--                        <option value="{{ mulu.id }}">{{ mulu.text }}</option>-->
+<!--                        {% endfor %}-->
+                        <option value="文字类">文字类</option>
+                        <option value="训诂类">训诂类</option>
+                        <option value="音韵类">音韵类</option>
+                        <option value="校勘类">校勘类</option>
+                        <option value="引书类">引书类</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="manageSet">知识集：</label>
+                    <select id="manageSet" name="set">
+                        <option value="">请选择知识集</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="manageTerm">术语：</label>
+                    <input type="text" id="manageTerm" name="term" readonly>
+                </div>
+                <div class="form-group">
+                    <label for="manageAttribute">知识属性：</label>
+                    <select id="manageAttribute" name="attribute">
+                        <option value="单对象描述型">单对象描述型</option>
+                        <option value="多对象关系型">多对象关系型</option>
+                    </select>
+                </div>
+                <div class="modal-buttons">
+                    <button type="button" class="modal-btn btn-confirm" onclick="confirmManage()">确定修改</button>
+                    <button type="button" class="modal-btn btn-cancel" onclick="closeModal('manageModal')">取消</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- 新增知识点模态框 -->
+    <div id="addModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('addModal')">&times;</span>
+            <div class="modal-header">新增知识点</div>
+            <form id="addForm" onsubmit="submitAdd(event)">
+                <div class="form-group">
+                    <label for="addName">知识点名称：</label>
+                    <input type="text" id="addName" name="name" required>
+                </div>
+                <div class="form-group">
+                    <label for="addCategory">知识范畴：</label>
+                    <select id="addCategory" name="category" required onchange="updateAddKnowledgeSet()">
+                        <option value="">请选择知识范畴</option>
+                        <option value="文字类">文字类</option>
+                        <option value="训诂类">训诂类</option>
+                        <option value="音韵类">音韵类</option>
+                        <option value="校勘类">校勘类</option>
+                        <option value="引书类">引书类</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="addSet">知识集：</label>
+                    <select id="addSet" name="set" required>
+                        <option value="">请选择知识集</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="addTerm">术语：</label>
+                    <input type="text" id="addTerm" name="term" required>
+                </div>
+                <div class="form-group">
+                    <label for="addAttribute">知识属性：</label>
+                    <select id="addAttribute" name="attribute" required>
+                        <option value="">请选择知识属性</option>
+                        <option value="单对象描述型">单对象描述型</option>
+                        <option value="多对象关系型">多对象关系型</option>
+                    </select>
+                </div>
+                <div class="modal-buttons">
+                    <button type="submit" class="modal-btn btn-confirm">确定提交</button>
+                    <button type="button" class="modal-btn btn-cancel" onclick="closeModal('addModal')">取消</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // 知识集映射
+        const knowledgeSets = {
+            '文字类': ['六书', '字际关系'],
+            '训诂类': ['训', '词', '义'],
+            '音韵类': ['韵部', '音韵术语'],
+            '校勘类': ['文献特征', '校正'],
+            '引书类': ['引证书目']
+        };
+
+        let isManageMode = false;
+        if(sessionStorage.getItem('isManageMode')==1){
+            isManageMode = true;
+            document.getElementById('manage-btn').textContent = "退出管理";
+            const knowledgePoints = document.querySelectorAll('.knowledge-point');
+            knowledgePoints.forEach(function(point) {
+                point.classList.add('manageable');
+            });
+        }
+        let currentKnowledgePoint = null;
+
+        // 页面加载完成后初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            // 管理知识点按钮
+            document.getElementById('manage-btn').addEventListener('click', function() {
+                isManageMode = !isManageMode;
+                const knowledgePoints = document.querySelectorAll('.knowledge-point');
+
+                if (isManageMode) {
+                    this.textContent = "退出管理";
+                    this.style.backgroundColor = "#c4a95e";
+                    knowledgePoints.forEach(function(point) {
+                        point.classList.add('manageable');
+                    });
+                    alert("管理模式已开启，请点击要管理的知识点");
+                    sessionStorage.setItem('isManageMode', 1);
+                } else {
+                    this.textContent = "管理知识点";
+                    this.style.backgroundColor = "#d4b96e";
+                    knowledgePoints.forEach(function(point) {
+                        point.classList.remove('manageable');
+                    });
+                    sessionStorage.setItem('isManageMode', 0);
+                }
+            });
+
+            // 新增知识点按钮
+            document.getElementById('add-btn').addEventListener('click', function() {
+                document.getElementById('addModal').style.display = 'block';
+                document.getElementById('updateId').value = "";
+            });
+
+            // 开始标注按钮
+            document.getElementById('annotate-btn').addEventListener('click', function() {
+                alert("标注功能即将开启，请准备开始标注工作！");
+                // 这里可以添加标注功能的具体实现
+            });
+
+            // 知识点点击事件
+            document.addEventListener('click', function(e) {
+                if (e.target.classList.contains('knowledge-point') && isManageMode) {
+                    e.preventDefault();
+                    currentKnowledgePoint = e.target;
+                    const updateId = e.target.getAttribute('data-id');
+                    const pointName = e.target.textContent;
+                    const category = e.target.getAttribute('data-category');
+                    const set = e.target.getAttribute('data-set');
+                    const term = e.target.getAttribute('data-term');
+                    const attribute = e.target.getAttribute('data-attribute') || '单对象描述型'; // 默认值
+
+                    document.getElementById('manageModalTitle').textContent = pointName;
+                    document.getElementById('updateId').value = updateId;
+                    document.getElementById('manageCategory').value = category;
+                    updateManageKnowledgeSet(category, set);
+                    document.getElementById('manageTerm').value = term;
+                    document.getElementById('manageAttribute').value = attribute;
+                    document.getElementById('manageModal').style.display = 'block';
+                }
+            });
+
+            // 知识范畴变化事件 - 管理模态框
+            document.getElementById('manageCategory').addEventListener('change', function() {
+                const category = this.value;
+                updateManageKnowledgeSet(category);
+            });
+
+            // 点击模态框外部关闭
+            window.addEventListener('click', function(e) {
+                if (e.target.classList.contains('modal')) {
+                    e.target.style.display = 'none';
+                }
+            });
+        });
+
+        // 更新管理模态框的知识集下拉列表
+        function updateManageKnowledgeSet(category, selectedSet = '') {
+            const select = document.getElementById('manageSet');
+            select.innerHTML = '<option value="">请选择知识集</option>';
+
+            if (category && knowledgeSets[category]) {
+                knowledgeSets[category].forEach(function(set) {
+                    const option = document.createElement('option');
+                    option.value = set;
+                    option.textContent = set;
+                    if (set === selectedSet) {
+                        option.selected = true;
+                    }
+                    select.appendChild(option);
+                });
+            }
+        }
+
+        // 更新新增模态框的知识集下拉列表
+        function updateAddKnowledgeSet() {
+            const category = document.getElementById('addCategory').value;
+            const select = document.getElementById('addSet');
+            select.innerHTML = '<option value="">请选择知识集</option>';
+
+            if (category && knowledgeSets[category]) {
+                knowledgeSets[category].forEach(function(set) {
+                    const option = document.createElement('option');
+                    option.value = set;
+                    option.textContent = set;
+                    select.appendChild(option);
+                });
+            }
+        }
+
+        // 关闭模态框
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        }
+
+        // 确定修改
+        function confirmManage() {
+            //const newCategory = document.getElementById('manageCategory').value;
+            //const newSet = document.getElementById('manageSet').value;
+            //const newTerm = document.getElementById('manageTerm').value;
+            //const newAttribute = document.getElementById('manageAttribute').value;
+
+
+
+            // 更新知识点的数据属性
+            //currentKnowledgePoint.setAttribute('data-category', newCategory);
+            //currentKnowledgePoint.setAttribute('data-set', newSet);
+            //currentKnowledgePoint.setAttribute('data-attribute', newAttribute);
+            //currentKnowledgePoint.textContent = newTerm;
+            const id = document.getElementById('updateId').value;
+            const zhishiji = document.getElementById('manageSet').value;
+            const shuyu = document.getElementById('manageTerm').value;
+            const shuxing = document.getElementById('manageAttribute').value;
+            var csrftoken = '{{ csrf_token }}';
+            if (!zhishiji) {
+                alert("请选择知识集");
+                return;
+            }
+            var param = {
+                       id: id,
+                       zhishiji: zhishiji,
+                       shuyu: shuyu,
+                       shuxing: shuxing
+                    };
+
+            $.ajax({
+                url:"/editKnowledge/",
+                type:"post",
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrftoken, // Django CSRF防护
+                },
+                data: JSON.stringify(param),
+                success:function(result){
+                    //console.log(result);
+                    if(result.success == true){
+                        $.message({type:'success',content:"修改成功。"});
+                        setTimeout(function(){
+                            location.reload();
+                        },1000);
+                    }else{
+                        $.message({type:'error',content:"修改失败!"});
+                    }
+                }
+            });
+            closeModal('manageModal');
+        }
+
+        // 新增知识点提交
+        function submitAdd(e) {
+            e.preventDefault();
+
+            const name = document.getElementById('addName').value;
+            const category = document.getElementById('addCategory').value;
+            const set = document.getElementById('addSet').value;
+            const term = document.getElementById('addTerm').value;
+            const attribute = document.getElementById('addAttribute').value;
+
+            if (!name || !category || !set || !term || !attribute) {
+                alert("请填写所有必填项");
+                return;
+            }
+
+            //alert(`新增知识点成功！\n名称：${name}\n范畴：${category}\n知识集：${set}\n术语：${term}\n知识属性：${attribute}`);
+
+            var csrftoken = '{{ csrf_token }}';
+            var param = {
+                       id: "",
+                       tagName: name,
+                       zhishiji: set,
+                       shuyu: term,
+                       shuxing: attribute
+                    };
+
+            $.ajax({
+                url:"/editKnowledge/",
+                type:"post",
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrftoken, // Django CSRF防护
+                },
+                data: JSON.stringify(param),
+                success:function(result){
+                    //console.log(result);
+                    if(result.success == true){
+                        $.message({type:'success',content:"新增知识点成功。"});
+                        setTimeout(function(){
+                            location.reload();
+                        },2000);
+                    }else{
+                        $.message({type:'error',content:"新增知识点失败!"});
+                    }
+                }
+            });
+
+            // 清空表单
+            document.getElementById('addForm').reset();
+            document.getElementById('addSet').innerHTML = '<option value="">请选择知识集</option>';
+            closeModal('addModal');
+        }
+    </script>
+</body>
+</html>

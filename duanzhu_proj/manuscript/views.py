@@ -323,6 +323,7 @@ def zhishimulu_data(request):
 
     return JsonResponse(tree_data, safe=False)
 
+
 def xiangxing(request):
     context = {}
     data = Liushu.objects.filter(liushu='象形')
@@ -1309,7 +1310,9 @@ def user_login(request):
         user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
-            return redirect('mark')
+            # return redirect('mark')
+            next_url = request.GET.get('next', '/mark/')
+            return redirect(next_url)
         else:
             messages.error(request, '用户名或密码错误')
     return render(request, 'login.html')
@@ -1380,6 +1383,63 @@ def bzZitou(request):
                     zitou.user_id = user.id
                     zitou.update_time = currentTime
                     zitou.save()
+                    success = True
+        except Exception as e:
+            print(e)
+    context["success"] = success
+
+    return JsonResponse(context, safe=False)
+
+@login_required
+def knowledge(request):
+    context = {}
+    level1s = list(Zhishimulu.objects.filter(level=1))
+    tree_data = []
+    for level1 in level1s:
+        level2s = Zhishimulu.objects.filter(parent_id=level1.id).values_list('id','tag_name')
+        level2_nades = []
+        print(level2s)
+        for level2 in level2s:
+            level3s = Zhishimulu.objects.filter(parent_id=level2[0]).values_list('id','tag_name','url','shuxing','shuyuxingshi')
+            level3_nodes = [{"id": id, "text": tag_name, "url":url, "type": "level3", "shuxing":shuxing,"shuyuxingshi":shuyuxingshi, "children": False} for id,tag_name,url,shuxing,shuyuxingshi in level3s]
+            level2_node = {"id": level2[0], "text": level2[1], "type": "level2", "children": level3_nodes}
+            level2_nades.append(level2_node)
+        tree_data.append({
+            "id": level1.id, "text": level1.tag_name, "type": "level1", "children": level2_nades
+        })
+        context['mulus'] = tree_data
+
+    return render(request, "manuscript/zhishimulu.html", context)
+
+@login_required
+def editKnowledge(request):
+    context = {}
+    success = False
+    user = request.user
+    if user:
+        try:
+            if request.method == 'POST':
+                param = json.loads(request.body)
+                id = param.get("id")
+                tagName = param.get("tagName")
+                zhishiji = param.get("zhishiji")
+                shuyu = param.get("shuyu")
+                shuxing = param.get("shuxing")
+                zsmlZSJ = Zhishimulu.objects.filter(tag_name=zhishiji).first()
+                if id:
+                    if id == "yunbu":
+                        print("yunbu")
+                    else:
+                        zhishimulu = get_object_or_404(Zhishimulu, id=id)
+                        if zhishimulu:
+
+                            zhishimulu.parent_id = zsmlZSJ.id
+                            zhishimulu.shuyu = shuyu
+                            zhishimulu.shuxing = shuxing
+                            zhishimulu.save()
+                            success = True
+                else:
+                    Zhishimulu.objects.create(tag_name=tagName, parent_id=zsmlZSJ.id, level=3, shuyuxingshi=shuyu, shuxing=shuxing)
                     success = True
         except Exception as e:
             print(e)
