@@ -6,14 +6,14 @@ from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ValidationError
-from django.db.models import Q
+from django.db.models import Q, OuterRef, Exists
 from django.shortcuts import render, get_object_or_404, redirect
 from django.http import JsonResponse, Http404
 from .models import DuanZhu, SwDu, Gujinzi, Guyunbu, Gouyi, Yinyitong, Yinshu, Zhishimulu, Liushu, Zhuanzhu, Jiajie, \
     Tongzi, Xingfeizi, Huxun, Zhiyan, Lianmianci, Yinshen, Benyi, Gujinyi, Hunyanxiyan, Ezi, Suzi, Suiwen, You, Shuozi, \
     Feishi, Fanxun, Tongxun, Shuangsheng, Dieyun, Yijinshigu, Hujian, Guyu, Shengfushiyuan, Fangsu, Tongyu, Zhuanyu, \
     Yixiangzu, Yintongyiyi, Bieyiyi, Guyin, Jinyin, Yinzhuan, Yinbian, Zuijin, Guheyun, Yiwen, Shan, Duotuo, Wanggai, \
-    Zheng, Benzuo, Xingfeiyi
+    Zheng, Benzuo, Xingfeiyi, KnowledgeAnnotate, RelationKnowledge, SingleObjectKnowledge
 from django.core.paginator import Paginator
 
 def index(request):
@@ -560,9 +560,9 @@ def benyi(request):
     page_obj = paginator.get_page(page)
     for p in page_obj:
         duanzhu = DuanZhu.objects.filter(duanzhu_bianhao=p.duanzhu_bianhao).first()
-        duanzhu.zhengwen_zhushi = duanzhu.zhengwen_zhushi.replace(p.benyi_1, '<span>' + p.benyi_1 + '</span>')
-        if p.benyi_2:
-            duanzhu.zhengwen_zhushi = duanzhu.zhengwen_zhushi.replace(p.benyi_2, '<span>' + p.benyi_2 + '</span>')
+        if p.match_content:
+            for content in p.match_content.split("#"):
+                duanzhu.zhengwen_zhushi = duanzhu.zhengwen_zhushi.replace(content, '<span>' + content + '</span>')
         p.duanzhu = duanzhu
     context['models'] = page_obj
 
@@ -600,14 +600,17 @@ def gouyi(request):
     page_obj = paginator.get_page(page)
     for p in page_obj:
         duanzhu = DuanZhu.objects.filter(duanzhu_bianhao=p.duanzhu_bianhao).first()
-        if p.gouyi1:
-            duanzhu.zhengwen_zhushi = duanzhu.zhengwen_zhushi.replace(p.gouyi1, '<span>' + p.gouyi1 + '</span>')
-        if p.gouyi2:
-            duanzhu.zhengwen_zhushi = duanzhu.zhengwen_zhushi.replace(p.gouyi2, '<span>' + p.gouyi2 + '</span>')
-        if p.gouyi3:
-            duanzhu.zhengwen_zhushi = duanzhu.zhengwen_zhushi.replace(p.gouyi3, '<span>' + p.gouyi3 + '</span>')
-        if p.shengfugouyi:
-            duanzhu.zhengwen_zhushi = duanzhu.zhengwen_zhushi.replace(p.shengfugouyi, '<span>' + p.shengfugouyi + '</span>')
+        if p.match_content:
+            for content in p.match_content.split("#"):
+                duanzhu.zhengwen_zhushi = duanzhu.zhengwen_zhushi.replace(content, '<span>' + content + '</span>')
+        # if p.gouyi1:
+        #     duanzhu.zhengwen_zhushi = duanzhu.zhengwen_zhushi.replace(p.gouyi1, '<span>' + p.gouyi1 + '</span>')
+        # if p.gouyi2:
+        #     duanzhu.zhengwen_zhushi = duanzhu.zhengwen_zhushi.replace(p.gouyi2, '<span>' + p.gouyi2 + '</span>')
+        # if p.gouyi3:
+        #     duanzhu.zhengwen_zhushi = duanzhu.zhengwen_zhushi.replace(p.gouyi3, '<span>' + p.gouyi3 + '</span>')
+        # if p.shengfugouyi:
+        #     duanzhu.zhengwen_zhushi = duanzhu.zhengwen_zhushi.replace(p.shengfugouyi, '<span>' + p.shengfugouyi + '</span>')
         p.duanzhu = duanzhu
     context['models'] = page_obj
 
@@ -1214,10 +1217,9 @@ def duotuo(request):
     page_obj = paginator.get_page(page)
     for p in page_obj:
         duanzhu = DuanZhu.objects.filter(duanzhu_bianhao=p.duanzhu_bianhao).first()
-        if p.match_content1:
-            duanzhu.zhengwen_zhushi = duanzhu.zhengwen_zhushi.replace(p.match_content1, '<span>' + p.match_content1 + '</span>')
-        if p.match_content2:
-            duanzhu.zhengwen_zhushi = duanzhu.zhengwen_zhushi.replace(p.match_content2, '<span>' + p.match_content2 + '</span>')
+        if p.match_content:
+            for content in p.match_content.split("#"):
+                duanzhu.zhengwen_zhushi = duanzhu.zhengwen_zhushi.replace(content, '<span>' + content + '</span>')
         p.duanzhu = duanzhu
     context['models'] = page_obj
 
@@ -1444,5 +1446,524 @@ def editKnowledge(request):
         except Exception as e:
             print(e)
     context["success"] = success
+
+    return JsonResponse(context, safe=False)
+
+@login_required
+def knowledgeAnnotate1(request):
+    knowledgePoint = request.GET.get("knowledgePoint")
+    print(knowledgePoint)
+    context = {}
+    context['knowledgePoint'] = knowledgePoint
+
+    return render(request, "manuscript/zhishimulu_annotate1.html", context)
+
+@login_required
+def knowledgeAnnotate2(request):
+    knowledgePoint = request.GET.get("knowledgePoint")
+    print(knowledgePoint)
+    context = {}
+    context['knowledgePoint'] = knowledgePoint
+
+    return render(request, "manuscript/zhishimulu_annotate2.html", context)
+
+@login_required
+def saveKnowledgeAnnotate1(request):
+    context = {}
+    success = False
+    user = request.user
+    if user:
+        try:
+            if request.method == 'POST':
+                param = json.loads(request.body)
+                id = param.get("id")
+                knowledgePoint = param.get("knowledgePoint")
+                belongsToPoint = param.get("belongsToPoint")
+                zhishimiaoshu = param.get("zhishimiaoshu")
+                bianhao = param.get("bianhao")
+
+                if knowledgePoint == "象形":
+                    xiangxing = Liushu.objects.filter(duanzhu_id=id, liushu='象形').first()
+                    if xiangxing:
+                        if belongsToPoint == "1":
+                            xiangxing.zhishimiaoshu = zhishimiaoshu
+                            xiangxing.save()
+                        else:
+                            xiangxing.delete()
+                    else:
+                        if belongsToPoint == "1":
+                            Liushu.objects.create(duanzhu_bianhao=bianhao,liushu="象形",duanzhu_id=id,zhishimiaoshu=zhishimiaoshu)
+                elif knowledgePoint == "指事":
+                    zhishi = Liushu.objects.filter(duanzhu_id=id, liushu='指事').first()
+                    if zhishi:
+                        if belongsToPoint == "1":
+                            zhishi.zhishimiaoshu = zhishimiaoshu
+                            zhishi.save()
+                        else:
+                            zhishi.delete()
+                    else:
+                        if belongsToPoint == "1":
+                            Liushu.objects.create(duanzhu_bianhao=bianhao,liushu="zhishi",duanzhu_id=id,zhishimiaoshu=zhishimiaoshu)
+                elif knowledgePoint == "会意":
+                    huiyi = Liushu.objects.filter(duanzhu_id=id, liushu='会意').first()
+                    if huiyi:
+                        if belongsToPoint == "1":
+                            huiyi.zhishimiaoshu = zhishimiaoshu
+                            huiyi.save()
+                        else:
+                            huiyi.delete()
+                    else:
+                        if belongsToPoint == "1":
+                            Liushu.objects.create(duanzhu_bianhao=bianhao,liushu="会意",duanzhu_id=id,zhishimiaoshu=zhishimiaoshu)
+                elif knowledgePoint == "犹":
+                    you = You.objects.filter(duanzhu_id=id).first()
+                    if you:
+                        if belongsToPoint == "1":
+                            you.match_content = zhishimiaoshu
+                            you.save()
+                        else:
+                            you.delete()
+                    else:
+                        if belongsToPoint == "1":
+                            You.objects.create(duanzhu_bianhao=bianhao,duanzhu_id=id,match_content=zhishimiaoshu)
+                elif knowledgePoint == "构意":
+                    gouyi = Gouyi.objects.filter(duanzhu_id=id).first()
+                    if gouyi:
+                        if belongsToPoint == "1":
+                            gouyi.match_content = zhishimiaoshu
+                            gouyi.save()
+                        else:
+                            gouyi.delete()
+                    else:
+                        if belongsToPoint == "1":
+                            Gouyi.objects.create(duanzhu_bianhao=bianhao,duanzhu_id=id,match_content=zhishimiaoshu)
+                elif knowledgePoint == "随文解之":
+                    suiwen = Suiwen.objects.filter(duanzhu_id=id).first()
+                    if suiwen:
+                        if belongsToPoint == "1":
+                            suiwen.match_content = zhishimiaoshu
+                            suiwen.save()
+                        else:
+                            suiwen.delete()
+                    else:
+                        if belongsToPoint == "1":
+                            Suiwen.objects.create(duanzhu_bianhao=bianhao,duanzhu_id=id,match_content=zhishimiaoshu)
+                elif knowledgePoint == "说字训诂":
+                    shuozi = Shuozi.objects.filter(duanzhu_id=id).first()
+                    if shuozi:
+                        if belongsToPoint == "1":
+                            shuozi.match_content = zhishimiaoshu
+                            shuozi.save()
+                        else:
+                            shuozi.delete()
+                    else:
+                        if belongsToPoint == "1":
+                            Shuozi.objects.create(duanzhu_bianhao=bianhao,duanzhu_id=id,match_content=zhishimiaoshu)
+                elif knowledgePoint == "非是":
+                    feishi = Feishi.objects.filter(duanzhu_id=id).first()
+                    if feishi:
+                        if belongsToPoint == "1":
+                            feishi.match_content = zhishimiaoshu
+                            feishi.save()
+                        else:
+                            feishi.delete()
+                    else:
+                        if belongsToPoint == "1":
+                            Feishi.objects.create(duanzhu_bianhao=bianhao,duanzhu_id=id,match_content=zhishimiaoshu)
+                elif knowledgePoint == "古语":
+                    guyu = Guyu.objects.filter(duanzhu_id=id).first()
+                    if guyu:
+                        if belongsToPoint == "1":
+                            guyu.match_content = zhishimiaoshu
+                            guyu.save()
+                        else:
+                            guyu.delete()
+                    else:
+                        if belongsToPoint == "1":
+                            Guyu.objects.create(duanzhu_bianhao=bianhao,duanzhu_id=id,match_content=zhishimiaoshu)
+                elif knowledgePoint == "声符示源":
+                    shengfushiyuan = Shengfushiyuan.objects.filter(duanzhu_id=id).first()
+                    if shengfushiyuan:
+                        if belongsToPoint == "1":
+                            shengfushiyuan.match_content = zhishimiaoshu
+                            shengfushiyuan.save()
+                        else:
+                            shengfushiyuan.delete()
+                    else:
+                        if belongsToPoint == "1":
+                            Shengfushiyuan.objects.create(duanzhu_bianhao=bianhao,duanzhu_id=id,match_content=zhishimiaoshu)
+                elif knowledgePoint == "联绵词":
+                    lianmianci = Lianmianci.objects.filter(duanzhu_id=id).first()
+                    if lianmianci:
+                        if belongsToPoint == "1":
+                            lianmianci.lianmianci = zhishimiaoshu
+                            lianmianci.save()
+                        else:
+                            lianmianci.delete()
+                    else:
+                        if belongsToPoint == "1":
+                            Lianmianci.objects.create(duanzhu_bianhao=bianhao,duanzhu_id=id,lianmianci=zhishimiaoshu)
+                elif knowledgePoint == "方言俗语":
+                    fangsu = Fangsu.objects.filter(duanzhu_id=id).first()
+                    if fangsu:
+                        if belongsToPoint == "1":
+                            fangsu.match_content = zhishimiaoshu
+                            fangsu.save()
+                        else:
+                            fangsu.delete()
+                    else:
+                        if belongsToPoint == "1":
+                            Fangsu.objects.create(duanzhu_bianhao=bianhao, duanzhu_id=id, match_content=zhishimiaoshu)
+                elif knowledgePoint == "通语":
+                    tongyu = Tongyu.objects.filter(duanzhu_id=id).first()
+                    if tongyu:
+                        if belongsToPoint == "1":
+                            tongyu.match_content = zhishimiaoshu
+                            tongyu.save()
+                        else:
+                            tongyu.delete()
+                    else:
+                        if belongsToPoint == "1":
+                            Tongyu.objects.create(duanzhu_bianhao=bianhao, duanzhu_id=id, match_content=zhishimiaoshu)
+                elif knowledgePoint == "转语":
+                    zhuanyu = Zhuanyu.objects.filter(duanzhu_id=id).first()
+                    if zhuanyu:
+                        if belongsToPoint == "1":
+                            zhuanyu.match_content = zhishimiaoshu
+                            zhuanyu.save()
+                        else:
+                            zhuanyu.delete()
+                    else:
+                        if belongsToPoint == "1":
+                            Zhuanyu.objects.create(duanzhu_bianhao=bianhao, duanzhu_id=id, match_content=zhishimiaoshu)
+                elif knowledgePoint == "本义":
+                    benyi = Benyi.objects.filter(duanzhu_id=id).first()
+                    if benyi:
+                        if belongsToPoint == "1":
+                            benyi.match_content = zhishimiaoshu
+                            benyi.save()
+                        else:
+                            benyi.delete()
+                    else:
+                        if belongsToPoint == "1":
+                            Benyi.objects.create(duanzhu_bianhao=bianhao, duanzhu_id=id, match_content=zhishimiaoshu)
+                elif knowledgePoint == "别一义":
+                    bieyiyi = Bieyiyi.objects.filter(duanzhu_id=id).first()
+                    if bieyiyi:
+                        if belongsToPoint == "1":
+                            bieyiyi.match_content = zhishimiaoshu
+                            bieyiyi.save()
+                        else:
+                            bieyiyi.delete()
+                    else:
+                        if belongsToPoint == "1":
+                            Bieyiyi.objects.create(duanzhu_bianhao=bianhao, duanzhu_id=id, match_content=zhishimiaoshu)
+                elif knowledgePoint == "古音":
+                    guyin = Guyin.objects.filter(duanzhu_id=id).first()
+                    if guyin:
+                        if belongsToPoint == "1":
+                            guyin.match_content = zhishimiaoshu
+                            guyin.save()
+                        else:
+                            guyin.delete()
+                    else:
+                        if belongsToPoint == "1":
+                            Guyin.objects.create(duanzhu_bianhao=bianhao, duanzhu_id=id, match_content=zhishimiaoshu)
+                elif knowledgePoint == "今音":
+                    jinyin = Jinyin.objects.filter(duanzhu_id=id).first()
+                    if jinyin:
+                        if belongsToPoint == "1":
+                            jinyin.match_content = zhishimiaoshu
+                            jinyin.save()
+                        else:
+                            jinyin.delete()
+                    else:
+                        if belongsToPoint == "1":
+                            Jinyin.objects.create(duanzhu_bianhao=bianhao, duanzhu_id=id, match_content=zhishimiaoshu)
+                elif knowledgePoint == "删":
+                    shan = Shan.objects.filter(duanzhu_id=id).first()
+                    if shan:
+                        if belongsToPoint == "1":
+                            shan.match_content = zhishimiaoshu
+                            shan.save()
+                        else:
+                            shan.delete()
+                    else:
+                        if belongsToPoint == "1":
+                            Shan.objects.create(duanzhu_bianhao=bianhao, duanzhu_id=id, match_content=zhishimiaoshu)
+                elif knowledgePoint == "夺":
+                    duotuo = Duotuo.objects.filter(duanzhu_id=id).first()
+                    if duotuo:
+                        if belongsToPoint == "1":
+                            duotuo.match_content = zhishimiaoshu
+                            duotuo.save()
+                        else:
+                            duotuo.delete()
+                    else:
+                        if belongsToPoint == "1":
+                            Duotuo.objects.create(duanzhu_bianhao=bianhao, duanzhu_id=id, match_content=zhishimiaoshu)
+                elif knowledgePoint == "妄改":
+                    wanggai = Wanggai.objects.filter(duanzhu_id=id).first()
+                    if wanggai:
+                        if belongsToPoint == "1":
+                            wanggai.match_content = zhishimiaoshu
+                            wanggai.save()
+                        else:
+                            wanggai.delete()
+                    else:
+                        if belongsToPoint == "1":
+                            Wanggai.objects.create(duanzhu_bianhao=bianhao, duanzhu_id=id, match_content=zhishimiaoshu)
+                elif knowledgePoint == "正":
+                    zheng = Zheng.objects.filter(duanzhu_id=id).first()
+                    if zheng:
+                        if belongsToPoint == "1":
+                            zheng.match_content = zhishimiaoshu
+                            zheng.save()
+                        else:
+                            zheng.delete()
+                    else:
+                        if belongsToPoint == "1":
+                            Zheng.objects.create(duanzhu_bianhao=bianhao, duanzhu_id=id, match_content=zhishimiaoshu)
+                elif knowledgePoint == "本作":
+                    benzuo = Benzuo.objects.filter(duanzhu_id=id).first()
+                    if benzuo:
+                        if belongsToPoint == "1":
+                            benzuo.match_content = zhishimiaoshu
+                            benzuo.save()
+                        else:
+                            benzuo.delete()
+                    else:
+                        if belongsToPoint == "1":
+                            Benzuo.objects.create(duanzhu_bianhao=bianhao, duanzhu_id=id, match_content=zhishimiaoshu)
+                else:
+                    singleObjectKnowledge = SingleObjectKnowledge.objects.filter(duanzhu_id=id, knowledge=knowledgePoint).first()
+                    if singleObjectKnowledge:
+                        if belongsToPoint == "1":
+                            singleObjectKnowledge.match_content = zhishimiaoshu
+                            singleObjectKnowledge.save()
+                        else:
+                            singleObjectKnowledge.delete()
+                    else:
+                        if belongsToPoint == "1":
+                            SingleObjectKnowledge.objects.create(duanzhu_bianhao=bianhao, duanzhu_id=id, match_content=zhishimiaoshu, knowledge=knowledgePoint)
+
+                zsAnnoteate = KnowledgeAnnotate.objects.filter(knowledge_point=knowledgePoint, duanzhu_id=id).first()
+                if belongsToPoint == "0":
+                    if not zsAnnoteate:
+                        KnowledgeAnnotate.objects.create(knowledge_point=knowledgePoint,duanzhu_id=id,duanzhu_bianhao=bianhao,is_belong=belongsToPoint)
+                else:
+                    if zsAnnoteate:
+                        zsAnnoteate.delete()
+                success = True
+        except Exception as e:
+            print(e)
+    context["success"] = success
+
+    return JsonResponse(context, safe=False)
+
+@login_required
+def saveKnowledgeAnnotate2(request):
+    context = {}
+    success = False
+    user = request.user
+    if user:
+        try:
+            if request.method == 'POST':
+                param = json.loads(request.body)
+                id = param.get("id")
+                bianhao = param.get("bianhao")
+                knowledgePoint = param.get("knowledgePoint")
+                belongsToPoint = param.get("belongsToPoint")
+                zhishimiaoshu = param.get("zhishimiaoshu")
+                groups = param.get("groups")
+                print(groups)
+                if belongsToPoint == "1":
+                    if len(groups)>0:
+                        for group in groups:
+                            char1 = group["char1"]
+                            char1Bianhao = group["id1"]
+                            char2 = group["char2"]
+                            char2Bianhao = group["id2"]
+                            relationKnowledge = RelationKnowledge.objects.filter(knowledge=knowledgePoint, duanzhu_bianhao=bianhao, object1_duanzhu_bianhao=char1Bianhao, object2_duanzhu_bianhao=char2Bianhao).first()
+                            if not relationKnowledge:
+                                RelationKnowledge.objects.create(duanzhu_bianhao=bianhao,object1=char1,object1_duanzhu_bianhao=char1Bianhao,object2=char2,object2_duanzhu_bianhao=char2Bianhao,miaoshu=zhishimiaoshu,knowledge=knowledgePoint,duanzhu_id=id)
+                    zsAnnoteate = KnowledgeAnnotate.objects.filter(knowledge_point=knowledgePoint,
+                                                                   duanzhu_id=id).first()
+                    if zsAnnoteate:
+                        zsAnnoteate.delete()
+                else:
+                    relationKnowledges = list(RelationKnowledge.objects.filter(knowledge=knowledgePoint, duanzhu_bianhao=bianhao))
+                    if relationKnowledges:
+                        for relationKnowledge in relationKnowledges:
+                            relationKnowledge.delete()
+                    zsAnnoteate = KnowledgeAnnotate.objects.filter(knowledge_point=knowledgePoint,
+                                                                   duanzhu_id=id).first()
+                    if not zsAnnoteate:
+                        KnowledgeAnnotate.objects.create(knowledge_point=knowledgePoint, duanzhu_id=id,
+                                                         duanzhu_bianhao=bianhao, is_belong=belongsToPoint)
+
+                success = True
+        except Exception as e:
+            print(e)
+    context["success"] = success
+
+    return JsonResponse(context, safe=False)
+
+@login_required
+def searchZitou(request):
+    keywords = request.GET.get('keywords')
+    zhishidian = request.GET.get('zhishidian')
+    if len(keywords)==1:
+        zitous = DuanZhu.objects.filter(zitou=keywords).values_list('id','zitou','duanzhu_bianhao','zhengwen_zhushi')
+    else:
+        zitous = DuanZhu.objects.filter(zhengwen_zhushi__contains=keywords).values_list('id', 'zitou', 'duanzhu_bianhao', 'zhengwen_zhushi')
+    data = [{"id":id,"zitou":zitou,"bianhao":bianhao,"zhengwenzhushi":zhengwenzhushi,"status":None,"miaoshu":None} for id,zitou,bianhao,zhengwenzhushi in zitous]
+    for zt in data:
+        if zhishidian == "象形":
+            xiangxing = Liushu.objects.filter(duanzhu_bianhao=zt["bianhao"],liushu='象形').first()
+            if xiangxing:
+                zt["status"] = 1
+                zt["miaoshu"] = xiangxing.zhishimiaoshu
+        elif zhishidian == "指事":
+            zhishi = Liushu.objects.filter(duanzhu_bianhao=zt["bianhao"], liushu='指事').first()
+            if zhishi:
+                zt["status"] = 1
+                zt["miaoshu"] = zhishi.zhishimiaoshu
+        elif zhishidian == "会意":
+            huiyi = Liushu.objects.filter(duanzhu_bianhao=zt["bianhao"], liushu='会意').first()
+            if huiyi:
+                zt["status"] = 1
+                zt["miaoshu"] = huiyi.zhishimiaoshu
+        elif zhishidian == "犹":
+            you = You.objects.filter(duanzhu_bianhao=zt["bianhao"]).first()
+            if you:
+                zt["status"] = 1
+                zt["miaoshu"] = you.match_content
+        elif zhishidian == "构意":
+            gouyi = Gouyi.objects.filter(duanzhu_bianhao=zt["bianhao"]).first()
+            if gouyi:
+                zt["status"] = 1
+                zt["miaoshu"] = gouyi.match_content
+        elif zhishidian == "随文解之":
+            suiwen = Suiwen.objects.filter(duanzhu_bianhao=zt["bianhao"]).first()
+            if suiwen:
+                zt["status"] = 1
+                zt["miaoshu"] = suiwen.match_content
+        elif zhishidian == "说字训诂":
+            shuozi = Shuozi.objects.filter(duanzhu_bianhao=zt["bianhao"]).first()
+            if shuozi:
+                zt["status"] = 1
+                zt["miaoshu"] = shuozi.match_content
+        elif zhishidian == "非是":
+            feishi = Feishi.objects.filter(duanzhu_bianhao=zt["bianhao"]).first()
+            if feishi:
+                zt["status"] = 1
+                zt["miaoshu"] = feishi.match_content
+        elif zhishidian == "古语":
+            guyu = Guyu.objects.filter(duanzhu_bianhao=zt["bianhao"]).first()
+            if guyu:
+                zt["status"] = 1
+                zt["miaoshu"] = guyu.match_content
+        elif zhishidian == "声符示源":
+            shengfushiyuan = Shengfushiyuan.objects.filter(duanzhu_bianhao=zt["bianhao"]).first()
+            if shengfushiyuan:
+                zt["status"] = 1
+                zt["miaoshu"] = shengfushiyuan.match_content
+        elif zhishidian == "联绵词":
+            lmc = Lianmianci.objects.filter(duanzhu_bianhao=zt["bianhao"]).first()
+            if lmc:
+                zt["status"] = 1
+                zt["miaoshu"] = lmc.lianmianci
+        elif zhishidian == "方言俗语":
+            fangsu = Fangsu.objects.filter(duanzhu_bianhao=zt["bianhao"]).first()
+            if fangsu:
+                zt["status"] = 1
+                zt["miaoshu"] = fangsu.match_content
+        elif zhishidian == "通语":
+            tongyu = Tongyu.objects.filter(duanzhu_bianhao=zt["bianhao"]).first()
+            if tongyu:
+                zt["status"] = 1
+                zt["miaoshu"] = tongyu.match_content
+        elif zhishidian == "转语":
+            zhuanyu = Zhuanyu.objects.filter(duanzhu_bianhao=zt["bianhao"]).first()
+            if zhuanyu:
+                zt["status"] = 1
+                zt["miaoshu"] = zhuanyu.match_content
+        elif zhishidian == "本义":
+            benyi = Benyi.objects.filter(duanzhu_bianhao=zt["bianhao"]).first()
+            if benyi:
+                zt["status"] = 1
+                zt["miaoshu"] = benyi.match_content
+        elif zhishidian == "别一义":
+            bieyiyi = Bieyiyi.objects.filter(duanzhu_bianhao=zt["bianhao"]).first()
+            if bieyiyi:
+                zt["status"] = 1
+                zt["miaoshu"] = bieyiyi.match_content
+        elif zhishidian == "古音":
+            guyin = Guyin.objects.filter(duanzhu_bianhao=zt["bianhao"]).first()
+            if guyin:
+                zt["status"] = 1
+                zt["miaoshu"] = guyin.match_content
+        elif zhishidian == "今音":
+            jinyin = Jinyin.objects.filter(duanzhu_bianhao=zt["bianhao"]).first()
+            if jinyin:
+                zt["status"] = 1
+                zt["miaoshu"] = jinyin.match_content
+        elif zhishidian == "删":
+            shan = Shan.objects.filter(duanzhu_bianhao=zt["bianhao"]).first()
+            if shan:
+                zt["status"] = 1
+                zt["miaoshu"] = shan.match_content
+        elif zhishidian == "夺":
+            duotuo = Duotuo.objects.filter(duanzhu_bianhao=zt["bianhao"]).first()
+            if duotuo:
+                zt["status"] = 1
+                zt["miaoshu"] = duotuo.match_content
+        elif zhishidian == "妄改":
+            wanggai = Wanggai.objects.filter(duanzhu_bianhao=zt["bianhao"]).first()
+            if wanggai:
+                zt["status"] = 1
+                zt["miaoshu"] = wanggai.match_content
+        elif zhishidian == "正":
+            zheng = Zheng.objects.filter(duanzhu_bianhao=zt["bianhao"]).first()
+            if zheng:
+                zt["status"] = 1
+                zt["miaoshu"] = zheng.match_content
+        elif zhishidian == "本作":
+            benzuo = Benzuo.objects.filter(duanzhu_bianhao=zt["bianhao"]).first()
+            if benzuo:
+                zt["status"] = 1
+                zt["miaoshu"] = benzuo.match_content
+        else:
+            zt["groups"] = []
+            relationKnowledges = list(RelationKnowledge.objects.filter(duanzhu_bianhao=zt["bianhao"],knowledge=zhishidian))
+            if relationKnowledges:
+                zt["status"] = 1
+                if len(relationKnowledges)>0:
+                    zt["miaoshu"] = relationKnowledges[0].miaoshu
+                for relationKnowledge in relationKnowledges:
+                    zt["groups"].append({"char1":relationKnowledge.object1,"id1":relationKnowledge.object1_duanzhu_bianhao,"char2":relationKnowledge.object2,"id2":relationKnowledge.object2_duanzhu_bianhao})
+
+        if zt["status"] != 1:
+            zsAnnoteate = KnowledgeAnnotate.objects.filter(knowledge_point=zhishidian, duanzhu_id=zt["id"]).first()
+            if zsAnnoteate:
+                zt["status"] = zsAnnoteate.is_belong
+                zt["miaoshu"] = None
+            else:
+                zt["status"] = None
+                zt["miaoshu"] = None
+
+    return JsonResponse(data, safe=False)
+
+@login_required
+def findByZitou(request):
+    context = {}
+    zitou = request.GET.get('zitou')
+    duanzhu = DuanZhu.objects.filter(zitou=zitou).first()
+    print(duanzhu)
+    if duanzhu:
+        context["id"] = duanzhu.id
+        context["bianhao"] = duanzhu.duanzhu_bianhao
+        context["zitou"] = duanzhu.zitou
 
     return JsonResponse(context, safe=False)

@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% load static %}
+    <title>知识点标注 - 段注知识体系</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'js/message/message.css' %}"/>
+    <script src="{% static 'js/vendor/jquery/jquery.min.js' %}"></script>
+    <script src="{% static 'js/message/message.js' %}"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+            height: 100vh;
+            overflow: hidden;
+        }
+        body:before{
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url(https://hebbkx1anhila5yf.public.blob.vercel-storage.com/%E6%88%AA%E5%B1%8F2025-05-10%2016.33.41.png-rToDqrsoxzaluLqmVPhlk3WpgnyUTF.jpeg);
+            background-size: cover;
+            background-position: center;
+            opacity: 0.1;
+            z-index: -1;
+        }
+
+        .header {
+            background-color: rgba(255, 255, 255, 0.95);
+            padding: 15px 20px;
+            border-bottom: 1px solid #ddd;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .header h1 {
+            margin: 0;
+            color: #5c3b00;
+            font-size: 24px;
+        }
+
+        .header-info {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .current-point {
+            background-color: #d4b96e;
+            color: #5c3b00;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+        }
+
+        .back-btn {
+            background-color: #666;
+            color: white;
+            padding: 8px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .back-btn:hover {
+            background-color: #555;
+        }
+
+        .main-container {
+            display: flex;
+            height: calc(100vh - 80px);
+        }
+
+        .left-panel {
+            width: 33.33%;
+            background-color: rgba(255, 255, 255, 0.95);
+            border-right: 1px solid #ddd;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .search-section {
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+            box-sizing: border-box;
+        }
+
+        .instances-list {
+            flex: 1;
+            overflow-y: auto;
+            padding: 10px;
+        }
+
+        .instance-item {
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            padding: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+            background-color: white;
+        }
+
+        .instance-item:hover {
+            border-color: #d4b96e;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .instance-item.selected {
+            border-color: #d4b96e;
+            background-color: #fff8e1;
+        }
+        .instance-item.annotated{
+            border-color: #28a745;
+            background-color: #d4edda;
+        }
+        .instance-item.annotated .instance-header {
+            color: #155724;
+        }
+
+        .instance-item.annotated .instance-header::after {
+            content: " ✓";
+            color: #28a745;
+            font-weight: bold;
+        }
+
+        .instance-item.annotated:hover {
+            border-color: #1e7e34;
+            background-color: #c3e6cb;
+        }
+
+        .instance-item.notBelong{
+            border-color: #cd0606;
+            background-color: #ffe1da;
+        }
+        .instance-item.notBelong .instance-header {
+            color: #ab0707;
+        }
+
+        .instance-item.notBelong .instance-header::after {
+            content: " ✖";
+            color: #ab0707;
+            font-weight: bold;
+        }
+
+        .instance-item.notBelong:hover {
+            border-color: #cd0606;
+            background-color: #efd1ca;
+        }
+
+        .instance-header {
+            font-weight: bold;
+            color: #5c3b00;
+            margin-bottom: 5px;
+        }
+
+        .instance-content {
+            font-size: 13px;
+            color: #666;
+            line-height: 1.4;
+            max-height: 60px;
+            overflow: hidden;
+        }
+
+        .right-panel {
+            width: 66.67%;
+            display: flex;
+        }
+
+        .content-panel {
+            flex: 2;
+            background-color: rgba(255, 255, 255, 0.95);
+            padding: 20px;
+            overflow-y: auto;
+            border-right: 1px solid #ddd;
+        }
+
+        .annotation-panel {
+            flex: 1;
+            background-color: rgba(255, 255, 255, 0.98);
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .content-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #5c3b00;
+            margin-bottom: 15px;
+            border-bottom: 2px solid #d4b96e;
+            padding-bottom: 10px;
+        }
+
+        .content-text {
+            line-height: 1.8;
+            font-size: 16px;
+            color: #333;
+        }
+
+        .annotation-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #5c3b00;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #5c3b00;
+        }
+
+        .form-group select,
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+            box-sizing: border-box;
+        }
+
+        .form-group textarea {
+            height: 80px;
+            resize: vertical;
+        }
+
+        .object-group {
+            border: 1px solid #e0e0e0;
+            border-radius: 5px;
+            padding: 15px;
+            margin-bottom: 15px;
+            background-color: #fafafa;
+        }
+
+        .object-group-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .object-group-title {
+            font-weight: bold;
+            color: #5c3b00;
+        }
+
+        .remove-group-btn {
+            background-color: #dc3545;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        .remove-group-btn:hover {
+            background-color: #c82333;
+        }
+
+        .object-inputs {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .add-group-btn {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+            margin-bottom: 20px;
+        }
+
+        .add-group-btn:hover {
+            background-color: #218838;
+        }
+
+        .save-btn {
+            background-color: #d4b96e;
+            color: #5c3b00;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        .save-btn:hover {
+            background-color: #c4a95e;
+        }
+
+        .char-id-hint {
+            font-size: 12px;
+            color: #28a745;
+            margin-top: 5px;
+        }
+
+        .char-id-error {
+            font-size: 12px;
+            color: #dc3545;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>知识点标注系统</h1>
+        <div class="header-info">
+            <div class="current-point" id="currentPoint">当前标注：{{ knowledgePoint }}</div>
+            <!--<a href="index.html" class="back-btn">返回主页</a>-->
+        </div>
+    </div>
+
+    <div class="main-container">
+        <!-- 左侧面板 -->
+        <div class="left-panel">
+            <div class="search-section">
+                <input type="text" class="search-input" id="searchInput" placeholder="搜索字头或注释内容...">
+            </div>
+            <div class="instances-list" id="instancesList">
+                <!-- 实例列表将通过JavaScript动态生成 -->
+            </div>
+        </div>
+
+        <!-- 右侧面板 -->
+        <div class="right-panel">
+            <!-- 内容显示区 -->
+            <div class="content-panel">
+                <div class="content-title" id="contentTitle">请选择左侧的实例</div>
+                <div class="content-text" id="contentText">
+                    <p style="color: #999; text-align: center; margin-top: 50px;">
+                        请从左侧列表中选择一个实例来查看详细内容
+                    </p>
+                </div>
+            </div>
+
+            <!-- 标注工作区 -->
+            <div class="annotation-panel">
+                <div class="annotation-title">标注工作区</div>
+
+                <div class="form-group">
+                    <label>是否属于本知识点：</label>
+                    <!--<select id="belongsToPoint">
+                        <option value="">请选择</option>
+                        <option value="yes">是</option>
+                        <option value="no">否</option>
+                    </select>-->
+                    <input type="radio" name="belongsToPoint" id="belongsToPoint1" value="1" style="width:auto;" /><label for="belongsToPoint1" style="display:inline;">是</label>&nbsp;&nbsp;
+                    <input type="radio" name="belongsToPoint" id="belongsToPoint2" value="0" style="width:auto;" /><label for="belongsToPoint2" style="display:inline;">否</label>
+                </div>
+
+                <!-- 描述型知识点的表单 -->
+                <div id="descriptiveForm" style="display: none;">
+                    <div class="form-group">
+                        <label for="knowledgeDescription">知识描述：</label>
+                        <textarea id="knowledgeDescription" placeholder="请描述该知识点的具体内容..."></textarea>
+                    </div>
+                </div>
+
+                <!-- 多对象关联型知识点的表单 -->
+                <div id="relationalForm" style="display: none;">
+                    <div class="form-group">
+                        <label for="relationalDescription">知识点描述：</label>
+                        <textarea id="relationalDescription" placeholder="请描述该知识点的具体内容..."></textarea>
+                    </div>
+
+                    <div id="objectGroups">
+                        <!-- 对象组将通过JavaScript动态生成 -->
+                    </div>
+
+                    <button class="add-group-btn" onclick="addObjectGroup()">+ 新增对象组</button>
+                </div>
+
+                <button class="save-btn" onclick="saveAnnotation()">保存标注</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentPointName = '{{ knowledgePoint }}';
+        let currentPointAttribute = '';
+        let selectedInstanceId = null;
+        let selectedInstanceBianhao = null;
+        let objectGroupCounter = 0;
+
+        // 模拟的知识点实例数据
+        let mockInstances = [];
+
+        // 页面初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            // 获取当前标注的知识点信息
+            currentPointName = '{{ knowledgePoint }}';
+            currentPointAttribute = '单对象描述型';
+
+            // 更新页面显示
+            document.getElementById('currentPoint').textContent = `当前标注：${currentPointName}`;
+
+            // 根据知识点属性显示相应的表单
+            if (currentPointAttribute === '单对象描述型') {
+                document.getElementById('descriptiveForm').style.display = 'block';
+                document.getElementById('relationalForm').style.display = 'none';
+            }
+
+            // 绑定搜索功能
+            document.getElementById('searchInput').addEventListener('input', function() {
+                loadInstances(this.value);
+            });
+        });
+
+        // 加载实例列表
+        function loadInstances(searchTerm = '') {
+            const instancesList = document.getElementById('instancesList');
+
+            if (searchTerm) {
+                $.ajax({
+                    url: "/searchZitou/?keywords=" + searchTerm + "&zhishidian=" + "{{ knowledgePoint }}",
+                    type: "GET",
+                    dataType: "json",
+                    success: function(data){
+                        console.log(data);
+                        mockInstances = data;
+                        let filteredInstances = mockInstances;
+                        instancesList.innerHTML = filteredInstances.map(instance => `
+                            <div class="instance-item ${instance.status==1?'annotated':instance.status==0?'notBelong':''}" onclick="selectInstance('${instance.id}')">
+                                <div class="instance-header">${instance.zitou}</div>
+                                <div class="instance-content">${instance.zhengwenzhushi}</div>
+                            </div>
+                        `).join('');
+                    }
+                });
+            }
+        }
+
+        // 选择实例
+        function selectInstance(instanceId) {
+            selectedInstanceId = instanceId;
+            const instance = mockInstances.find(item => item.id === instanceId);
+            selectedInstanceBianhao = instance.bianhao
+
+            if (instance) {
+                // 更新选中状态
+                document.querySelectorAll('.instance-item').forEach(item => {
+                    item.classList.remove('selected');
+                });
+                event.currentTarget.classList.add('selected');
+
+                // 更新内容显示
+                document.getElementById('contentTitle').textContent = `字头：${instance.zitou}`;
+                document.getElementById('contentText').innerHTML = `<pre style="white-space: pre-wrap; font-family: inherit;">${instance.zhengwenzhushi}</pre>`;
+
+                console.log(instance.status);
+                if(instance.status==1){
+                    $("input[name='belongsToPoint'][value='1']").prop("checked",true);
+                    $("input[name='belongsToPoint'][value='0']").prop("checked",false);
+                }else if(instance.status==0){
+                    $("input[name='belongsToPoint'][value='1']").prop("checked",false);
+                    $("input[name='belongsToPoint'][value='0']").prop("checked",true);
+                }else{
+                    $("input[name='belongsToPoint']").prop("checked",false);
+                }
+                $("#knowledgeDescription").val(instance.miaoshu);
+            }
+        }
+
+        // 保存标注
+        function saveAnnotation() {
+            const belongsToPoint = $('input[name="belongsToPoint"]:checked').val();
+
+            if (!belongsToPoint) {
+                alert('请选择是否属于本知识点');
+                return;
+            }
+
+            if (!selectedInstanceId) {
+                alert('请先选择一个实例');
+                return;
+            }
+
+            let annotationData = {
+                id: selectedInstanceId,
+                bianhao: selectedInstanceBianhao,
+                knowledgePoint: currentPointName,
+                belongsToPoint: belongsToPoint
+            };
+
+            if (currentPointAttribute === '单对象描述型') {
+                const description = document.getElementById('knowledgeDescription').value;
+                if (belongsToPoint === '1' && !description.trim()) {
+                    alert('请填写知识描述');
+                    return;
+                }
+                annotationData.zhishimiaoshu = description;
+            }
+
+            // 模拟保存到服务器
+            console.log('保存标注数据:', annotationData);
+            var csrftoken = '{{ csrf_token }}';
+            $.ajax({
+                url:"/saveKnowledgeAnnotate1/",
+                type:"post",
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrftoken, // Django CSRF防护
+                },
+                data: JSON.stringify(annotationData),
+                success:function(result){
+                    if(result.success == true){
+                        const instance = mockInstances.find(item => item.id === selectedInstanceId);
+                        instance.status = annotationData.belongsToPoint;
+                        instance.miaoshu = annotationData.zhishimiaoshu;
+
+                        if(annotationData.belongsToPoint==1){
+                            $(".instance-item.selected").removeClass("notBelong");
+                            $(".instance-item.selected").addClass("annotated");
+                        }else{
+                            $(".instance-item.selected").removeClass("annotated");
+                            $(".instance-item.selected").addClass("notBelong");
+                        }
+                        $.message({type:'success',content:"标注保存成功。"});
+                    }else{
+                        $.message({type:'error',content:"标注保存失败!"});
+                    }
+                }
+            });
+
+            // 清空表单
+            //resetForm();
+        }
+
+        // 重置表单
+        function resetForm() {
+            document.getElementById('belongsToPoint').value = '';
+
+            if (currentPointAttribute === '单对象描述型') {
+                document.getElementById('knowledgeDescription').value = '';
+            } else {
+                document.getElementById('relationalDescription').value = '';
+                // 清空所有对象组
+                document.getElementById('objectGroups').innerHTML = '';
+                objectGroupCounter = 0;
+                // 重新添加两个默认对象组
+                addObjectGroup();
+                addObjectGroup();
+            }
+        }
+    </script>
+</body>
+</html>

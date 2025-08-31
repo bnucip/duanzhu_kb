@@ -474,6 +474,7 @@
         };
 
         let isManageMode = false;
+        let isAnnotateMode = false;
         if(sessionStorage.getItem('isManageMode')==1){
             isManageMode = true;
             document.getElementById('manage-btn').textContent = "退出管理";
@@ -517,7 +518,23 @@
 
             // 开始标注按钮
             document.getElementById('annotate-btn').addEventListener('click', function() {
-                alert("标注功能即将开启，请准备开始标注工作！");
+                isAnnotateMode = !isAnnotateMode;
+                const knowledgePoints = document.querySelectorAll('.knowledge-point');
+                if(isAnnotateMode){
+                    this.textContent = "退出标注";
+                    this.style.backgroundColor = "#c4a95e";
+                    knowledgePoints.forEach(function(point) {
+                        point.classList.add('manageable');
+                    });
+                    alert("标注功能即将开启，请准备开始标注工作！");
+                }else{
+                    this.textContent = "开始标注";
+                    this.style.backgroundColor = "#d4b96e";
+                    knowledgePoints.forEach(function(point) {
+                        point.classList.remove('manageable');
+                    });
+                }
+
                 // 这里可以添加标注功能的具体实现
             });
 
@@ -540,6 +557,15 @@
                     document.getElementById('manageTerm').value = term;
                     document.getElementById('manageAttribute').value = attribute;
                     document.getElementById('manageModal').style.display = 'block';
+                }else if (e.target.classList.contains('knowledge-point') && isAnnotateMode) {
+                    e.preventDefault();
+                    const pointName = e.target.textContent;
+                    const attribute = e.target.getAttribute('data-attribute') || '单对象描述型'; // 默认值
+                    if(attribute == "单对象描述型"){
+                        window.open("/knowledgeAnnotate1?knowledgePoint="+pointName);
+                    }else if(attribute == "多对象关系型"){
+                        window.open("/knowledgeAnnotate2?knowledgePoint="+pointName);
+                    }
                 }
             });
 

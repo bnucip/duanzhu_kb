@@ -5,7 +5,8 @@ from .views import catalogue_data, zitou, zitou_detail, zstag_detail, index, sea
     tongxun, shuangsheng, dieyun, yijinshigu, hujian, guyu, shengfushiyuan, fangsu, tongyu, zhuanyu, yixiangzu, \
     yintongyiyi, bieyiyi, guyin, jinyin, yinzhuan, yinbian, zuijin, guheyun, yiwen, shan, duotuo, wanggai, zheng, \
     benzuo, xingfeiyi, yunbu, user_login, user_logout, mark, getZitous, getZitouParagraphs, bzZitou, \
-    knowledge, editKnowledge
+    knowledge, editKnowledge, searchZitou, knowledgeAnnotate1, saveKnowledgeAnnotate1, knowledgeAnnotate2, \
+    saveKnowledgeAnnotate2, findByZitou
 
 urlpatterns = [
     path('', index, name='index'),
@@ -79,4 +80,10 @@ urlpatterns = [
     path('yunbu/', yunbu, name='yunbu'),
     path('knowledge/', knowledge, name='knowledge'),
     path('editKnowledge/', editKnowledge, name='editKnowledge'),
+    path('searchZitou/', searchZitou, name='searchZitou'),
+    path('knowledgeAnnotate1/', knowledgeAnnotate1, name='knowledgeAnnotate1'),
+    path('knowledgeAnnotate2/', knowledgeAnnotate2, name='knowledgeAnnotate2'),
+    path('saveKnowledgeAnnotate1/', saveKnowledgeAnnotate1, name='saveKnowledgeAnnotate1'),
+    path('saveKnowledgeAnnotate2/', saveKnowledgeAnnotate2, name='saveKnowledgeAnnotate2'),
+    path('findByZitou/', findByZitou, name='findByZitou')
 ]

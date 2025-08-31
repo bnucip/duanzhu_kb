@@ -77,6 +77,7 @@ class Gouyi(models.Model):
     gouyi2 = models.TextField('构意2', null=True, blank=True)
     gouyi3 = models.TextField('构意3', null=True, blank=True)
     shengfugouyi = models.TextField('声符构意', null=True, blank=True)
+    match_content = models.TextField('匹配内容', null=True, blank=True)
     class Meta:
         verbose_name = '构意阐释'
         verbose_name_plural = verbose_name
@@ -124,8 +125,9 @@ class Yinshu(models.Model):
 class Liushu(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     duanzhu_bianhao = models.CharField('段注编号', max_length=20, null=True, blank=True)
-    duanzhu = models.ForeignKey(DuanZhu, on_delete=models.CASCADE, db_constraint=True, verbose_name='段注ID', null=True)
+    duanzhu = models.ForeignKey(DuanZhu, on_delete=models.CASCADE, db_constraint=True, verbose_name='段注ID', null=True, related_name='liushus')
     liushu = models.TextField('六书', null=True, blank=True)
+    zhishimiaoshu = models.TextField('知识描述', null=True, blank=True)
     class Meta:
         verbose_name = '六书'
         verbose_name_plural = verbose_name
@@ -215,6 +217,7 @@ class Benyi(models.Model):
     duanzhu = models.ForeignKey(DuanZhu, on_delete=models.CASCADE, db_constraint=True, verbose_name='段注ID', null=True)
     benyi_1 = models.TextField('本义1', null=True, blank=True)
     benyi_2 = models.TextField('本义2', null=True, blank=True)
+    match_content = models.TextField('匹配内容', null=True, blank=True)
     class Meta:
         verbose_name = '本义'
         verbose_name_plural = verbose_name
@@ -509,6 +512,7 @@ class Duotuo(models.Model):
     duanzhu = models.ForeignKey(DuanZhu, on_delete=models.CASCADE, db_constraint=True, verbose_name='段注ID', null=True)
     match_content1 = models.TextField('匹配内容1', null=True, blank=True)
     match_content2 = models.TextField('匹配内容2', null=True, blank=True)
+    match_content = models.TextField('匹配内容', null=True, blank=True)
     class Meta:
         verbose_name = '夺'
         verbose_name_plural = verbose_name
@@ -547,4 +551,37 @@ class Xingfeiyi(models.Model):
     yixingyifeishuojie = models.TextField('义行义废说解', null=True, blank=True)
     class Meta:
         verbose_name = '行废义'
+        verbose_name_plural = verbose_name
+
+class KnowledgeAnnotate(models.Model):
+    knowledge_point = models.CharField('知识点', max_length=20, null=True, blank=True)
+    duanzhu = models.ForeignKey(DuanZhu, on_delete=models.CASCADE, db_constraint=True, verbose_name='段注ID', null=True)
+    duanzhu_bianhao = models.CharField('段注编号', max_length=20, null=True, blank=True)
+    is_belong = models.IntegerField('是否属于该知识点', null=True, blank=True, default=0)
+    class Meta:
+        verbose_name = '知识点标注记录'
+        verbose_name_plural = verbose_name
+
+class RelationKnowledge(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    duanzhu_bianhao = models.CharField('段注编号', max_length=20, null=True, blank=True)
+    duanzhu = models.ForeignKey(DuanZhu, on_delete=models.CASCADE, db_constraint=True, verbose_name='段注ID', null=True)
+    object1 = models.TextField('对象1', null=True, blank=True)
+    object1_duanzhu_bianhao = models.TextField('对象1段注编号', null=True, blank=True)
+    object2 = models.TextField('对象2', null=True, blank=True)
+    object2_duanzhu_bianhao = models.TextField('对象2段注编号', null=True, blank=True)
+    miaoshu = models.TextField('知识点描述', null=True, blank=True)
+    knowledge = models.TextField('知识点', null=True, blank=True)
+    class Meta:
+        verbose_name = '多对象关系型知识点标注数据'
+        verbose_name_plural = verbose_name
+
+class SingleObjectKnowledge(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    duanzhu_bianhao = models.CharField('段注编号', max_length=20, null=True, blank=True)
+    duanzhu = models.ForeignKey(DuanZhu, on_delete=models.CASCADE, db_constraint=True, verbose_name='段注ID', null=True)
+    match_content = models.TextField('匹配内容', null=True, blank=True)
+    knowledge = models.TextField('知识点', null=True, blank=True)
+    class Meta:
+        verbose_name = '单对象描述型知识点标注数据'
         verbose_name_plural = verbose_name
