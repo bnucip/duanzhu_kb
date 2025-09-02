@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Mono Raw List</title>
+</head>
+<body>
+    <h1>Mono Raw Records</h1>
+    <div>
+        {% if page_obj.has_previous %}
+            <a href="?page=1">First</a>
+            <a href="?page={{ page_obj.previous_page_number }}">Previous</a>
+        {% endif %}
+
+        <span>Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}">Next</a>
+            <a href="?page={{ page_obj.paginator.num_pages }}">Last</a>
+        {% endif %}
+    </div>
+    <table border="1">
+        <tr>
+            <th>ID</th>
+            <th>Point</th>
+            <th>Char ID</th>
+            <th>Char Txt</th>
+            <th>Person</th>
+            <th>Script</th>
+            <th>Script Backup</th>
+        </tr>
+        {% for item in page_obj %}
+        <tr>
+            <td>{{ item.id }}</td>
+            <td>{{ item.point }}</td>
+            <td>{{ item.char_id }}</td>
+            <td>{{ item.char_txt }}</td>
+            <td>{{ item.person }}</td>
+            <td>{{ item.script }}</td>
+            <td>{{ item.script_bk }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <div>
+        {% if page_obj.has_previous %}
+            <a href="?page=1">First</a>
+            <a href="?page={{ page_obj.previous_page_number }}">Previous</a>
+        {% endif %}
+
+        <span>Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}">Next</a>
+            <a href="?page={{ page_obj.paginator.num_pages }}">Last</a>
+        {% endif %}
+    </div>
+</body>
+</html>

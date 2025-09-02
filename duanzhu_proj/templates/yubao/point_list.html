@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Point List</title>
+</head>
+<body>
+    <h1>Point Records</h1>
+    <div>
+        {% if page_obj.has_previous %}
+            <a href="?page=1">First</a>
+            <a href="?page={{ page_obj.previous_page_number }}">Previous</a>
+        {% endif %}
+
+        <span>Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}">Next</a>
+            <a href="?page={{ page_obj.paginator.num_pages }}">Last</a>
+        {% endif %}
+    </div>
+    <table border="1">
+        <tr>
+            <th>ID</th>
+            <th>Longitude</th>
+            <th>Latitude</th>
+            <th>First Level ID</th>
+            <th>File Path</th>
+            <th>Province</th>
+            <th>City</th>
+            <th>Country</th>
+            <th>Village</th>
+            <th>Street</th>
+            <th>Population</th>
+            <th>Nation</th>
+            <th>Minority Info</th>
+            <th>Dialect Info</th>
+            <th>Opera Info</th>
+            <th>Source</th>
+            <th>Degree</th>
+            <th>Area</th>
+            <th>Slice</th>
+            <th>Slices</th>
+        </tr>
+        {% for point in page_obj %}
+        <tr>
+            <td>{{ point.id }}</td>
+            <td>{{ point.longitude }}</td>
+            <td>{{ point.latitude }}</td>
+            <td>{{ point.firstLevelid }}</td>
+            <td>{{ point.filepath }}</td>
+            <td>{{ point.province }}</td>
+            <td>{{ point.city }}</td>
+            <td>{{ point.country }}</td>
+            <td>{{ point.village }}</td>
+            <td>{{ point.street }}</td>
+            <td>{{ point.population }}</td>
+            <td>{{ point.nation }}</td>
+            <td>{{ point.minorityInfo }}</td>
+            <td>{{ point.dialectInfo }}</td>
+            <td>{{ point.operaInfo }}</td>
+            <td>{{ point.source }}</td>
+            <td>{{ point.degree }}</td>
+            <td>{{ point.area }}</td>
+            <td>{{ point.slice }}</td>
+            <td>{{ point.slices }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <div>
+        {% if page_obj.has_previous %}
+            <a href="?page=1">First</a>
+            <a href="?page={{ page_obj.previous_page_number }}">Previous</a>
+        {% endif %}
+
+        <span>Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}">Next</a>
+            <a href="?page={{ page_obj.paginator.num_pages }}">Last</a>
+        {% endif %}
+    </div>
+</body>
+</html>

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Consonant Counts</title>
+    <style>
+        table { border-collapse: collapse; margin: 20px; width: 45%; float: left; }
+        th, td { border: 1px solid #ccc; padding: 5px; text-align: left; }
+        h2 { clear: both; }
+    </style>
+</head>
+<body>
+    <h1>Mono Consonant Counts</h1>
+
+    <table>
+        <caption><strong>Old Consonants</strong></caption>
+        <tr>
+            <th>Old Consonant</th>
+            <th>Count</th>
+        </tr>
+        {% for row in old_counts %}
+        <tr>
+            <td>{{ row.old_consonant }}</td>
+            <td>
+                <a href="{% url 'mono_list' %}?old_consonant={{ row.old_consonant|urlencode }}">
+                    {{ row.count }}
+                </a>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <table>
+        <caption><strong>Young Consonants</strong></caption>
+        <tr>
+            <th>Young Consonant</th>
+            <th>Count</th>
+        </tr>
+        {% for row in young_counts %}
+        <tr>
+            <td>{{ row.young_consonant }}</td>
+            <td>
+                <a href="{% url 'mono_list' %}?young_consonant={{ row.young_consonant|urlencode }}">
+                    {{ row.count }}
+                </a>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>
