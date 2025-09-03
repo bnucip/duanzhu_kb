@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Rebuild Completed</title>
+    <style>
+        body { font-size: 20px; font-family: Arial, sans-serif; text-align: center; padding: 50px; }
+        a { font-size: 20px; color: #1a73e8; text-decoration: none; }
+        a:hover { text-decoration: underline; }
+    </style>
+</head>
+<body>
+    <h1>Mono table rebuilt successfully!</h1>
+    <p>Time cost: {{ time_cost|floatformat:2 }} seconds</p>
+    <p><a href="{% url 'mono_list' %}">Go to Mono List</a></p>
+</body>
+</html>

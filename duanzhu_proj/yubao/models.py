@@ -37,7 +37,9 @@ class MonoRaw(models.Model):
 
     class Meta:
         db_table = "yubao_mono_raw"
-
+        indexes = [
+            models.Index(fields=["point", "char_id"], name="idx_mono_raw_point_char"),
+        ]
 
 class Mono(models.Model):
     id = models.AutoField(primary_key=True)
@@ -53,3 +55,6 @@ class Mono(models.Model):
 
     class Meta:
         db_table = "yubao_mono"
+        constraints = [
+            models.UniqueConstraint(fields=["point", "char_id"], name="uniq_mono_point_char"),
+        ]

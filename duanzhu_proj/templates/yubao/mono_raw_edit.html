@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Edit Script</title>
+    <style>
+        body {
+            font-size: 20px;   /* enlarge all text */
+            font-family: Arial, sans-serif;
+        }
+        table {
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 8px 12px;
+            text-align: left;
+        }
+        input[type="text"] {
+            font-size: 20px;
+            width: 600px;
+        }
+        button, a {
+            font-size: 20px;
+            margin-top: 10px;
+            display: inline-block;
+        }
+    </style>
+</head>
+<body>
+    <form method="post">
+        {% csrf_token %}
+        <table>
+            <tr>
+                <th>ID</th>
+                <td>{{ mono_raw.id }}</td>
+            </tr>
+            <tr>
+                <th>Point</th>
+                <td>{{ mono_raw.point }}</td>
+            </tr>
+            <tr>
+                <th>Char ID</th>
+                <td>{{ mono_raw.char_id }}</td>
+            </tr>
+            <tr>
+                <th>Char Txt</th>
+                <td>{{ mono_raw.char_txt }}</td>
+            </tr>
+            <tr>
+                <th>Person</th>
+                <td>{{ mono_raw.person }}</td>
+            </tr>
+            <tr>
+                <th>Script</th>
+                <td>
+                    <input type="text"
+                           name="script"
+                           value="{{ mono_raw.script }}"
+                           required
+                           pattern="\S+ +.+ +\S+"
+                           title="Format: three groups separated by spaces">
+                </td>
+            </tr>
+            <tr>
+                <th>Script Backup</th>
+                <td>{{ mono_raw.script_bk }}</td>
+            </tr>
+        </table>
+
+        <button type="submit">Save</button>
+        <a href="{% url 'mono_list' %}">Cancel</a>
+    </form>
+</body>
+</html>

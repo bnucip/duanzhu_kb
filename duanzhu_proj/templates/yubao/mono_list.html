@@ -27,6 +27,7 @@
             <th>Old Consonant</th>
             <th>Old Vowel</th>
             <th>Old Tone</th>
+            <th>Edit</th>
             <th>Young Consonant</th>
             <th>Young Vowel</th>
             <th>Young Tone</th>
@@ -40,6 +41,11 @@
             <td>{{ item.old_consonant }}</td>
             <td>{{ item.old_vowel }}</td>
             <td>{{ item.old_tone }}</td>
+            <td>
+                <a href="{% url 'mono_raw_edit' %}?point={{ item.point }}&char_id={{ item.char_id }}&person=老男">←老男</a>
+                |
+                <a href="{% url 'mono_raw_edit' %}?point={{ item.point }}&char_id={{ item.char_id }}&person=青男">青男→</a>
+            </td>
             <td>{{ item.young_consonant }}</td>
             <td>{{ item.young_vowel }}</td>
             <td>{{ item.young_tone }}</td>

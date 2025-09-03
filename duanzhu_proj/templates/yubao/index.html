@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Yubao App Index</title>
+    <style>
+        body {
+            font-size: 20px;
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+        h1 {
+            margin-bottom: 20px;
+        }
+        ul {
+            list-style-type: none;
+            padding-left: 0;
+        }
+        li {
+            margin-bottom: 10px;
+        }
+        a {
+            font-size: 20px;
+            text-decoration: none;
+            color: #1a73e8;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <h1>Yubao App Pages</h1>
+    <ul>
+        <li><a href="{% url 'point_list' %}">Point List</a></li>
+        <li><a href="{% url 'mono_raw_list' %}">MonoRaw List</a></li>
+        <li><a href="{% url 'mono_list' %}">Mono List</a></li>
+        <li><a href="{% url 'consonant_counts' %}">Consonant Summary</a></li>
+        <li><a href="{% url 'rebuild_mono' %}" onclick="return confirm('Are you sure to rebuild mono from mono_raw? This may take several minutes.')">Rebuild Mono from MonoRaw</a></li>
+    </ul>
+</body>
+</html>
